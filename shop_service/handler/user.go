@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -40,7 +41,7 @@ func (UserSever) GetUserList(c context.Context, pageInfo *proto.PageInfo) (*prot
 	})
 	if err != nil {
 		logrus.Errorf("get user list error: %v", err)
-		return nil, err
+		return nil, errors.New("get user list error")
 	}
 	var userList []*proto.UserInfoResponse
 	for _, user := range list {

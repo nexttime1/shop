@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/shop_api/api/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/api/user_api.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/common/res/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/conf/conf_system.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/conf/config.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/core/init_log.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/core/init_yaml.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/flags/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/flags/flag_db.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/global/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/proto/user.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/router/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/router/user_router.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/settings.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/utils/validate/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_service/conf/conf_system.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/conf/conf_system.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_service/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/conf/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_service/core/init_rpc.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/core/init_rpc.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_service/handler/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/handler/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_service/settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/settings.yaml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file://$USER_HOME$/sdk/go1.24.3" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;nexttime1&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:nexttime1/shop.git&quot;,
+    &quot;accountId&quot;: &quot;b17aa24f-d426-4ec9-b395-c57266688a86&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="35gyhqnJYLn0Uv5pvxymM4IKAtE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "Go 构建.go build shop_api/z_test/zap_test.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "main",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/shop_api/proto",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\proto" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\core" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\z_test\zap_test" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="go build shop_api/z_test/zap_test" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="shop" />
+      <working_directory value="$PROJECT_DIR$/shop_api" />
+      <kind value="PACKAGE" />
+      <package value="shop_api/z_test/zap_test" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/shop_api/z_test/zap_test/main.go" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go 构建.go build shop_api/z_test/zap_test" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-gosdk-3b128438d3f6-4b567d62c776-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-251.25410.140" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-GO-251.25410.140" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="" />
+      <created>1763546131686</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1763546131686</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>

@@ -11,7 +11,7 @@ import (
 func InitRPC() error {
 	server := grpc.NewServer()
 	proto.RegisterUserServer(server, &handler.UserSever{})
-	lis, err := net.Listen("tcp", global.Config.System.GetAddr())
+	lis, err := net.Listen("tcp", global.Config.UserRPC.GetAddr())
 	if err != nil {
 		return err
 	}
