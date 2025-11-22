@@ -1,8 +1,12 @@
 package global
 
-import "shop_api/conf"
+import (
+	"github.com/go-redis/redis"
+	"shop_api/conf"
+)
 
 var (
 	Config    *conf.Config
+	Redis     *redis.Client
 	LevelFlag bool
 )

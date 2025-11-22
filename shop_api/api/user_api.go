@@ -4,10 +4,12 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"shop_api/common/enum"
 	"shop_api/common/res"
 	"shop_api/connect"
 	"shop_api/proto"
-	"shop_api/service"
+	"shop_api/service/user_service"
+	"shop_api/utils/jwts"
 )
 
 type UserApi struct {
@@ -32,7 +34,7 @@ func (UserApi) UserListView(c *gin.Context) {
 }
 
 func (UserApi) UserLoginView(c *gin.Context) {
-	var userLoginRequest service.UserLoginRequest
+	var userLoginRequest user_service.UserLoginRequest
 	err := c.ShouldBindJSON(&userLoginRequest)
 	if err != nil {
 		zap.S().Error(err)
@@ -66,6 +68,16 @@ func (UserApi) UserLoginView(c *gin.Context) {
 		res.FailWithMsg(c, res.FailArgumentCode, "密码错误")
 		return
 	}
-	res.OkWithMessage(c, "登录成功")
+	claim := jwts.Claims{
+		UserID:   userInfo.Id,
+		Username: userInfo.NickName,
+		Role:     enum.RoleType(userInfo.Role),
+	}
+	token, err := jwts.GetToken(claim)
+	if err != nil {
+		res.FailWithServiceMsg(c, err)
+		return
+	}
+	res.OkWithData(c, token)
 
 }

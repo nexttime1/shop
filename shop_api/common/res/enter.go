@@ -22,7 +22,7 @@ type Code int
 
 const (
 	SuccessCode      Code = 0    //成功
-	FailValidCode    Code = 1001 //合法性校验失败
+	FailLoginCode    Code = 1001 //登录错误
 	FailServiceCode  Code = 1002 //服务异常
 	FailArgumentCode Code = 1003
 	NotFoundCode     Code = 1004
