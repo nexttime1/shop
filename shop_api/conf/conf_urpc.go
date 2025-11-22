@@ -3,8 +3,8 @@ package conf
 import "fmt"
 
 type URPC struct {
-	IP   string `yaml:"ip"`
-	Port int    `yaml:"port"`
+	IP   string `mapstructure:"ip"`
+	Port int    `mapstructure:"port"`
 }
 
 func (s URPC) GetAddr() string {

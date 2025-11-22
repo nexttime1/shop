@@ -926,7 +926,7 @@ const _ = grpc.SupportPackageIsVersion6
 type UserClient interface {
 	GetUserList(ctx context.Context, in *PageInfo, opts ...grpc.CallOption) (*UserListResponse, error)
 	GetUserInfo(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)
-	GetUserMobile(ctx context.Context, in *MobileRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)
+	GetUserMobile(ctx context.Context, in *MobileRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)  // get User Info By Module
 	CreateUser(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*UserInfoResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*Response, error)
 	CheckPassword(ctx context.Context, in *CheckPasswordReq, opts ...grpc.CallOption) (*CheckPasswordResponse, error)

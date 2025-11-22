@@ -3,10 +3,10 @@ package conf
 import "fmt"
 
 type System struct {
-	IP      string `yaml:"ip"`
-	Port    int    `yaml:"port"`
-	GinMode string `yaml:"gin_mode"`
-	Env     string `yaml:"env"`
+	IP      string `mapstructure:"ip"`
+	Port    int    `mapstructure:"port"`
+	GinMode string `mapstructure:"gin_mode"`
+	Env     string `mapstructure:"env"`
 }
 
 func (s System) GetAddr() string {

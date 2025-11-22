@@ -2,24 +2,32 @@ package core
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v3"
-	"os"
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
 	"shop_api/conf"
 	"shop_api/flags"
 )
 
 func ReadConf() *conf.Config {
-	file, err := os.ReadFile(flags.FileOption.File)
+	v := viper.New()
+	v.SetConfigFile(flags.FileOption.File)
+	err := v.ReadInConfig()
 	if err != nil {
 		panic(err)
 	}
 	var c = new(conf.Config)
-	err = yaml.Unmarshal(file, c)
+	err = v.Unmarshal(&c)
+
 	if err != nil {
-		panic(fmt.Sprintf("yaml配置文件格式错误 ,%s", err))
+		panic(fmt.Sprintf("配置文件格式错误 ,%s", err))
 	}
 
 	fmt.Printf("读取配置文件 %s 成功\n", flags.FileOption.File)
+	v.WatchConfig()
+	v.OnConfigChange(func(e fsnotify.Event) {
+		zap.S().Infof("配置文件发生变化: %s", e.Name)
+	})
 
 	return c
 }

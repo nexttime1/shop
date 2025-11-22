@@ -83,8 +83,13 @@ func Fail(c *gin.Context, code Code, data interface{}, msg string) {
 	Response(c, code, data, msg)
 }
 
-func FailWithMessage(c *gin.Context, err error) { //错误填在err里面
+func FailWithServiceMsg(c *gin.Context, err error) { //错误填在err里面
 	code, msg := RPCErrorToHttp(err)
+	global.LevelFlag = true
+	Response(c, code, empty, msg)
+}
+
+func FailWithMsg(c *gin.Context, code Code, msg string) {
 	global.LevelFlag = true
 	Response(c, code, empty, msg)
 }
@@ -94,6 +99,6 @@ func FailWithData(c *gin.Context, data interface{}) {
 	Response(c, FailServiceCode, data, "失败")
 }
 func FailWithErr(c *gin.Context, code Code, err error) {
-	data, msg := validate.ValidateErr(err)
-	Fail(c, code, data, msg)
+	data, _ := validate.ValidateErr(err)
+	Fail(c, code, data, "失败")
 }
