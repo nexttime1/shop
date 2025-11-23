@@ -28,6 +28,3 @@ redis:
   password: ""
   db: 0
 
-code:
-  id: xxx
-  secret: xxx
