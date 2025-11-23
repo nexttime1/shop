@@ -29,5 +29,5 @@ redis:
   db: 0
 
 ali:
-  accessKey_id: xxx
-  accessKey_secret: xxx
+  id: xxx
+  secret: xxx
