@@ -12,8 +12,8 @@ import (
 
 // 全局变量：直接定义阿里云 Access Key
 var (
-	accessKeyID     = "LTAI5t8p6D7DSBazeKJq1inF"
-	accessKeySecret = "oe1WX1CN7zxM6F7BvmPNpaTsHoxlY2"
+	accessKeyID     = "xxx"
+	accessKeySecret = "xxx"
 )
 
 func CreateClient() (_result *dypnsapi20170525.Client, _err error) {
