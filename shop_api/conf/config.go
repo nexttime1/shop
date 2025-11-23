@@ -5,4 +5,5 @@ type Config struct {
 	UserRPC URPC   `mapstructure:"user_rpc"`
 	Jwt     Jwt    `mapstructure:"jwt"`
 	Redis   Redis  `mapstructure:"redis"`
+	ALI     ALI    `mapstructure:"ali"`
 }

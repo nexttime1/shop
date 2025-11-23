@@ -68,7 +68,7 @@ func (UserSever) GetUserInfo(ctx context.Context, id *proto.IdRequest) (*proto.U
 
 func (UserSever) GetUserMobile(ctx context.Context, mobile *proto.MobileRequest) (*proto.UserInfoResponse, error) {
 	var user models.UserModel
-	result := global.DB.Where("mobile = ?", mobile).First(&user)
+	result := global.DB.Where("mobile = ?", mobile.Mobile).First(&user)
 	if result.RowsAffected == 0 {
 		return nil, status.Error(codes.NotFound, "用户不存在")
 	}
@@ -123,5 +123,17 @@ func (UserSever) UpdateUser(ctx context.Context, req *proto.UpdateUserReq) (*pro
 
 }
 func (UserSever) CheckPassword(ctx context.Context, check *proto.CheckPasswordReq) (*proto.CheckPasswordResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "wait")
+
+	var response proto.CheckPasswordResponse
+	if check.Password == check.EncryptedPassword {
+		response = proto.CheckPasswordResponse{
+			IsValid: true,
+		}
+	} else {
+		response = proto.CheckPasswordResponse{
+			IsValid: false,
+		}
+	}
+
+	return &response, nil
 }

@@ -5,29 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/shop_api/api/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/api/user_api.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/common/res/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/conf/conf_system.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/conf/config.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/core/init_log.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/core/init_yaml.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/flags/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/flags/flag_db.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/global/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/proto/user.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/router/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/router/user_router.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/settings.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/utils/validate/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/conf/conf_ali.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/utils/aliyun/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/z_test/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/z_test/go.mod" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/z_test/main/go.mod" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/z_test/main/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/conf/config.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop_api/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop_api/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/conf/conf_system.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/conf/conf_system.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/conf/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/core/init_rpc.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/core/init_rpc.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/settings.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/z_test/zap_test/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/z_test/zap_test/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop_service/handler/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/handler/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/settings.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +47,10 @@
     &quot;accountId&quot;: &quot;b17aa24f-d426-4ec9-b395-c57266688a86&quot;
   }
 }</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -68,7 +62,12 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "DefaultGoTemplateProperty": "Go File",
+    "Go 构建.go build enter.go.executor": "Run",
+    "Go 构建.go build main.go (1).executor": "Run",
+    "Go 构建.go build main.go.executor": "Run",
+    "Go 构建.go build shop_api/z_test/phone_register.executor": "Run",
     "Go 构建.go build shop_api/z_test/zap_test.executor": "Run",
+    "Go 构建.go build true11.go.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -78,35 +77,76 @@
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/shop_api/proto",
+    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/shop_api/z_test",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm"
+    "nodejs_package_manager_path": "npm",
+    "run.configurations.included.in.services": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\z_test" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\conf" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\middleware" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\utils" />
       <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\proto" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\core" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\z_test\aliyun" />
       <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\z_test\zap_test" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\z_test\main" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\core" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\conf" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration name="go build shop_api/z_test/zap_test" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="GoApplicationRunConfiguration" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Go 构建.go build main.go (1)">
+    <configuration name="go build main.go (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="shop" />
-      <working_directory value="$PROJECT_DIR$/shop_api" />
-      <kind value="PACKAGE" />
-      <package value="shop_api/z_test/zap_test" />
+      <working_directory value="$PROJECT_DIR$/shop_api/z_test" />
+      <kind value="FILE" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$/shop_api/z_test/zap_test/main.go" />
       <method v="2" />
     </configuration>
+    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="shop" />
+      <working_directory value="$PROJECT_DIR$/shop_api/z_test" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/shop_api/z_test/main/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build true11.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="shop" />
+      <working_directory value="$PROJECT_DIR$/shop_api/z_test" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/shop_api/z_test/zap_test/true11.go" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Go 构建.go build main.go (1)" />
+      <item itemvalue="Go 构建.go build true11.go" />
+      <item itemvalue="Go 构建.go build main.go" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Go 构建.go build shop_api/z_test/zap_test" />
+        <item itemvalue="Go 构建.go build main.go (1)" />
+        <item itemvalue="Go 构建.go build true11.go" />
+        <item itemvalue="Go 构建.go build main.go" />
       </list>
     </recent_temporary>
   </component>

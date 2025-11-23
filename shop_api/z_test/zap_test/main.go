@@ -1,4 +1,3 @@
-// This file is auto-generated, don't edit it. Thanks.
 package main
 
 import (
@@ -6,47 +5,31 @@ import (
 	"fmt"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	dypnsapi20170525 "github.com/alibabacloud-go/dypnsapi-20170525/v3/client"
-	console "github.com/alibabacloud-go/tea-console/client"
 	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
-	credential "github.com/aliyun/credentials-go/credentials"
 	"strings"
 )
 
-// 全局变量：直接定义阿里云 Access Key（替换为你的真实密钥）
+// 全局变量：直接定义阿里云 Access Key
 var (
-	accessKeyID     = "LTAI5t8p6D7DSBazeKJq1inF"       // 这里填你的 ALIBABA_CLOUD_ACCESS_KEY_ID
-	accessKeySecret = "oe1WX1CN7zxM6F7BvmPNpaTsHoxlY2" // 这里填你的 ALIBABA_CLOUD_ACCESS_KEY_SECRET
+	accessKeyID     = "LTAI5t8p6D7DSBazeKJq1inF"
+	accessKeySecret = "oe1WX1CN7zxM6F7BvmPNpaTsHoxlY2"
 )
 
-// Description:
-//
-// 使用凭据初始化账号Client
-//
-// @return Client
-//
-// @throws Exception
 func CreateClient() (_result *dypnsapi20170525.Client, _err error) {
-	// 使用 NewCredential 并传入配置对象来创建凭证
-	cred, _err := credential.NewCredential(&credential.Config{
-		Type:            tea.String("access_key"),
-		AccessKeyId:     tea.String(accessKeyID),
-		AccessKeySecret: tea.String(accessKeySecret),
-	})
-	if _err != nil {
-		return _result, _err
+	// ✅ 关键：直接设置 AccessKeyId 和 AccessKeySecret
+	config := &openapi.Config{
+		AccessKeyId:     tea.String(accessKeyID),     // 直接传字符串
+		AccessKeySecret: tea.String(accessKeySecret), // 直接传字符串
+		Endpoint:        tea.String("dypnsapi.aliyuncs.com"),
 	}
 
-	config := &openapi.Config{
-		Credential: cred, // 使用上面创建的凭证
-	}
-	// Endpoint 请参考 https://api.aliyun.com/product/Dypnsapi
-	config.Endpoint = tea.String("dypnsapi.aliyuncs.com")
+	// 不需要 Credential 字段！
 	_result, _err = dypnsapi20170525.NewClient(config)
 	return _result, _err
 }
 
-func _main(args []*string) (_err error) {
+func _main() (_err error) {
 	client, _err := CreateClient()
 	if _err != nil {
 		return _err
@@ -59,6 +42,7 @@ func _main(args []*string) (_err error) {
 		TemplateParam: tea.String("{\"code\":\"##code##\",\"min\":\"5\"}"),
 	}
 	runtime := &util.RuntimeOptions{}
+
 	tryErr := func() (_e error) {
 		defer func() {
 			if r := tea.Recover(recover()); r != nil {
@@ -69,9 +53,7 @@ func _main(args []*string) (_err error) {
 		if _err != nil {
 			return _err
 		}
-
-		console.Log(util.ToJSONString(resp))
-
+		fmt.Printf("短信发送成功，响应结果：%s\n", util.ToJSONString(resp))
 		return nil
 	}()
 
@@ -82,16 +64,13 @@ func _main(args []*string) (_err error) {
 		} else {
 			error.Message = tea.String(tryErr.Error())
 		}
-		// 此处仅做打印展示，请谨慎对待异常处理，在工程项目中切勿直接忽略异常。
-		// 错误 message
-		fmt.Println(tea.StringValue(error.Message))
-		// 诊断地址
+		fmt.Println("短信发送失败，错误信息：", tea.StringValue(error.Message))
 		var data interface{}
 		d := json.NewDecoder(strings.NewReader(tea.StringValue(error.Data)))
 		d.Decode(&data)
 		if m, ok := data.(map[string]interface{}); ok {
 			recommend, _ := m["Recommend"]
-			fmt.Println(recommend)
+			fmt.Println("阿里云建议：", recommend)
 		}
 		_, _err = util.AssertAsString(error.Message)
 		if _err != nil {
@@ -102,7 +81,7 @@ func _main(args []*string) (_err error) {
 }
 
 func main() {
-	err := _main(tea.StringSlice([]string{})) // 去掉 os.Args 依赖
+	err := _main()
 	if err != nil {
 		panic(err)
 	}
