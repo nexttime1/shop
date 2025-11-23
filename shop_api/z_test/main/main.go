@@ -38,7 +38,7 @@ func _main() (_err error) {
 	sendSmsVerifyCodeRequest := &dypnsapi20170525.SendSmsVerifyCodeRequest{
 		SignName:      tea.String("速通互联验证码"),
 		TemplateCode:  tea.String("100001"),
-		PhoneNumber:   tea.String("18183424103"),
+		PhoneNumber:   tea.String("xxx"),
 		TemplateParam: tea.String("{\"code\":\"##code##\",\"min\":\"5\"}"),
 	}
 	runtime := &util.RuntimeOptions{}
