@@ -14,8 +14,8 @@ import (
 func CreateClient() (_result *dypnsapi20170525.Client, _err error) {
 	// 设置 AccessKeyId 和 AccessKeySecret
 	config := &openapi.Config{
-		AccessKeyId:     tea.String(global.Config.ALI.AccessKeyID),     // AccessKeyID
-		AccessKeySecret: tea.String(global.Config.ALI.AccessKeySecret), // AccessKeySecret
+		AccessKeyId:     tea.String(global.Config.Code.ID),     // AccessKeyID
+		AccessKeySecret: tea.String(global.Config.Code.Secret), // AccessKeySecret
 		Endpoint:        tea.String("dypnsapi.aliyuncs.com"),
 	}
 

@@ -1,6 +1,6 @@
 package conf
 
-type ALI struct {
-	AccessKeyID     string `mapstructure:"accessKey_id"`
-	AccessKeySecret string `mapstructure:"accessKey_secret"`
+type Code struct {
+	ID     string `mapstructure:"id"`
+	Secret string `mapstructure:"secret"`
 }

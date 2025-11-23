@@ -28,6 +28,6 @@ redis:
   password: ""
   db: 0
 
-ali:
+code:
   id: xxx
   secret: xxx

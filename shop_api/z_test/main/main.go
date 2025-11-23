@@ -12,15 +12,15 @@ import (
 
 // 全局变量：直接定义阿里云 Access Key
 var (
-	accessKeyID     = "xxx"
-	accessKeySecret = "xxx"
+	ID     = "xxx"
+	Secret = "xxx"
 )
 
 func CreateClient() (_result *dypnsapi20170525.Client, _err error) {
 	// ✅ 关键：直接设置 AccessKeyId 和 AccessKeySecret
 	config := &openapi.Config{
-		AccessKeyId:     tea.String(accessKeyID),     // 直接传字符串
-		AccessKeySecret: tea.String(accessKeySecret), // 直接传字符串
+		AccessKeyId:     tea.String(ID),     // 直接传字符串
+		AccessKeySecret: tea.String(Secret), // 直接传字符串
 		Endpoint:        tea.String("dypnsapi.aliyuncs.com"),
 	}
 
