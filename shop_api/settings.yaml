@@ -29,5 +29,5 @@ redis:
   db: 0
 
 ali:
-  accessKey_id: LTAI5t8p6D7DSBazeKJq1inF
-  accessKey_secret: oe1WX1CN7zxM6F7BvmPNpaTsHoxlY2
+  accessKey_id: LTAI5t8p6D7DSBazeKJq1inFxxx
+  accessKey_secret: oe1WX1CN7zxM6F7BvmPNpaTsHoxlY2xxx
