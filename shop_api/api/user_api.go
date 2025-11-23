@@ -34,11 +34,18 @@ func (UserApi) UserListView(c *gin.Context) {
 }
 
 func (UserApi) UserLoginView(c *gin.Context) {
+
 	var userLoginRequest user_service.UserLoginRequest
 	err := c.ShouldBindJSON(&userLoginRequest)
 	if err != nil {
 		zap.S().Error(err)
 		res.FailWithErr(c, res.FailArgumentCode, err)
+		return
+	}
+	//验证码
+	verifyResult := Store.Verify(userLoginRequest.CaptchaId, userLoginRequest.Answer, true)
+	if !verifyResult {
+		res.FailWithMsg(c, res.FailArgumentCode, "验证码错误")
 		return
 	}
 

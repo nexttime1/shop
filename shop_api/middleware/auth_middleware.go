@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"errors"
 	"github.com/gin-gonic/gin"
 	"shop_api/common/enum"
 	"shop_api/common/res"
@@ -12,7 +11,7 @@ import (
 func AuthMiddleware(c *gin.Context) {
 	claims, err := jwts.ParseTokenByGin(c)
 	if err != nil {
-		res.FailWithErr(c, res.FailLoginCode, err)
+		res.FailWithMsg(c, res.FailLoginCode, err.Error())
 		c.Abort()
 		return
 	}
@@ -31,7 +30,7 @@ func AuthMiddleware(c *gin.Context) {
 func AdminMiddleware(c *gin.Context) {
 	claims, err := jwts.ParseTokenByGin(c)
 	if err != nil {
-		res.FailWithErr(c, res.FailLoginCode, err)
+		res.FailWithMsg(c, res.FailLoginCode, err.Error())
 		c.Abort()
 		return
 	}
@@ -44,7 +43,7 @@ func AdminMiddleware(c *gin.Context) {
 	}
 
 	if claims.Role != enum.AdminRole {
-		res.FailWithErr(c, res.FailLoginCode, errors.New("权限错误"))
+		res.FailWithMsg(c, res.FailLoginCode, "权限错误")
 		c.Abort()
 		return
 	}

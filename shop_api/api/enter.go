@@ -1,7 +1,8 @@
 package api
 
 type Api struct {
-	UserApi UserApi
+	UserApi    UserApi
+	CaptchaApi CaptchaApi
 }
 
 var App = Api{}
