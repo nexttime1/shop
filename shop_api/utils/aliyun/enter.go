@@ -2,16 +2,16 @@ package aliyun
 
 import (
 	"encoding/json"
-	"fmt"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	dypnsapi20170525 "github.com/alibabacloud-go/dypnsapi-20170525/v3/client"
 	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
+	"go.uber.org/zap"
 	"shop_api/global"
 	"strings"
 )
 
-func CreateClient() (_result *dypnsapi20170525.Client, _err error) {
+func createClient() (_result *dypnsapi20170525.Client, _err error) {
 	// 设置 AccessKeyId 和 AccessKeySecret
 	config := &openapi.Config{
 		AccessKeyId:     tea.String(global.Config.Code.ID),     // AccessKeyID
@@ -24,7 +24,7 @@ func CreateClient() (_result *dypnsapi20170525.Client, _err error) {
 }
 
 func SendCode(phone string) (_err error) {
-	client, _err := CreateClient()
+	client, _err := createClient()
 	if _err != nil {
 		return _err
 	}
@@ -43,11 +43,75 @@ func SendCode(phone string) (_err error) {
 				_e = r
 			}
 		}()
+
 		resp, _err := client.SendSmsVerifyCodeWithOptions(sendSmsVerifyCodeRequest, runtime)
 		if _err != nil {
 			return _err
 		}
-		fmt.Printf("短信发送成功，响应结果：%v\n", util.ToJSONString(resp))
+		zap.S().Infof("短信发送成功，响应结果：%#v\n", util.ToJSONString(resp))
+		return nil
+
+	}()
+
+	if tryErr != nil {
+		var error = &tea.SDKError{}
+		if _t, ok := tryErr.(*tea.SDKError); ok {
+			error = _t
+		} else {
+			error.Message = tea.String(tryErr.Error())
+		}
+		zap.S().Errorf("短信发送失败，错误信息：", tea.StringValue(error.Message))
+		var data interface{}
+		d := json.NewDecoder(strings.NewReader(tea.StringValue(error.Data)))
+		d.Decode(&data)
+		if m, ok := data.(map[string]interface{}); ok {
+			recommend, _ := m["Recommend"]
+			zap.S().Infof("阿里云建议： %#v", recommend)
+		}
+		_, _err = util.AssertAsString(error.Message)
+		if _err != nil {
+			return _err
+		}
+	}
+	return _err
+}
+
+// CheckSmsVerifyCode 验证验证码
+func CheckSmsVerifyCode(phoneNumber, verifyCode string) (success bool, _err error) {
+	client, _err := createClient()
+	if _err != nil {
+		return false, _err
+	}
+
+	checkSmsVerifyCodeRequest := &dypnsapi20170525.CheckSmsVerifyCodeRequest{
+		PhoneNumber: tea.String(phoneNumber),
+		VerifyCode:  tea.String(verifyCode),
+	}
+	runtime := &util.RuntimeOptions{}
+
+	tryErr := func() (_e error) {
+		defer func() {
+			if r := tea.Recover(recover()); r != nil {
+				_e = r
+			}
+		}()
+
+		resp, _err := client.CheckSmsVerifyCodeWithOptions(checkSmsVerifyCodeRequest, runtime)
+		if _err != nil {
+			return _err
+		}
+
+		// 检查验证结果
+		if resp.Body != nil {
+			// 根据阿里云文档，验证成功会返回 200 状态码和相应的数据
+			// 你可以根据实际返回结构来判断验证是否成功
+			zap.S().Infof("验证码验证响应：%v\n", util.ToJSONString(resp))
+
+			// 通常验证成功会返回 Model 数据
+			if resp.Body.Model != nil {
+				success = true
+			}
+		}
 		return nil
 	}()
 
@@ -58,18 +122,18 @@ func SendCode(phone string) (_err error) {
 		} else {
 			error.Message = tea.String(tryErr.Error())
 		}
-		fmt.Println("短信发送失败，错误信息：", tea.StringValue(error.Message))
+		zap.S().Errorf("验证码验证失败，错误信息：", tea.StringValue(error.Message))
 		var data interface{}
 		d := json.NewDecoder(strings.NewReader(tea.StringValue(error.Data)))
 		d.Decode(&data)
 		if m, ok := data.(map[string]interface{}); ok {
 			recommend, _ := m["Recommend"]
-			fmt.Println("阿里云建议：", recommend)
+			zap.S().Infof("阿里云建议：", recommend)
 		}
 		_, _err = util.AssertAsString(error.Message)
 		if _err != nil {
-			return _err
+			return false, _err
 		}
 	}
-	return _err
+	return success, _err
 }

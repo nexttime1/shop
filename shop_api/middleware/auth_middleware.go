@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"shop_api/common/enum"
 	"shop_api/common/res"
-	"shop_api/service/redis_jwt"
+	"shop_api/service/redis_service/redis_jwt"
 	"shop_api/utils/jwts"
 )
 

@@ -9,10 +9,9 @@ import (
 
 func main() {
 	flags.Parse()
+	core.InitZap()
 	global.Config = core.ReadConf()
 	global.Redis = core.InitRedis()
-	core.InitZap()
-
 	router.Router()
 
 }

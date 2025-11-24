@@ -5,6 +5,7 @@ import (
 	"github.com/mojocn/base64Captcha"
 	"go.uber.org/zap"
 	"shop_api/common/res"
+	"shop_api/utils/aliyun"
 )
 
 type CaptchaApi struct{}
@@ -12,6 +13,16 @@ type CaptchaApi struct{}
 type CaptchaResponse struct {
 	CaptchaId     string `json:"captcha_id"`
 	CaptchaBase64 string `json:"captcha_base64"`
+}
+
+type SendSmsRequest struct {
+	Mobile string `json:"mobile" binding:"required,mobile"`
+	Type   string `json:"type" binding:"required,oneof=1 2"`
+}
+
+type VerifySmsRequest struct {
+	Mobile string `json:"mobile" binding:"required,mobile"`
+	Code   string `json:"code" binding:"required"`
 }
 
 var Store = base64Captcha.DefaultMemStore
@@ -32,5 +43,40 @@ func (api CaptchaApi) CaptchaCreateView(c *gin.Context) {
 		CaptchaId:     captchaId,
 		CaptchaBase64: base64s,
 	})
+
+}
+
+func (api CaptchaApi) SendRegisterView(c *gin.Context) {
+	var cr SendSmsRequest
+	if err := c.ShouldBindJSON(&cr); err != nil {
+		zap.S().Error(err)
+		res.FailWithErr(c, res.FailArgumentCode, err)
+		return
+	}
+	err := aliyun.SendCode(cr.Mobile)
+	if err != nil {
+		zap.S().Error(err)
+		res.FailWithErr(c, res.FailServiceCode, err)
+		return
+	}
+	res.OkWithMessage(c, "发送成功")
+
+}
+
+func (api CaptchaApi) VerifyCaptchaView(c *gin.Context) {
+	var cr VerifySmsRequest
+	if err := c.ShouldBindJSON(&cr); err != nil {
+		res.FailWithErr(c, res.FailArgumentCode, err)
+		return
+	}
+	success, err := aliyun.CheckSmsVerifyCode(cr.Mobile, cr.Code)
+	if err != nil {
+		zap.S().Errorf("错误： %v", err)
+	}
+	if success {
+		res.OkWithMessage(c, "验证成功")
+	} else {
+		res.FailWithMsg(c, res.FailArgumentCode, "验证码错误")
+	}
 
 }

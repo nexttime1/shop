@@ -6,3 +6,9 @@ type UserLoginRequest struct {
 	CaptchaId string `json:"captcha_id" binding:"required"`
 	Answer    string `json:"answer" binding:"required"`
 }
+
+type UserRegisterRequest struct {
+	Mobile   string `json:"mobile" binding:"required,mobile" `
+	Password string `json:"password" binding:"required"`
+	Code     string `json:"code" binding:"required"`
+}
