@@ -5,9 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/shop_api/service/redis_service/redis_code/enter.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/api/captcha_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/api/captcha_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/api/user_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/api/user_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/core/init_redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/core/init_redis.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/middleware/auth_middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/middleware/auth_middleware.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/router/captcha_router.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/router/captcha_router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/router/user_router.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/router/user_router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/service/redis_jwt/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/service/redis_service/redis_jwt/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/service/user_service/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/service/user_service/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop_api/settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/settings.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_api/z_test/zap_test/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/utils/aliyun/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/utils/aliyun/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_service/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_service/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_service/handler/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/handler/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_service/models/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/models/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_service/models/user_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/models/user_model.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,11 +103,11 @@
       <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\proto" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_service\utils" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\service\redis_service" />
       <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\z_test\aliyun" />
       <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\z_test\zap_test" />
       <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\z_test\main" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\core" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\conf" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -129,8 +144,8 @@
     </configuration>
     <list>
       <item itemvalue="Go 构建.go build main.go (1)" />
-      <item itemvalue="Go 构建.go build true11.go" />
       <item itemvalue="Go 构建.go build main.go" />
+      <item itemvalue="Go 构建.go build true11.go" />
     </list>
     <recent_temporary>
       <list>

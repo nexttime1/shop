@@ -6,9 +6,9 @@ import (
 )
 
 type Model struct {
-	ID        int32     `gorm:"primarykey"`
-	CreatedAt time.Time `gorm:"column:add_time"`
-	UpdatedAt time.Time `gorm:"column:update_time"`
-	DeletedAt gorm.DeletedAt
-	idDeleted bool
+	ID        int32          `gorm:"primarykey" structs:"-"`
+	CreatedAt time.Time      `gorm:"column:add_time" structs:"-"`
+	UpdatedAt time.Time      `gorm:"column:update_time" structs:"-"`
+	DeletedAt gorm.DeletedAt `structs:"-"`
+	idDeleted bool           `structs:"-"`
 }

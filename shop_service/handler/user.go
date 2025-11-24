@@ -10,6 +10,7 @@ import (
 	"shop_service/global"
 	"shop_service/models"
 	"shop_service/proto"
+	"shop_service/utils/struct_to_map"
 	"time"
 )
 
@@ -104,13 +105,18 @@ func (UserSever) UpdateUser(ctx context.Context, req *proto.UpdateUserReq) (*pro
 	if count == 0 {
 		return nil, status.Error(codes.NotFound, "用户不存在")
 	}
-	BirthDay := time.Unix(int64(req.BirthDay), 0)
-	user.Birthday = &BirthDay
-	user.NickName = req.NickName
-	user.Gender = req.Gender
-	user.Role = int(req.Role)
 
-	err := global.DB.Save(user).Error
+	var userInfo models.UserModel
+	if req.BirthDay != 0 {
+		BirthDay := time.Unix(int64(req.BirthDay), 0)
+		userInfo.Birthday = &BirthDay
+	}
+	userInfo.NickName = req.NickName
+	userInfo.Gender = req.Gender
+	userInfo.Role = int(req.Role)
+	userInfo.Password = req.Password
+	mapInfo := struct_to_map.StructToMap(userInfo)
+	err := global.DB.Debug().Model(&user).Updates(&mapInfo).Error
 	if err != nil {
 		logrus.Errorf("update user error: %v", err)
 		return nil, status.Error(codes.Internal, "用户更新失败")
