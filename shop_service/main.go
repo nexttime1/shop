@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/sirupsen/logrus"
 	"shop_service/core"
 	"shop_service/flags"
@@ -15,6 +16,7 @@ func main() {
 	core.InitLogrus()
 	flags.Run()
 	err := core.InitRPC()
+
 	if err != nil {
 		logrus.Errorf("init rpc error: %v", err)
 		fmt.Println(err)
