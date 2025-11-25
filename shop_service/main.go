@@ -12,6 +12,7 @@ import (
 func main() {
 	flags.Parse() //解析 yaml文件
 	global.Config = core.ReadConf()
+	//fmt.Print(global.Config)
 	global.DB = core.InitDB()
 	core.InitLogrus()
 	flags.Run()

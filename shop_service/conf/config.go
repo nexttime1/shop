@@ -1,7 +1,9 @@
 package conf
 
 type Config struct {
-	UserRPC URPC `yaml:"user_rpc"`
-	DB      DB   `yaml:"db"`
-	Log     Log  `yaml:"log"`
+	UserRPC    URPC       `mapstructure:"user_rpc"`
+	DB         DB         `mapstructure:"db"`
+	Log        Log        `mapstructure:"log"`
+	ConsulInfo ConsulInfo `mapstructure:"consul_info"`
+	LocalInfo  LocalInfo  `mapstructure:"local_info"`
 }

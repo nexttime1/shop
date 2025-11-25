@@ -12,3 +12,12 @@ db:
   db: user-srv
   debug: false
   source: mysql
+
+consul_info:
+  port: 8500
+  addr: 192.168.163.50
+  name: user_service
+
+local_info:
+  port: 10051
+  addr: 192.168.163.1

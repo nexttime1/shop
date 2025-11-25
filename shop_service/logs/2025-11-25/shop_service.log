@@ -1,0 +1,2 @@
+[2025-11-25 19:31:38] [31m[error][0m main.go:21 main.main init rpc error: Put "http://:0/v1/agent/service/register": dial tcp :0: connectex: The requested address is not valid in its context.
+[2025-11-25 19:33:12] [31m[error][0m main.go:22 main.main init rpc error: Put "http://:0/v1/agent/service/register": dial tcp :0: connectex: The requested address is not valid in its context.

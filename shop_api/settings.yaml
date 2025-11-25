@@ -15,10 +15,6 @@ db:
   debug: false
   source: mysql
 
-user_rpc:
-  ip: 0.0.0.0
-  port: 10051
-
 jwt:
   expire: 3
   secret: skw
@@ -31,3 +27,8 @@ redis:
 code:
   id: LTAI5t8p6D7DSBazeKJq1inF
   secret: oe1WX1CN7zxM6F7BvmPNpaTsHoxlY2
+
+consul_info:
+  port: 8500
+  addr: 192.168.163.50
+  name: user_service

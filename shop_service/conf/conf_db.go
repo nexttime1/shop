@@ -3,13 +3,13 @@ package conf
 import "fmt"
 
 type DB struct {
-	User     string `yaml:"user"`
-	Password string `yaml:"password"`
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	DB       string `yaml:"db"`
-	Debug    bool   `yaml:"debug"`  //打印全部日志
-	Source   string `yaml:"source"` //数据库类型 pgsql mysql
+	User     string `mapstructure:"user"`
+	Password string `mapstructure:"password"`
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	DB       string `mapstructure:"db"`
+	Debug    bool   `mapstructure:"debug"`  //打印全部日志
+	Source   string `mapstructure:"source"` //数据库类型 pgsql mysql
 }
 
 func (d DB) DSN() string {
