@@ -1,34 +1,8 @@
-system:
-  ip: 0.0.0.0
-  port: 8080
-  env: dev
-  gin_mode: release
-log:
-  app: shop_service
-  dir: logs
-db:
-  user: root
-  password: root
-  host: 127.0.0.1
-  port: 3306
-  db: user-srv
-  debug: false
-  source: mysql
-
-jwt:
-  expire: 3
-  secret: skw
-  issuer: xiaosong
-redis:
-  addr: 127.0.0.1:6379
-  password: ""
-  db: 0
-
-code:
-  id: LTAI5t8p6D7DSBazeKJq1inF
-  secret: oe1WX1CN7zxM6F7BvmPNpaTsHoxlY2
-
-consul_info:
-  port: 8500
-  addr: 192.168.163.50
-  name: user_service
+nacos_info:
+  host: "192.168.163.50"
+  port: 8848
+  user: "nacos"
+  password: "nacos"
+  data_id: user_web_dev.yaml
+  group: dev
+  namespace: b5dc39e2-0639-4fbc-a591-d84a0903381a
