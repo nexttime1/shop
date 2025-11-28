@@ -34,4 +34,16 @@ func Router() {
 	if err != nil {
 		zap.L().Error("启动错误", zap.Error(err))
 	}
+
+	// 上线使用这个
+	//addr ,err := free_port.GetFreePort()
+	//if err != nil {
+	//	zap.L().Error(" Port 错误", zap.Error(err))
+	//	return
+	//}
+	//err := r.Run(fmt.Sprintf("127.0.0.1:%d", addr))
+	//if err != nil {
+	//	zap.L().Error("启动错误", zap.Error(err))
+	//}
+
 }
