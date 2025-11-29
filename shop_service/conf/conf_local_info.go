@@ -3,8 +3,8 @@ package conf
 import "fmt"
 
 type LocalInfo struct {
-	Port int    `mapstructure:"port"`
-	Addr string `mapstructure:"addr"`
+	Port int    `mapstructure:"port" yaml:"port"`
+	Addr string `mapstructure:"addr" yaml:"addr"`
 }
 
 func (l LocalInfo) GetAddr() string {

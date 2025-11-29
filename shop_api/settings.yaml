@@ -1,8 +1,9 @@
 nacos_info:
   host: "192.168.163.50"
   port: 8848
-  user: "nacos"
-  password: "nacos"
+  user: nacos
+  password: nacos
   data_id: user_web_dev.yaml
   group: dev
   namespace: b5dc39e2-0639-4fbc-a591-d84a0903381a
+  access_token: S1wVNXtCe2HraKU6GsAsYPq5Zaux9b0KLfZgMhZbRbk=
