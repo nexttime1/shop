@@ -1,146 +1,130 @@
 package handler
 
-//
-//import (
-//	"context"
-//	"errors"
-//	"github.com/sirupsen/logrus"
-//	"google.golang.org/grpc/codes"
-//	"google.golang.org/grpc/status"
-//	"goods_service/common"
-//	"goods_service/global"
-//	"goods_service/models"
-//	"goods_service/proto"
-//	"goods_service/utils/struct_to_map"
-//	"time"
-//)
-//
-//type UserSever struct {
-//}
-//
-//func UserResponseFunction(user models.UserModel) proto.UserInfoResponse {
-//	response := proto.UserInfoResponse{
-//		Id:       user.ID,
-//		Mobile:   user.Mobile,
-//		Password: user.Password,
-//		NickName: user.NickName,
-//		Gender:   user.Gender,
-//		Role:     int32(user.Role),
-//	}
-//	if user.Birthday != nil {
-//		response.BirthDay = uint64(user.Birthday.Unix())
-//	}
-//
-//	return response
-//}
-//
-//func (UserSever) GetUserList(c context.Context, pageInfo *proto.PageInfo) (*proto.UserListResponse, error) {
-//	list, count, err := common.ListQuery(models.UserModel{}, common.Options{
-//		PageInfo: common.PageInfo{
-//			Limit: pageInfo.Limit,
-//			Page:  pageInfo.Page,
-//		},
-//	})
-//	if err != nil {
-//		logrus.Errorf("get user list error: %v", err)
-//		return nil, errors.New("get user list error")
-//	}
-//	var userList []*proto.UserInfoResponse
-//	for _, user := range list {
-//		response := UserResponseFunction(user)
-//		userList = append(userList, &response)
-//	}
-//
-//	return &proto.UserListResponse{
-//		Total: int32(count),
-//		Data:  userList,
-//	}, nil
-//
-//}
-//
-//func (UserSever) GetUserInfo(ctx context.Context, id *proto.IdRequest) (*proto.UserInfoResponse, error) {
-//	var user models.UserModel
-//	count := global.DB.Where("id = ?", id.Id).First(&user).RowsAffected
-//	if count != 1 {
-//		return nil, status.Error(codes.NotFound, "用户不存在")
-//	}
-//	response := UserResponseFunction(user)
-//	return &response, nil
-//}
-//
-//func (UserSever) GetUserMobile(ctx context.Context, mobile *proto.MobileRequest) (*proto.UserInfoResponse, error) {
-//	var user models.UserModel
-//	result := global.DB.Where("mobile = ?", mobile.Mobile).First(&user)
-//	if result.RowsAffected == 0 {
-//		return nil, status.Error(codes.NotFound, "用户不存在")
-//	}
-//	if result.Error != nil {
-//		return nil, result.Error
-//	}
-//	response := UserResponseFunction(user)
-//	return &response, nil
-//
-//}
-//func (UserSever) CreateUser(ctx context.Context, req *proto.CreateUserReq) (*proto.UserInfoResponse, error) {
-//	var user models.UserModel
-//	count := global.DB.Where("mobile = ?", req.Mobile).First(&user).RowsAffected
-//	if count != 0 {
-//		return nil, status.Error(codes.AlreadyExists, "该手机号已经注册")
-//	}
-//	user.Mobile = req.Mobile
-//	user.Password = req.Password
-//	user.NickName = req.NickName
-//	err := global.DB.Create(&user).Error
-//	if err != nil {
-//		logrus.Errorf("create user error: %v", err)
-//		return nil, status.Error(codes.Internal, "创建用户失败")
-//	}
-//	response := UserResponseFunction(user)
-//	return &response, nil
-//
-//}
-//
-//func (UserSever) UpdateUser(ctx context.Context, req *proto.UpdateUserReq) (*proto.Response, error) {
-//	var user models.UserModel
-//	count := global.DB.Where("id = ?", req.Id).First(&user).RowsAffected
-//	if count == 0 {
-//		return nil, status.Error(codes.NotFound, "用户不存在")
-//	}
-//
-//	var userInfo models.UserModel
-//	if req.BirthDay != 0 {
-//		BirthDay := time.Unix(int64(req.BirthDay), 0)
-//		userInfo.Birthday = &BirthDay
-//	}
-//	userInfo.NickName = req.NickName
-//	userInfo.Gender = req.Gender
-//	userInfo.Role = int(req.Role)
-//	userInfo.Password = req.Password
-//	mapInfo := struct_to_map.StructToMap(userInfo)
-//	err := global.DB.Debug().Model(&user).Updates(&mapInfo).Error
-//	if err != nil {
-//		logrus.Errorf("update user error: %v", err)
-//		return nil, status.Error(codes.Internal, "用户更新失败")
-//	}
-//	response := proto.Response{
-//		Code: int32(codes.OK),
-//		Msg:  "更新成功",
-//	}
-//	return &response, nil
-//
-//}
-//func (UserSever) CheckPassword(ctx context.Context, check *proto.CheckPasswordReq) (*proto.CheckPasswordResponse, error) {
-//
-//	var response proto.CheckPasswordResponse
-//	if check.Password == check.EncryptedPassword {
-//		response = proto.CheckPasswordResponse{
-//			IsValid: true,
-//		}
-//	} else {
-//		response = proto.CheckPasswordResponse{
-//			IsValid: false,
-//		}
-//	}
-//
-//	return &response, nil
-//}
+import (
+	"context"
+	"github.com/golang/protobuf/ptypes/empty"
+	"goods_service/proto"
+)
+
+type GoodSever struct {
+}
+
+func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequest) (*proto.GoodsListResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) BatchGetGoods(ctx context.Context, info *proto.BatchGoodsIdInfo) (*proto.GoodsListResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo) (*proto.GoodsInfoResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) DeleteGoods(ctx context.Context, info *proto.DeleteGoodsInfo) (*empty.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) UpdateGoods(ctx context.Context, info *proto.CreateGoodsInfo) (*empty.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) GetGoodsDetail(ctx context.Context, request *proto.GoodInfoRequest) (*proto.GoodsInfoResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) GetAllCategorysList(ctx context.Context, empty *empty.Empty) (*proto.CategoryListResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) GetSubCategory(ctx context.Context, request *proto.CategoryListRequest) (*proto.SubCategoryListResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) CreateCategory(ctx context.Context, request *proto.CategoryInfoRequest) (*proto.CategoryInfoResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) DeleteCategory(ctx context.Context, request *proto.DeleteCategoryRequest) (*empty.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) UpdateCategory(ctx context.Context, request *proto.CategoryInfoRequest) (*empty.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) BrandList(ctx context.Context, empty *empty.Empty) (*proto.BrandListResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) CreateBrand(ctx context.Context, request *proto.BrandRequest) (*proto.BrandInfoResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) DeleteBrand(ctx context.Context, request *proto.BrandRequest) (*empty.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) UpdateBrand(ctx context.Context, request *proto.BrandRequest) (*empty.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) BannerList(ctx context.Context, empty *empty.Empty) (*proto.BannerListResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) CreateBanner(ctx context.Context, request *proto.BannerRequest) (*proto.BannerResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) DeleteBanner(ctx context.Context, request *proto.BannerRequest) (*empty.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) UpdateBanner(ctx context.Context, request *proto.BannerRequest) (*empty.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) CategoryBrandList(ctx context.Context, request *proto.CategoryBrandFilterRequest) (*proto.CategoryBrandListResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) GetCategoryBrandList(ctx context.Context, request *proto.CategoryInfoRequest) (*proto.BrandListResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) CreateCategoryBrand(ctx context.Context, request *proto.CategoryBrandRequest) (*proto.CategoryBrandResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) DeleteCategoryBrand(ctx context.Context, request *proto.CategoryBrandRequest) (*empty.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (g GoodSever) UpdateCategoryBrand(ctx context.Context, request *proto.CategoryBrandRequest) (*empty.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}

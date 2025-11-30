@@ -5,68 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/goods_service/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/common/list_query.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/conf/conf_consul.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/conf/conf_db.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/conf/conf_local_info.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/conf/conf_nacos.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/conf/config.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/core/init_db.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/core/init_rpc.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/core/init_yaml.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/core/init_zap.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/flags/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/flags/flag_db.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/global/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/handler/user.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/logs/2025-11-18/shop_service.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/logs/2025-11-19/shop_service.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/logs/2025-11-21/shop_service.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/logs/2025-11-22/shop_service.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/logs/2025-11-23/shop_service.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/logs/2025-11-24/shop_service.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/logs/2025-11-25/shop_service.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/logs/2025-11-30/shop_service.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/models/banner_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/models/brands_category_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/models/brands_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/models/category_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/models/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/models/enum/image_type.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/models/goods_image_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/models/goods_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/proto/user.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/proto/user.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/settings.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/test/logs/2025-11-19/shop_service.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/test/settings.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/test/user.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/utils/free_port/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/utils/nacos_get/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/utils/struct_to_map/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/utils/nacos_get/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_service/conf/conf_nacos.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_service/core/init_zap.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_service/utils/nacos_get/enter.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_api/core/init_redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/core/init_redis.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_api/core/init_yaml.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/core/init_yaml.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/conf/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/core/init_db.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/core/init_db.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/core/init_rpc.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/core/init_rpc.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/core/init_yaml.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/core/init_yaml.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/flags/flag_db.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/flags/flag_db.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/settings.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/test/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/test/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/conf/conf_consul.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/conf/conf_consul.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/conf/conf_db.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/conf/conf_db.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/core/init_db.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/core/init_db.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/core/init_rpc.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/core/init_rpc.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/handler/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/proto/user.pb.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/proto/user.proto" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/settings.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/conf/conf_consul.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/conf/conf_consul.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_service/conf/conf_consul.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/conf/conf_consul.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

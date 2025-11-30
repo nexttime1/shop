@@ -15,13 +15,12 @@ func main() {
 	//fmt.Println(global.Config)
 	global.DB = core.InitDB()
 
-	//core.InitLogrus()
 	flags.Run()
-	//err := core.InitRPC()
+	err := core.InitRPC()
 
-	//if err != nil {
-	//	return
-	//}
+	if err != nil {
+		return
+	}
 	fmt.Println("运行成功")
 
 }

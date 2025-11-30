@@ -24,11 +24,6 @@ func ReadConf() *conf.Config {
 		panic(fmt.Sprintf("配置文件格式错误 ,%s", err))
 	}
 
-	fmt.Printf("正在从Nacos获取配置...\n")
-	fmt.Printf("Nacos地址: %s:%d\n", c.NacosInfo.Host, c.NacosInfo.Port)
-	fmt.Printf("命名空间: %s\n", c.NacosInfo.Namespace)
-	fmt.Printf("DataId: %s, Group: %s\n", c.NacosInfo.DataId, c.NacosInfo.Group)
-
 	// 使用HTTP客户端直接调用Nacos API
 	configContent, err := nacos_get.GetConfigWithTokenAuth(c.NacosInfo)
 	if err != nil {
@@ -36,7 +31,7 @@ func ReadConf() *conf.Config {
 	}
 
 	fmt.Printf("成功获取配置，内容长度: %d\n", len(configContent))
-	fmt.Printf("配置内容预览:\n%s\n", configContent[:min(200, len(configContent))])
+	fmt.Printf("配置内容预览:\n%s\n", configContent[:min(100, len(configContent))])
 
 	// 解析配置
 	err = yaml.Unmarshal([]byte(configContent), c)
