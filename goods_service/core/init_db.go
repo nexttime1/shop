@@ -2,9 +2,9 @@ package core
 
 import (
 	"go.uber.org/zap"
+	"goods_service/global"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"shop_service/global"
 	"time"
 )
 

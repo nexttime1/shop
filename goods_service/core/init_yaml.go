@@ -5,10 +5,10 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+	"goods_service/conf"
+	"goods_service/flags"
+	"goods_service/utils/nacos_get"
 	"gopkg.in/yaml.v2"
-	"shop_service/conf"
-	"shop_service/flags"
-	"shop_service/utils/nacos_get"
 )
 
 func ReadConf() *conf.Config {

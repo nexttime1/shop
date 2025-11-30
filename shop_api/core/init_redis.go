@@ -16,6 +16,7 @@ func InitRedis() *redis.Client {
 	err := client.Ping().Err()
 	if err != nil {
 		zap.S().Errorf("redis 连接失败  %s", err.Error())
+		return nil
 	}
 	zap.L().Info("redis 连接成功")
 	return client

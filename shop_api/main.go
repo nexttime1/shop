@@ -11,6 +11,7 @@ func main() {
 	flags.Parse()
 	core.InitZap()
 	global.Config = core.ReadConf()
+	//fmt.Println(global.Config)
 	global.Redis = core.InitRedis()
 	router.Router()
 

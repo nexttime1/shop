@@ -1,0 +1,2 @@
+[2025-11-30 14:45:52] [31m[error][0m main.go:22 main.main init rpc error: Unexpected response code: 404 (Unknown service ID "6326c620-8c01-455e-9883-7634c2ec3393". Ensure that the service ID is passed, not the service name.)
+[2025-11-30 14:50:44] [31m[error][0m main.go:22 main.main init rpc error: Unexpected response code: 404 (Unknown service ID "9b5ec288-620b-40be-aecf-da2f1b16ba95". Ensure that the service ID is passed, not the service name.)

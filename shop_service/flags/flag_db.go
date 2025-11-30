@@ -1,7 +1,7 @@
 package flags
 
 import (
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 	"shop_service/global"
 	"shop_service/models"
 )
@@ -11,9 +11,9 @@ func FlagDB() {
 		&models.UserModel{},
 	)
 	if err != nil {
-		logrus.Errorf("\n数据库迁移失败  %s", err)
+		zap.S().Errorf("\n数据库迁移失败  %s", err)
 		return
 	}
-	logrus.Info("\n数据库迁移成功")
+	zap.S().Info("\n数据库迁移成功")
 
 }

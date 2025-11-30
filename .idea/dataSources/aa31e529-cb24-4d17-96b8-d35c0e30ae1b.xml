@@ -1024,7 +1024,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     <schema id="297" parent="1" name="user-srv">
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2025-11-22.11:18:20</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-11-30.06:47:32</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <user id="298" parent="1" name="mysql.infoschema">

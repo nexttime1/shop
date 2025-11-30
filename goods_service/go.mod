@@ -1,4 +1,4 @@
-module shop_service
+module goods_service
 
 go 1.25.3
 

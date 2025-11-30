@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"shop_service/core"
-	"shop_service/flags"
-	"shop_service/global"
+	"goods_service/core"
+	"goods_service/flags"
+	"goods_service/global"
 )
 
 func main() {
@@ -17,11 +17,11 @@ func main() {
 
 	//core.InitLogrus()
 	flags.Run()
-	err := core.InitRPC()
+	//err := core.InitRPC()
 
-	if err != nil {
-		return
-	}
+	//if err != nil {
+	//	return
+	//}
 	fmt.Println("运行成功")
 
 }

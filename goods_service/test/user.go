@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"goods_service/core"
+	"goods_service/flags"
+	"goods_service/global"
+	"goods_service/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"shop_service/core"
-	"shop_service/flags"
-	"shop_service/global"
-	"shop_service/proto"
 	"time"
 )
 
@@ -19,9 +19,8 @@ func Init() {
 	flags.Parse() //解析 yaml文件
 	global.Config = core.ReadConf()
 	global.DB = core.InitDB()
-	core.InitLogrus()
 	var err error
-	conn, err = grpc.NewClient(global.Config.UserRPC.GetAddr(), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.NewClient("", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		panic(err)
 	}

@@ -19,9 +19,18 @@ import (
 )
 
 func InitRPC() error {
+	// 动态获得 端口
+	port, err := free_port.GetFreePort()
+	if err != nil {
+		zap.L().Error("端口获得错误 ", zap.Error(err))
+		return err
+	}
+	zap.S().Infof("用户服务获得的端口号为: %d", port)
 	server := grpc.NewServer()
 	proto.RegisterUserServer(server, &handler.UserSever{})
-	lis, err := net.Listen("tcp", global.Config.UserRPC.GetAddr())
+	// 监听的端口 一定是动态获取的 要不健康检查 识别不到
+	listenAddr := fmt.Sprintf("%s:%d", global.Config.UserRPC.IP, port)
+	lis, err := net.Listen("tcp", listenAddr)
 	if err != nil {
 		return err
 	}
@@ -36,13 +45,7 @@ func InitRPC() error {
 
 	consulClient, err := api.NewClient(consulConfig)
 	//健康检查配置 用于放到 请求的json中  告诉他如何访问  用rpc 而不是 http 去检查健康
-	// 动态获得 端口
-	port, err := free_port.GetFreePort()
-	if err != nil {
-		zap.L().Error("端口获得错误 ", zap.Error(err))
-		return err
-	}
-	zap.S().Infof("用户服务获得的端口号为: %d", port)
+
 	check := &api.AgentServiceCheck{
 		GRPC:                           fmt.Sprintf("%s:%d", global.Config.LocalInfo.Addr, port), // gRPC 健康检查地址
 		GRPCUseTLS:                     false,                                                    // 是否使用 TLS
@@ -94,6 +97,6 @@ func InitRPC() error {
 		return err
 	}
 	zap.S().Info("服务注销成功")
-	
+
 	return nil
 }
