@@ -1,15 +1,10 @@
-system:
-  ip: 0.0.0.0
-  port: 8080
-  env: dev
-log:
-  app: shop_service
-  dir: logs
-db:
-  user: root
-  password: root
-  host: 127.0.0.1
-  port: 3306
-  db: user-srv
-  debug: false
-  source: mysql
+nacos_info:
+  host: "192.168.163.50"
+  port: 8848
+  user: nacos
+  password: nacos
+  data_id: goods_service_dev.yaml
+  group: dev
+  namespace: 04e78919-1fdc-4038-a29a-821bad0cb310
+  access_token: S1wVNXtCe2HraKU6GsAsYPq5Zaux9b0KLfZgMhZbRbk=
+

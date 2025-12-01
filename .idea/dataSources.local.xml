@@ -14,6 +14,7 @@
         <introspection-scope>
           <node kind="schema">
             <name qname="@" />
+            <name qname="good-srv" />
             <name qname="user-srv" />
           </node>
         </introspection-scope>

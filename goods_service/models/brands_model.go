@@ -1,7 +1,7 @@
 package models
 
 type Brands struct {
-	Model
-	Name string `gorm:"type:varchar(20);not null"`
-	Logo string `gorm:"type:varchar(200);default:'';not null"`
+	Model `structs:"-"`
+	Name  string `gorm:"type:varchar(20);not null" structs:"name"`
+	Logo  string `gorm:"type:varchar(200);default:'';not null"  structs:"logo"`
 }
