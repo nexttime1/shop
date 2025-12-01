@@ -66,17 +66,23 @@ message CategoryInfoResponse {
   bool isTab = 5;
 }
 
+message SubCategoryListResponse {
+    int32 id = 1;
+    string name = 2;
+    int32 parentCategory = 3;
+    int32 level = 4;
+    bool isTab = 5;
+  repeated SubCategoryListResponse subCategories = 6;
+
+}
+
+
 message CategoryListResponse {
   int32 total = 1;
   repeated CategoryInfoResponse data = 2;
   string JsonData = 3;
 }
 
-message SubCategoryListResponse {
-  int32 total = 1;
-  CategoryInfoResponse info = 2;
-  repeated CategoryInfoResponse subCategorys = 3;
-}
 
 
 

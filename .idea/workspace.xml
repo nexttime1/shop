@@ -5,25 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/goods_service/conf/conf_qiniu.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/handler/banner.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/handler/brands.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/handler/category.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/handler/goods.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/utils/qiniu/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/conf/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/handler/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/models/banner_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/models/banner_model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/handler/category.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/category.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/models/brands_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/models/brands_model.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/models/category_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/models/category_model.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/models/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/models/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/test/settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/test/settings.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/test/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/test/goods.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.proto" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/test/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/test/goods.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

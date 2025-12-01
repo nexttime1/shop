@@ -27,8 +27,56 @@ func (g GoodSever) GetAllCategorysList(ctx context.Context, empty *empty.Empty) 
 }
 
 func (g GoodSever) GetSubCategory(ctx context.Context, request *proto.CategoryListRequest) (*proto.SubCategoryListResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	var model models.CategoryModel
+	err := global.DB.Take(&model, request.Id).Error
+	if err != nil {
+		zap.S().Error(err)
+		return nil, status.Error(codes.NotFound, "分类不存在")
+	}
+	// 如果是一级目录 要显示 到3 级
+	preload := "SubCategory"
+	if model.Level == 1 {
+		preload = "SubCategory.SubCategory"
+	}
+	var categoryModel models.CategoryModel
+	global.DB.Debug().Where("id = ?", model.ID).Preload(preload).Find(&categoryModel)
+
+	response := proto.SubCategoryListResponse{
+		Id:             categoryModel.ID,
+		Name:           categoryModel.Name,
+		ParentCategory: categoryModel.ParentCategoryID,
+		IsTab:          categoryModel.IsTab,
+		Level:          categoryModel.Level,
+	}
+
+	var sub []*proto.SubCategoryListResponse
+	for _, c := range categoryModel.SubCategory {
+		info := &proto.SubCategoryListResponse{
+			Id:             c.ID,
+			Name:           c.Name,
+			ParentCategory: c.ParentCategoryID,
+			IsTab:          c.IsTab,
+			Level:          c.Level,
+		}
+		if c.SubCategory != nil {
+			var grandSub []*proto.SubCategoryListResponse
+			for _, grandson := range c.SubCategory {
+				grandInfo := &proto.SubCategoryListResponse{
+					Id:             grandson.ID,
+					Name:           grandson.Name,
+					ParentCategory: grandson.ParentCategoryID,
+					IsTab:          grandson.IsTab,
+					Level:          grandson.Level,
+				}
+				grandSub = append(grandSub, grandInfo)
+			}
+			info.SubCategories = grandSub
+		}
+		sub = append(sub, info)
+	}
+	response.SubCategories = sub
+
+	return &response, nil
 }
 
 func (g GoodSever) CreateCategory(ctx context.Context, request *proto.CategoryInfoRequest) (*proto.CategoryInfoResponse, error) {

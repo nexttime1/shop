@@ -20,7 +20,7 @@ func Init() {
 	global.Config = core.ReadConf()
 	global.DB = core.InitDB()
 	var err error
-	conn, err = grpc.NewClient("192.168.163.1:60120", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.NewClient("192.168.163.1:62150", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		panic(err)
 	}
@@ -47,6 +47,17 @@ func GetAllCategorys() {
 		return
 	}
 	fmt.Println(list.JsonData)
+}
+
+func GetSubCategoryList() {
+	category, err := client.GetSubCategory(context.Background(), &proto.CategoryListRequest{
+		Id: 2,
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(category)
 }
 
 //
@@ -85,5 +96,7 @@ func main() {
 	Init()
 	defer conn.Close()
 	//GoodList()
-	GetAllCategorys()
+	//GetAllCategorys()
+	GetSubCategoryList()
+
 }
