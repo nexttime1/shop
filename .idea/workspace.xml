@@ -7,10 +7,8 @@
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/handler/category.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/category.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/models/brands_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/models/brands_model.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.proto" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/test/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/test/goods.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +69,7 @@
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/goods_service/utils",
+    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",

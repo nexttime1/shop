@@ -43,7 +43,7 @@ message CategoryListRequest {
 message CategoryInfoRequest {
   int32 id = 1;
   string name = 2;
-  int32 parentCategory = 3;
+  int32 parentCategoryID = 3;
   int32 level = 4;
   bool isTab = 5;
 }
@@ -61,7 +61,7 @@ message QueryCategoryRequest {
 message CategoryInfoResponse {
   int32 id = 1;
   string name = 2;
-  int32 parentCategory = 3;
+  int32 parentCategoryID = 3;
   int32 level = 4;
   bool isTab = 5;
 }
