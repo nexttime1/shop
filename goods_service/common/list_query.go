@@ -7,8 +7,8 @@ import (
 )
 
 type PageInfo struct {
-	Limit uint32 `form:"limit"`
-	Page  uint32 `form:"page"`
+	Limit int32  `form:"limit"`
+	Page  int32  `form:"page"`
 	Key   string `form:"key"`
 	Sort  string `form:"sort"` //前端可以覆盖
 }
@@ -22,25 +22,25 @@ type Options struct {
 	DefaultOrder string //内层   order
 }
 
-func (p PageInfo) GetLimit() uint32 {
+func (p PageInfo) GetLimit() int32 {
 	if p.Limit <= 0 || p.Limit >= 50 {
 		p.Limit = 10
 	}
 	return p.Limit
 }
-func (p PageInfo) GetPage() uint32 {
+func (p PageInfo) GetPage() int32 {
 	if p.Page <= 0 || p.Page >= 20 {
 		return 1
 	}
 	return p.Page
 }
-func (p PageInfo) GetOffset() uint32 {
+func (p PageInfo) GetOffset() int32 {
 	offset := (p.GetPage() - 1) * p.GetLimit()
 	return offset
 
 }
 
-func ListQuery[T any](model T, options Options) (list []T, count int, err error) {
+func ListQuery[T any](model T, options Options) (list []T, count int32, err error) {
 	//基础查询  GORM 会提取model中非零值字段作为等值查询条件  零值如0、""、nil会被忽略
 	query := global.DB.Model(model).Where(model)
 
@@ -81,7 +81,7 @@ func ListQuery[T any](model T, options Options) (list []T, count int, err error)
 
 	var _count int64
 	query.Count(&_count)
-	count = int(_count)
+	count = int32(_count)
 
 	// 分页
 
