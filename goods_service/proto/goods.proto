@@ -210,11 +210,11 @@ message GoodsFilterRequest  {
   bool  IsHot = 3;
   bool  IsNew = 4;
   bool  IsTab = 5;
-  int32 TopCategory = 6;
+  int32 TopCategoryID = 6;
   int32 Pages = 7;
   int32 PagePerNums = 8;
   string KeyWords = 9;
-  int32 brand = 10;
+  int32 brandID = 10;
 }
 
 

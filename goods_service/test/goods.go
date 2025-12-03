@@ -20,14 +20,14 @@ func Init() {
 	global.Config = core.ReadConf()
 	global.DB = core.InitDB()
 	var err error
-	conn, err = grpc.NewClient("192.168.163.1:62150", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.NewClient("192.168.163.1:64542", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		panic(err)
 	}
 	client = proto.NewGoodsClient(conn)
 }
 
-func GoodList() {
+func BrandList() {
 	fmt.Println("GoodList")
 	var e *empty.Empty
 	list, err := client.BrandList(context.Background(), e)
@@ -58,6 +58,18 @@ func GetSubCategoryList() {
 		return
 	}
 	fmt.Println(category)
+}
+
+func GetGoodList() {
+	response, err := client.GoodsList(context.Background(), &proto.GoodsFilterRequest{
+		TopCategoryID: 2,
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(response.Total)
+	fmt.Println(response.Data)
 }
 
 //
@@ -97,6 +109,7 @@ func main() {
 	defer conn.Close()
 	//GoodList()
 	//GetAllCategorys()
-	GetSubCategoryList()
+	//GetSubCategoryList()
+	GetGoodList()
 
 }

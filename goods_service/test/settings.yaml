@@ -5,6 +5,6 @@ nacos_info:
   password: nacos
   data_id: goods_service_dev.yaml
   group: dev
-  namespace: 04e78919-1fdc-4038-a29a-821bad0cb310
+  namespace: S1wVNXtCe2HraKU6GsAsYPq5Zaux9b0KLfZgMhZbRbk
   access_token: S1wVNXtCe2HraKU6GsAsYPq5Zaux9b0KLfZgMhZbRbk=
 
