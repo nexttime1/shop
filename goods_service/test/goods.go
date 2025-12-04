@@ -20,7 +20,7 @@ func Init() {
 	global.Config = core.ReadConf()
 	global.DB = core.InitDB()
 	var err error
-	conn, err = grpc.NewClient("192.168.163.1:64542", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.NewClient("192.168.163.1:61006", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		panic(err)
 	}
@@ -62,7 +62,7 @@ func GetSubCategoryList() {
 
 func GetGoodList() {
 	response, err := client.GoodsList(context.Background(), &proto.GoodsFilterRequest{
-		TopCategoryID: 2,
+		TopCategoryID: 14,
 	})
 	if err != nil {
 		fmt.Println(err)

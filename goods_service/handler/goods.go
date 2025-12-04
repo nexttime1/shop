@@ -101,16 +101,17 @@ func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequ
 			// 一级分类 也就是 找出所有二级分类  	再找到三级分类
 			subQuery = fmt.Sprintf("select id from category_models where parent_category_id in (select id from category_models where parent_category_id = %d)", request.TopCategoryID)
 		} else if model.Level == 2 {
-			subQuery = fmt.Sprintf("select id from category_models where parent_category_id = %d)", request.TopCategoryID)
+			subQuery = fmt.Sprintf("select id from category_models where parent_category_id = %d", request.TopCategoryID)
 		} else {
 			subQuery = fmt.Sprintf("%d", request.TopCategoryID)
 		}
-		query = query.Where("category_id in ?", subQuery)
+		search := fmt.Sprintf("category_id in (%s)", subQuery)
+		query = query.Where(search)
 	}
 	list, count, err := common.ListQuery(models.GoodModel{}, common.Options{
 		PageInfo: pageInfo,
 		Likes:    []string{"name"},
-		Preload:  []string{"CategoryModel", "Brands", "GoodsImageModel"},
+		Preload:  []string{"Category", "Brands", "Images"},
 		Where:    query,
 		Debug:    true,
 	})
@@ -130,13 +131,40 @@ func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequ
 }
 
 func (g GoodSever) BatchGetGoods(ctx context.Context, info *proto.BatchGoodsIdInfo) (*proto.GoodsListResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	var GoodsModels []models.GoodModel
+	global.DB.Where("id in ?", info.Id).Preload("Category").Preload("Brands").Preload("Images").Find(&GoodsModels)
+	if len(GoodsModels) != len(info.Id) {
+		return nil, status.Errorf(codes.NotFound, "部分商品不存在")
+	}
+	var response []*proto.GoodsInfoResponse
+	for _, good := range GoodsModels {
+		goodInfo := GoodInfoFunction(good)
+		response = append(response, &goodInfo)
+	}
+
+	return &proto.GoodsListResponse{
+		Total: int32(len(GoodsModels)),
+		Data:  response,
+	}, nil
+
 }
 
 func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo) (*proto.GoodsInfoResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	var category models.CategoryModel
+	err := global.DB.Where("id = ?", info.CategoryId).Take(&category).Error
+	if err != nil {
+		zap.S().Error(err)
+		return nil, status.Errorf(codes.NotFound, "分类不存在")
+	}
+	var brand models.Brands
+	err = global.DB.Where("id = ?", info.Brand).Take(&brand).Error
+	if err != nil {
+		zap.S().Error(err)
+		return nil, status.Errorf(codes.NotFound, "品牌不存在")
+	}
+
+	// web 已经上传了 七牛云 这里就是 url
+
 }
 
 func (g GoodSever) DeleteGoods(ctx context.Context, info *proto.DeleteGoodsInfo) (*empty.Empty, error) {
@@ -150,6 +178,14 @@ func (g GoodSever) UpdateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 }
 
 func (g GoodSever) GetGoodsDetail(ctx context.Context, request *proto.GoodInfoRequest) (*proto.GoodsInfoResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	var GoodsModel models.GoodModel
+	err := global.DB.Where("id = ?", request.Id).Preload("Category").Preload("Brands").Preload("Images").Take(&GoodsModel).Error
+	if err != nil {
+		zap.S().Error(err)
+		return nil, status.Errorf(codes.NotFound, "商品不存在")
+	}
+
+	goodInfo := GoodInfoFunction(GoodsModel)
+	return &goodInfo, nil
+
 }

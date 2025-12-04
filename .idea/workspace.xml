@@ -7,11 +7,7 @@
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/handler/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/goods.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.proto" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/settings.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/test/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/test/goods.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/test/settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/test/settings.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,5 +175,16 @@
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/goods_service/handler/goods.go</url>
+          <line>99</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
