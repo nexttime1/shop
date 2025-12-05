@@ -47,6 +47,7 @@ func InitRPC() error {
 	//健康检查配置 用于放到 请求的json中  告诉他如何访问  用rpc 而不是 http 去检查健康
 
 	check := &api.AgentServiceCheck{
+		// 应用 	grpc_health_v1.RegisterHealthServer(server, health.NewServer())  到时候Consul 去检查
 		GRPC:                           fmt.Sprintf("%s:%d", global.Config.LocalInfo.Addr, port), // gRPC 健康检查地址
 		GRPCUseTLS:                     false,                                                    // 是否使用 TLS
 		Interval:                       "10s",                                                    // 检查间隔

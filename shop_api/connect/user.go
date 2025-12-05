@@ -21,7 +21,7 @@ func UserConnectService(c *gin.Context) (proto.UserClient, *grpc.ClientConn, err
 	connectAddr := "consul://" +
 		global.Config.ConsulInfo.GetAddr() +
 		"/user_service?wait=14s" +
-		"&tag=manual"
+		"&tag=xtm"
 
 	zap.S().Infof("try connecting to %s ...", connectAddr)
 	conn, err := grpc.NewClient(
