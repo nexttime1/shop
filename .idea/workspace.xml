@@ -7,7 +7,6 @@
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/handler/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/goods.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/test/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/test/goods.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,7 +180,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/goods_service/handler/goods.go</url>
-          <line>99</line>
+          <line>100</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

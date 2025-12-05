@@ -10,6 +10,7 @@ import (
 	"goods_service/models"
 	"goods_service/models/enum"
 	"goods_service/proto"
+	"goods_service/utils/struct_to_map"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -162,19 +163,243 @@ func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.NotFound, "品牌不存在")
 	}
+	// 开启事务，保证操作原子性
+	tx := global.DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	// 添加商品
+	model := models.GoodModel{
+		CategoryID:  info.CategoryId,
+		BrandsID:    info.Brand,
+		OnSale:      info.OnSale,
+		ShipFree:    info.ShipFree,
+		IsNew:       info.IsNew,
+		IsHot:       info.IsHot,
+		Name:        info.Name,
+		GoodsSn:     info.GoodsSn,
+		ClickNum:    0,
+		SoldNum:     0,
+		FavNum:      0,
+		MarketPrice: info.MarketPrice,
+		ShopPrice:   info.ShopPrice,
+		GoodsBrief:  info.GoodsBrief,
+	}
+	err = tx.Create(&model).Error
+	if err != nil {
+		zap.S().Error(err)
+		tx.Rollback()
+		return nil, status.Errorf(codes.Internal, "创建失败")
+	}
 
 	// web 已经上传了 七牛云 这里就是 url
+	// 添加第三章表  图片
+	// 主图
+	err = tx.Create(&models.GoodsImageModel{
+		GoodsID:   model.ID,
+		ImageURL:  info.GoodsFrontImage,
+		Sort:      0,
+		IsMain:    true,
+		ImageType: 1, //（1=主图，2=详情图，3=其他）
+	}).Error
+	if err != nil {
+		zap.S().Error(err)
+		tx.Rollback()
+		return nil, status.Errorf(codes.Internal, "创建失败")
+	}
+
+	for i, image := range info.DescImages {
+		err = tx.Create(&models.GoodsImageModel{
+			GoodsID:   model.ID,
+			ImageURL:  image,
+			Sort:      int32(i + 1),
+			IsMain:    true,
+			ImageType: 2, //（1=主图，2=详情图，3=其他）
+		}).Error
+		if err != nil {
+			zap.S().Error(err)
+			tx.Rollback()
+			return nil, status.Errorf(codes.Internal, "创建失败")
+		}
+	}
+	for i, image := range info.Images {
+		err = tx.Create(&models.GoodsImageModel{
+			GoodsID:   model.ID,
+			ImageURL:  image,
+			Sort:      int32(i + 1),
+			IsMain:    true,
+			ImageType: 3, //（1=主图，2=详情图，3=其他）
+		}).Error
+		if err != nil {
+			zap.S().Error(err)
+			tx.Rollback()
+			return nil, status.Errorf(codes.Internal, "创建失败")
+		}
+	}
+	goodInfo := GoodInfoFunction(model)
+
+	return &goodInfo, nil
 
 }
 
 func (g GoodSever) DeleteGoods(ctx context.Context, info *proto.DeleteGoodsInfo) (*empty.Empty, error) {
-	//TODO implement me
-	panic("implement me")
+	var model models.GoodModel
+	err := global.DB.Where("id = ?", info.Id).Take(&model).Error
+	if err != nil {
+		zap.S().Error(err)
+		return nil, status.Errorf(codes.NotFound, "不存在")
+	}
+	// 先删除 image 表
+	// 开启事务，保证操作原子性
+	tx := global.DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	err = tx.Where("goods_id = ?", info.Id).Delete(&models.GoodsImageModel{}).Error
+	if err != nil {
+		zap.S().Error(err)
+		tx.Rollback()
+		return nil, status.Errorf(codes.Internal, "删除失败")
+	}
+
+	err = tx.Delete(&model).Error
+	if err != nil {
+		zap.S().Error(err)
+		return nil, status.Errorf(codes.Internal, "删除失败")
+	}
+	return new(empty.Empty), tx.Commit().Error
 }
 
 func (g GoodSever) UpdateGoods(ctx context.Context, info *proto.CreateGoodsInfo) (*empty.Empty, error) {
-	//TODO implement me
-	panic("implement me")
+
+	var model models.GoodModel
+	err := global.DB.Where("id = ?", info.Id).Take(&model).Error
+	if err != nil {
+		zap.S().Error(err)
+		return nil, status.Errorf(codes.NotFound, "不存在")
+	}
+	if info.Brand != 0 {
+		var brand models.Brands
+		err := global.DB.Where("id = ?", info.Brand).Take(&brand).Error
+		if err != nil {
+			zap.S().Error(err)
+			return nil, status.Errorf(codes.NotFound, "品牌不存在")
+		}
+
+	}
+	if info.CategoryId != 0 {
+		var category models.CategoryModel
+		err := global.DB.Where("id = ?", info.CategoryId).Take(&category).Error
+		if err != nil {
+			zap.S().Error(err)
+			return nil, status.Errorf(codes.NotFound, "分类不存在")
+		}
+
+	}
+
+	// 开启事务，保证操作原子性
+	tx := global.DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	// 修改 第三章表
+	if info.GoodsFrontImage != "" {
+		err = tx.Where("goods_id = ? and is_main = 1", info.Id).Delete(&models.GoodsImageModel{}).Error
+		if err != nil {
+			zap.S().Error(err)
+			tx.Rollback()
+			return nil, status.Errorf(codes.Internal, "修改错误")
+		}
+		err = tx.Create(&models.GoodsImageModel{
+			GoodsID:   model.ID,
+			ImageURL:  info.GoodsFrontImage,
+			Sort:      0,
+			IsMain:    true,
+			ImageType: 1, //（1=主图，2=详情图，3=其他）
+		}).Error
+		if err != nil {
+			zap.S().Error(err)
+			tx.Rollback()
+			return nil, status.Errorf(codes.Internal, "创建失败")
+		}
+	}
+	if info.DescImages != nil {
+		err = tx.Where("goods_id = ? and image_type = 2", info.Id).Delete(&models.GoodsImageModel{}).Error
+		if err != nil {
+			zap.S().Error(err)
+			tx.Rollback()
+			return nil, status.Errorf(codes.Internal, "修改错误")
+		}
+		for i, image := range info.DescImages {
+			err = tx.Create(&models.GoodsImageModel{
+				GoodsID:   model.ID,
+				ImageURL:  image,
+				Sort:      int32(i + 1),
+				IsMain:    true,
+				ImageType: 2, //（1=主图，2=详情图，3=其他）
+			}).Error
+			if err != nil {
+				zap.S().Error(err)
+				tx.Rollback()
+				return nil, status.Errorf(codes.Internal, "创建失败")
+			}
+		}
+	}
+	if info.Images != nil {
+		err = tx.Where("goods_id = ? and image_type = 3", info.Id).Delete(&models.GoodsImageModel{}).Error
+		if err != nil {
+			zap.S().Error(err)
+			tx.Rollback()
+			return nil, status.Errorf(codes.Internal, "修改错误")
+		}
+
+		for i, image := range info.Images {
+			err = tx.Create(&models.GoodsImageModel{
+				GoodsID:   model.ID,
+				ImageURL:  image,
+				Sort:      int32(i + 1),
+				IsMain:    true,
+				ImageType: 3, //（1=主图，2=详情图，3=其他）
+			}).Error
+			if err != nil {
+				zap.S().Error(err)
+				tx.Rollback()
+				return nil, status.Errorf(codes.Internal, "创建失败")
+			}
+		}
+
+	}
+
+	// 修改 商品表
+	StructMap := map[string]interface{}{
+		"name":         info.Name,
+		"goods_sn":     info.GoodsSn,
+		"stocks":       info.Stocks,
+		"market_price": info.MarketPrice,
+		"shop_price":   info.ShopPrice,
+		"goods_brief":  info.GoodsBrief,
+		"ship_free":    info.ShipFree,
+		"is_new":       info.IsNew,
+		"is_hot":       info.IsHot,
+		"on_sale":      info.OnSale,
+		"category_id":  info.CategoryId,
+		"brands_id":    info.Brand,
+	}
+	toMap := struct_to_map.StructToMap(StructMap)
+
+	err = tx.Model(&model).Updates(toMap).Error
+	if err != nil {
+		zap.S().Error(err)
+		return nil, status.Errorf(codes.Internal, "更新错误")
+	}
+	return new(empty.Empty), tx.Commit().Error
+
 }
 
 func (g GoodSever) GetGoodsDetail(ctx context.Context, request *proto.GoodInfoRequest) (*proto.GoodsInfoResponse, error) {
