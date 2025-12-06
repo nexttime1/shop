@@ -8,6 +8,7 @@ import (
 	"goods_service/global"
 	"goods_service/models"
 	"goods_service/proto"
+	"goods_service/service"
 	"goods_service/utils/struct_to_map"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -145,11 +146,11 @@ func (g GoodSever) UpdateCategory(ctx context.Context, request *proto.CategoryIn
 		zap.S().Error(err)
 		return nil, status.Error(codes.NotFound, "分类不存在")
 	}
-	categoryMap := map[string]interface{}{
-		"name":               request.Name,
-		"parent_category_id": request.ParentCategoryID,
-		"level":              request.Level,
-		"is_tab":             request.IsTab,
+	categoryMap := service.CategoryUpdateServiceMap{
+		Name:             request.Name,
+		ParentCategoryID: request.ParentCategoryID,
+		Level:            request.Level,
+		IsTab:            &request.IsTab,
 	}
 	toMap := struct_to_map.StructToMap(categoryMap)
 	err = global.DB.Model(&model).Updates(toMap).Error

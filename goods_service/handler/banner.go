@@ -7,6 +7,7 @@ import (
 	"goods_service/global"
 	"goods_service/models"
 	"goods_service/proto"
+	"goods_service/service"
 	"goods_service/utils/struct_to_map"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -91,10 +92,10 @@ func (g GoodSever) UpdateBanner(ctx context.Context, request *proto.BannerReques
 		zap.S().Error(err.Error())
 		return nil, status.Error(codes.NotFound, "图片不存在")
 	}
-	updateMap := map[string]interface{}{
-		"image": request.Image,
-		"url":   request.Url,
-		"index": request.Index,
+	updateMap := service.BannerUpdateServiceMap{
+		Image: request.Image,
+		Url:   request.Url,
+		Index: request.Index,
 	}
 	toMap := struct_to_map.StructToMap(updateMap)
 	err = global.DB.Model(&model).Updates(toMap).Error

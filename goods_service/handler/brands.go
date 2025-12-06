@@ -7,6 +7,7 @@ import (
 	"goods_service/global"
 	"goods_service/models"
 	"goods_service/proto"
+	"goods_service/service"
 	"goods_service/utils/struct_to_map"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -80,9 +81,9 @@ func (g GoodSever) UpdateBrand(ctx context.Context, request *proto.BrandRequest)
 		zap.S().Error(err)
 		return nil, status.Error(codes.NotFound, "品牌不存在")
 	}
-	updateMap := map[string]interface{}{
-		"name": request.Name,
-		"logo": request.Logo,
+	updateMap := service.BrandUpdateServiceMap{
+		Name: request.Name,
+		Logo: request.Logo,
 	}
 	toMap := struct_to_map.StructToMap(updateMap)
 	err = global.DB.Model(&model).Updates(toMap).Error

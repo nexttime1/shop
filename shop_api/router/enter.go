@@ -24,16 +24,20 @@ func Router() {
 
 	// 解决跨域问题
 	r.Use(middleware.Cors())
-
+	HealthRouter(r)
 	ApiGroup := r.Group("/u/v1")
 	UserRouter(ApiGroup)
 	CaptchaRouter(ApiGroup)
 
+	go func() {
+		err := r.Run(global.Config.System.GetAddr())
+		if err != nil {
+			zap.L().Error("启动错误", zap.Error(err))
+			return
+		}
+	}()
+
 	zap.L().Info("router is running ...")
-	err := r.Run(global.Config.System.GetAddr())
-	if err != nil {
-		zap.L().Error("启动错误", zap.Error(err))
-	}
 
 	// 上线使用这个
 	//addr ,err := free_port.GetFreePort()

@@ -8,10 +8,10 @@ type GoodModel struct {
 	BrandsID int32   `gorm:"type:int;not null;comment:品牌ID（逻辑外键）;index:idx_goods_brand"`
 	Brands   *Brands `gorm:"foreignKey:BrandsID;references:ID;constraint:<-:false,foreignKey:no action"`
 
-	OnSale      bool    `gorm:"default:false;not null;comment:是否上架"`
-	ShipFree    bool    `gorm:"default:false;not null;comment:是否包邮"`
-	IsNew       bool    `gorm:"default:false;not null;comment:是否新品"`
-	IsHot       bool    `gorm:"default:false;not null;comment:是否热销"`
+	OnSale      *bool   `gorm:"default:false;not null;comment:是否上架"`
+	ShipFree    *bool   `gorm:"default:false;not null;comment:是否包邮"`
+	IsNew       *bool   `gorm:"default:false;not null;comment:是否新品"`
+	IsHot       *bool   `gorm:"default:false;not null;comment:是否热销"`
 	Name        string  `gorm:"type:varchar(50);not null;comment:商品名称;index:idx_goods_name"`
 	GoodsSn     string  `gorm:"type:varchar(50);not null;comment:商品编号;uniqueIndex:idx_goods_sn"`
 	ClickNum    int32   `gorm:"type:int;default:0;not null;comment:点击量"`

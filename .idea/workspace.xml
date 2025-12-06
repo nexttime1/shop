@@ -5,43 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/goods_api/api/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/api/good_api.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/common/enum/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/common/request.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/common/res/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/conf/conf_consul.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/conf/conf_jwt.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/conf/conf_nacos.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/conf/conf_redis.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/conf/conf_system.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/conf/config.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/connect/good.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/core/init_log.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/core/init_redis.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/core/init_register.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/core/init_yaml.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/flags/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/flags/flag_db.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/global/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/middleware/auth_middleware.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/middleware/cors.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/proto/goods.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/proto/goods.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/router/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/router/good_router.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/service/good_srv/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/service/redis_service/redis_jwt/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/settings.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/utils/jwts/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/utils/nacos_get/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/utils/validate/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_api/router/health_router.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_service/service/banner.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_service/service/brand.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_service/service/category.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_service/service/good.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/core/init_register.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop_api/router/health_router.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/core/init_rpc.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/core/init_rpc.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_api/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/conf/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_api/connect/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/connect/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/api/good_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/api/good_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/core/init_register.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/core/init_register.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/proto/goods.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/proto/goods.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/proto/goods.proto" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/proto/goods.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/router/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/router/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/router/good_router.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/router/good_router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/service/good_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/service/good_srv/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/handler/banner.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/banner.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/handler/brands.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/brands.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/handler/category.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/category.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/handler/category_brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/category_brand.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/handler/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/goods.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/models/goods_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/models/goods_model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.proto" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/utils/struct_to_map/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/utils/struct_to_map/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/router/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/router/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_service/utils/struct_to_map/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/utils/struct_to_map/enter.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,9 +81,10 @@
     "Go 构建.go build enter.go.executor": "Run",
     "Go 构建.go build main.go (1).executor": "Run",
     "Go 构建.go build main.go.executor": "Run",
+    "Go 构建.go build shop_api.executor": "Debug",
     "Go 构建.go build shop_api/z_test/phone_register.executor": "Run",
     "Go 构建.go build shop_api/z_test/zap_test.executor": "Run",
-    "Go 构建.go build shop_service.executor": "Run",
+    "Go 构建.go build shop_service.executor": "Debug",
     "Go 构建.go build true11.go.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -102,7 +95,7 @@
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/goods_api",
+    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/goods_api/proto",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -116,11 +109,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\goods_api\proto" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\core" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\router" />
       <recent name="D:\5524\go_project\xtm_shop\shop\goods_api" />
       <recent name="D:\5524\go_project\xtm_shop\shop" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\utils" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\goods_api\service" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\goods_service\utils" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\5524\go_project\xtm_shop\shop\goods_api" />
@@ -154,6 +147,15 @@
       <filePath value="$PROJECT_DIR$/shop_api/z_test/main/main.go" />
       <method v="2" />
     </configuration>
+    <configuration name="go build shop_api" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="shop" />
+      <working_directory value="$PROJECT_DIR$/shop_api" />
+      <kind value="FILE" />
+      <package value="shop_api" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/shop_api/main.go" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build shop_service" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="shop" />
       <working_directory value="$PROJECT_DIR$/shop_service" />
@@ -172,6 +174,7 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Go 构建.go build shop_api" />
       <item itemvalue="Go 构建.go build shop_service" />
       <item itemvalue="Go 构建.go build main.go (1)" />
       <item itemvalue="Go 构建.go build main.go" />
@@ -180,6 +183,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Go 构建.go build shop_service" />
+        <item itemvalue="Go 构建.go build shop_api" />
         <item itemvalue="Go 构建.go build main.go (1)" />
         <item itemvalue="Go 构建.go build true11.go" />
         <item itemvalue="Go 构建.go build main.go" />
@@ -209,5 +213,16 @@
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/goods_service/handler/goods.go</url>
+          <line>277</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

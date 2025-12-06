@@ -10,6 +10,7 @@ import (
 	"goods_service/models"
 	"goods_service/models/enum"
 	"goods_service/proto"
+	"goods_service/service"
 	"goods_service/utils/struct_to_map"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -174,10 +175,7 @@ func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 	model := models.GoodModel{
 		CategoryID:  info.CategoryId,
 		BrandsID:    info.Brand,
-		OnSale:      info.OnSale,
 		ShipFree:    info.ShipFree,
-		IsNew:       info.IsNew,
-		IsHot:       info.IsHot,
 		Name:        info.Name,
 		GoodsSn:     info.GoodsSn,
 		ClickNum:    0,
@@ -275,7 +273,7 @@ func (g GoodSever) DeleteGoods(ctx context.Context, info *proto.DeleteGoodsInfo)
 }
 
 func (g GoodSever) UpdateGoods(ctx context.Context, info *proto.CreateGoodsInfo) (*empty.Empty, error) {
-
+	fmt.Println("UpdateGoods")
 	var model models.GoodModel
 	err := global.DB.Where("id = ?", info.Id).Take(&model).Error
 	if err != nil {
@@ -377,22 +375,22 @@ func (g GoodSever) UpdateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 	}
 
 	// 修改 商品表
-	StructMap := map[string]interface{}{
-		"name":         info.Name,
-		"goods_sn":     info.GoodsSn,
-		"stocks":       info.Stocks,
-		"market_price": info.MarketPrice,
-		"shop_price":   info.ShopPrice,
-		"goods_brief":  info.GoodsBrief,
-		"ship_free":    info.ShipFree,
-		"is_new":       info.IsNew,
-		"is_hot":       info.IsHot,
-		"on_sale":      info.OnSale,
-		"category_id":  info.CategoryId,
-		"brands_id":    info.Brand,
+	StructMap := service.GoodUpdateServiceMap{
+		Name:        info.Name,
+		GoodsSn:     info.GoodsSn,
+		Stocks:      info.Stocks,
+		MarketPrice: info.MarketPrice,
+		ShopPrice:   info.ShopPrice,
+		GoodsBrief:  info.GoodsBrief,
+		ShipFree:    info.ShipFree,
+		IsNew:       info.IsNew,
+		IsHot:       info.IsHot,
+		OnSale:      info.OnSale,
+		CategoryId:  info.CategoryId,
+		Brand:       info.Brand,
 	}
-	toMap := struct_to_map.StructToMap(StructMap)
 
+	toMap := struct_to_map.StructToMap(StructMap)
 	err = tx.Model(&model).Updates(toMap).Error
 	if err != nil {
 		zap.S().Error(err)

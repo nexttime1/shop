@@ -2,14 +2,14 @@ package struct_to_map
 
 import (
 	"github.com/fatih/structs"
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 	"reflect"
 )
 
 func StructToMap(obj interface{}) map[string]interface{} {
 	m := structs.Map(obj)
 	data := DeleteEmpty(m)
-	logrus.Infof("data: %v", data)
+	zap.S().Infof("data: %v", data)
 	return data
 }
 
@@ -29,7 +29,19 @@ func DeleteEmpty(m map[string]interface{}) map[string]interface{} {
 			if val != 0 {
 				data[key] = val
 			}
+		case int32:
+			if val != 0 {
+				data[key] = val
+			}
 		case int64:
+			if val != 0 {
+				data[key] = val
+			}
+		case float32:
+			if val != 0 {
+				data[key] = val
+			}
+		case float64:
 			if val != 0 {
 				data[key] = val
 			}

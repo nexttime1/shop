@@ -182,13 +182,13 @@ message CreateGoodsInfo {
   float shopPrice = 9;
   string goodsBrief = 10;
   string goodsDesc = 11;
-  bool shipFree = 12;
+  optional bool shipFree = 12;
   repeated string images = 13;
   repeated string descImages = 14;
   string goodsFrontImage = 15;
-  bool isNew = 16;
-  bool isHot = 17;
-  bool onSale = 18;
+  optional bool isNew = 16;
+  optional bool isHot = 17;
+  optional bool onSale = 18;
   int32 categoryId = 19;
   int32 brand = 20;
 }
@@ -231,13 +231,13 @@ message GoodsInfoResponse {
   float shopPrice = 10;
   string goodsBrief = 11;
   string goodsDesc = 12;
-  bool shipFree = 13;
+  optional bool shipFree = 13;
   repeated string images = 14;
   repeated string descImages = 15;
   string goodsFrontImage = 16;
-  bool isNew = 17;
-  bool isHot = 18;
-  bool onSale = 19;
+  optional bool isNew = 17;
+  optional bool isHot = 18;
+  optional bool onSale = 19;
   int64 addTime = 20;
   CategoryBriefInfoResponse category = 21;
   BrandInfoResponse brand = 22;

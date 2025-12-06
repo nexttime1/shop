@@ -29,6 +29,10 @@ func DeleteEmpty(m map[string]interface{}) map[string]interface{} {
 			if val != 0 {
 				data[key] = val
 			}
+		case int32:
+			if val != 0 {
+				data[key] = val
+			}
 		case int64:
 			if val != 0 {
 				data[key] = val

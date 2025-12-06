@@ -22,7 +22,7 @@ func Router() {
 
 	// 解决跨域问题
 	r.Use(middleware.Cors())
-
+	HealthRouter(r)
 	ApiGroup := r.Group("/g/v1")
 	GoodRouter(ApiGroup)
 

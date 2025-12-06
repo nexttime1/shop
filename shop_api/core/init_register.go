@@ -6,7 +6,7 @@ import (
 
 	"github.com/satori/go.uuid"
 	"go.uber.org/zap"
-	"goods_api/global"
+	"shop_api/global"
 )
 
 type ClientRegister interface {

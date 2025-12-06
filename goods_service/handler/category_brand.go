@@ -8,6 +8,7 @@ import (
 	"goods_service/global"
 	"goods_service/models"
 	"goods_service/proto"
+	"goods_service/service"
 	"goods_service/utils/struct_to_map"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -179,9 +180,9 @@ func (g GoodSever) UpdateCategoryBrand(ctx context.Context, request *proto.Categ
 
 		}
 	}
-	ModelMap := map[string]interface{}{
-		"category_id": request.CategoryId,
-		"brands_id":   request.BrandId,
+	ModelMap := service.CategoryBrandUpdateServiceMap{
+		CategoryId: request.CategoryId,
+		BrandId:    request.BrandId,
 	}
 	toMap := struct_to_map.StructToMap(ModelMap)
 
