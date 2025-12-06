@@ -65,6 +65,7 @@ func (g GoodSever) CategoryBrandList(ctx context.Context, request *proto.Categor
 	return categoryBrandListResponse, nil
 }
 
+// GetCategoryBrandList 一个分类下的所有品牌
 func (g GoodSever) GetCategoryBrandList(ctx context.Context, request *proto.CategoryInfoRequest) (*proto.BrandListResponse, error) {
 	// 最后的返回
 	brandListResponse := proto.BrandListResponse{}

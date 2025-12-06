@@ -273,7 +273,7 @@ func (g GoodSever) DeleteGoods(ctx context.Context, info *proto.DeleteGoodsInfo)
 }
 
 func (g GoodSever) UpdateGoods(ctx context.Context, info *proto.CreateGoodsInfo) (*empty.Empty, error) {
-	fmt.Println("UpdateGoods")
+
 	var model models.GoodModel
 	err := global.DB.Where("id = ?", info.Id).Take(&model).Error
 	if err != nil {

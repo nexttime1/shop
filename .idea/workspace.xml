@@ -5,35 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/goods_api/router/health_router.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/service/banner.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/service/brand.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/service/category.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_service/service/good.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/core/init_register.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop_api/router/health_router.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_api/api/banner_api.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_api/api/brand_api.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_api/api/category_api.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_api/router/banner_router.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_api/router/brand_router.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_api/router/category_router.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_api/service/banner_srv/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_api/service/brand_srv/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_api/service/category_srv/enter.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_api/api/good_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/api/good_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_api/core/init_register.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/core/init_register.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/api/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/api/enter.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_api/proto/goods.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/proto/goods.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_api/proto/goods.proto" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/proto/goods.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_api/router/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/router/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_api/router/good_router.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/router/good_router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_api/service/good_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/service/good_srv/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/handler/banner.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/banner.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/handler/brands.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/brands.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/handler/category.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/category.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/handler/category_brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/category_brand.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/handler/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/goods.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/models/goods_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/models/goods_model.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.proto" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/utils/struct_to_map/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/utils/struct_to_map/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_api/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_api/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_api/router/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/router/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/utils/struct_to_map/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/utils/struct_to_map/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/service/brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/service/brand.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

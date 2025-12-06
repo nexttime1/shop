@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/golang/protobuf/ptypes/empty"
 	"go.uber.org/zap"
 	"goods_service/global"
@@ -24,6 +25,7 @@ func (g GoodSever) GetAllCategorysList(ctx context.Context, empty *empty.Empty) 
 	}
 	return &proto.CategoryListResponse{
 		JsonData: string(bytesData),
+		Total:    int32(len(categoryModels)),
 	}, nil
 
 }
@@ -90,7 +92,8 @@ func (g GoodSever) CreateCategory(ctx context.Context, request *proto.CategoryIn
 	}
 	if request.Level != 1 {
 		// 查一下父分类存不存在
-		err := global.DB.Model(&models.CategoryModel{}).Where("id = ?", request.ParentCategoryID).Error
+		var parentCategory models.CategoryModel
+		err := global.DB.Model(&models.CategoryModel{}).Where("id = ?", request.ParentCategoryID).Take(&parentCategory).Error
 		if err != nil {
 			zap.S().Error(err)
 			return nil, status.Error(codes.NotFound, "父分类不存在")
@@ -100,7 +103,9 @@ func (g GoodSever) CreateCategory(ctx context.Context, request *proto.CategoryIn
 		Name:             request.Name,
 		ParentCategoryID: request.ParentCategoryID,
 		Level:            request.Level,
-		IsTab:            request.IsTab,
+	}
+	if request.IsTab != nil {
+		categoryModel.IsTab = *request.IsTab
 	}
 	err := global.DB.Create(&categoryModel).Error
 
@@ -120,20 +125,50 @@ func (g GoodSever) DeleteCategory(ctx context.Context, request *proto.DeleteCate
 		zap.S().Error(err)
 		return nil, status.Error(codes.NotFound, "分类不存在")
 	}
+	// 开启事务，保证操作原子性
+	tx := global.DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
 	// 删除中间表
-	var brand_category_models []models.BrandCategoryModel
-	global.DB.Where("category_id = ?", model.ID).Find(&brand_category_models)
-	err = global.DB.Delete(&brand_category_models).Error
+	err = tx.Where("category_id = ?", model.ID).Delete(&models.BrandCategoryModel{}).Error
 	if err != nil {
 		zap.S().Error(err)
+		tx.Rollback()
 		return nil, status.Error(codes.Internal, "中间表删除失败")
+	}
+	// 删除自己的子分类
+	subQuery := ""
+	if model.Level == 1 {
+		subQuery = fmt.Sprintf("select id from category_models where parent_category_id in (select id from category_models where parent_category_id = %d)", model.ID)
+	}
+	if model.Level == 2 {
+		subQuery = fmt.Sprintf("select id from category_models where parent_category_id = %d", model.ID)
+	}
+	if model.Level != 3 {
+		err = tx.Where(fmt.Sprintf("category_id in (%s)", subQuery)).Delete(&models.BrandCategoryModel{}).Error
+		if err != nil {
+			zap.S().Error(err)
+			tx.Rollback()
+			return nil, status.Error(codes.Internal, "删除失败")
+		}
 	}
 
 	// 删除自己
-	err = global.DB.Delete(&model).Error
+	err = tx.Delete(&model).Error
 	if err != nil {
 		zap.S().Error(err)
+		tx.Rollback()
 		return nil, status.Error(codes.Internal, "删除失败")
+	}
+
+	if err = tx.Commit().Error; err != nil {
+		zap.S().Errorf("事务提交失败：%v", err)
+		tx.Rollback()
+		return nil, status.Error(codes.Internal, "事务提交失败")
 	}
 
 	return &empty.Empty{}, nil
@@ -147,10 +182,8 @@ func (g GoodSever) UpdateCategory(ctx context.Context, request *proto.CategoryIn
 		return nil, status.Error(codes.NotFound, "分类不存在")
 	}
 	categoryMap := service.CategoryUpdateServiceMap{
-		Name:             request.Name,
-		ParentCategoryID: request.ParentCategoryID,
-		Level:            request.Level,
-		IsTab:            &request.IsTab,
+		Name:  request.Name,
+		IsTab: request.IsTab,
 	}
 	toMap := struct_to_map.StructToMap(categoryMap)
 	err = global.DB.Model(&model).Updates(toMap).Error

@@ -25,6 +25,9 @@ func Router() {
 	HealthRouter(r)
 	ApiGroup := r.Group("/g/v1")
 	GoodRouter(ApiGroup)
+	CategoryRouter(ApiGroup)
+	BannerRouter(ApiGroup)
+	BrandRouter(ApiGroup)
 
 	go func() {
 		err := r.Run(global.Config.System.GetAddr())

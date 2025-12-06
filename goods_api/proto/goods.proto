@@ -19,7 +19,7 @@ service Goods{
   rpc UpdateCategory(CategoryInfoRequest) returns(google.protobuf.Empty); //修改分类信息
 
   //品牌和轮播图
-  rpc BrandList(google.protobuf.Empty) returns(BrandListResponse); //批量获取品牌信息
+  rpc BrandList(PageInfo) returns(BrandListResponse); //批量获取品牌信息
   rpc CreateBrand(BrandRequest) returns(BrandInfoResponse); //新建品牌信息
   rpc DeleteBrand(BrandRequest) returns(google.protobuf.Empty); //删除品牌
   rpc UpdateBrand(BrandRequest) returns(google.protobuf.Empty); //修改品牌信息
@@ -45,7 +45,7 @@ message CategoryInfoRequest {
   string name = 2;
   int32 parentCategoryID = 3;
   int32 level = 4;
-  bool isTab = 5;
+  optional bool isTab = 5;
 }
 
 
@@ -83,6 +83,11 @@ message CategoryListResponse {
   string JsonData = 3;
 }
 
+
+message PageInfo {
+  int32 page = 1;
+  int32 limit = 2;
+}
 
 
 
