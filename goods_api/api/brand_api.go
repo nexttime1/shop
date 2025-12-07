@@ -9,6 +9,7 @@ import (
 	"goods_api/connect"
 	"goods_api/proto"
 	"goods_api/service/brand_srv"
+	"strconv"
 )
 
 type BrandApi struct{}
@@ -70,12 +71,21 @@ func (BrandApi) UpdateBrandView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
+	idString := c.Param("id")
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		zap.S().Error(err)
+		res.FailWithErr(c, res.FailArgumentCode, err)
+		return
+	}
+
 	client, conn, err := connect.GoodConnectService(c)
 	if err != nil {
 		return
 	}
 	defer conn.Close()
 	_, err = client.UpdateBrand(context.Background(), &proto.BrandRequest{
+		Id:   int32(id),
 		Name: cr.Name,
 		Logo: cr.Logo,
 	})
@@ -218,12 +228,20 @@ func (BrandApi) UpdateCategoryBrandView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
+	idString := c.Param("id")
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		zap.S().Error(err)
+		res.FailWithErr(c, res.FailArgumentCode, err)
+		return
+	}
 	client, conn, err := connect.GoodConnectService(c)
 	if err != nil {
 		return
 	}
 	defer conn.Close()
 	_, err = client.UpdateCategoryBrand(context.Background(), &proto.CategoryBrandRequest{
+		Id:         int32(id),
 		BrandId:    cr.BrandId,
 		CategoryId: cr.CategoryId,
 	})
