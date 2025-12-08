@@ -5,40 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/oss_web/common/enum/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/common/res/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/conf/conf_consul.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/conf/conf_jwt.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/conf/conf_nacos.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/conf/conf_redis.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/conf/conf_system.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/conf/config.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/core/init_log.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/core/init_register.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/core/init_yaml.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/flags/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/global/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/middleware/auth_middleware.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/middleware/cors.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/router/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/router/health_router.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/router/qiniu_router.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/settings.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/utils/jwts/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/utils/nacos_get/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/utils/qiniu/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/utils/qiniu/niqiu.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/utils/redis_service/redis_jwt/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/utils/validate/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/z_test/g.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/oss_web/z_test/niqiu.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/common/list_query.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/conf/conf_consul.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/conf/conf_db.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/conf/conf_local_info.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/conf/conf_nacos.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/conf/config.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/core/init_db.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/core/init_register.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/core/init_yaml.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/core/init_zap.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/flags/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/flags/flag_db.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/global/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/go.mod" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/handler/inventory.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/models/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/models/inventory_model.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/proto/inventory.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/settings.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/utils/free_port/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/utils/nacos_get/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/utils/struct_to_map/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_api/api/brand_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/api/brand_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_api/flags/flag_db.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/conf/conf_qiniu.go" beforeDir="false" afterPath="$PROJECT_DIR$/oss_web/conf/conf_qiniu.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/conf/config.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +93,7 @@
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/oss_web/router",
+    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/stock_service/core",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -114,11 +107,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\stock_service\core" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\stock_service" />
       <recent name="D:\5524\go_project\xtm_shop\shop\oss_web\router" />
       <recent name="D:\5524\go_project\xtm_shop\shop\oss_web" />
       <recent name="D:\5524\go_project\xtm_shop\shop\oss_web\utils\qiniu" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\oss_web\utils" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\oss_web\conf" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\5524\go_project\xtm_shop\shop\goods_api" />
