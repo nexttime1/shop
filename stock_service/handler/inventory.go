@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -62,9 +63,21 @@ func (i InventorySever) Sell(ctx context.Context, info *proto.SellInfo) (*emptyp
 			tx.Rollback()
 		}
 	}()
+
 	for _, invInfo := range info.GoodsInfo {
+		// redis 分布式锁
+		mutexName := fmt.Sprintf("good_%d", invInfo.GoodsId)
+		mutex := global.RedisMutex.NewMutex(mutexName)
+		//for {	// 乐观锁  也先不用了
 		var model models.InventoryModel
-		err := tx.Where("goods = ?", invInfo.GoodsId).Take(&model).Error
+		// 悲观锁
+		//err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("goods = ?", invInfo.GoodsId).Take(&model).Error
+		err := mutex.Lock()
+		if err != nil {
+			zap.S().Error(err)
+			return nil, status.Errorf(codes.Internal, "redis分布式锁加载错误")
+		}
+		err = tx.Where("goods = ?", invInfo.GoodsId).Take(&model).Error
 		if err != nil {
 			zap.S().Error(err)
 			tx.Rollback()
@@ -81,9 +94,22 @@ func (i InventorySever) Sell(ctx context.Context, info *proto.SellInfo) (*emptyp
 		if err != nil {
 			zap.S().Error(err)
 			tx.Rollback()
-			return nil, status.Error(codes.Internal, "库存更新失败")
+			return nil, status.Error(codes.Internal, "更新错误")
+		}
+		ok, err := mutex.Unlock()
+		if err != nil || !ok {
+			tx.Rollback()
+			zap.S().Error(err)
+			return nil, status.Error(codes.Internal, "解锁失败")
 		}
 
+		//err = tx.Model(models.InventoryModel{}).Where("goods = ? and version = ?", model.Goods, model.Version).Select("stock", "version").Updates(map[string]interface{}{"stock": model.Stock, "version": model.Version + 1}).Error
+		//if err != nil {
+		//	continue
+		//} else {
+		//	break
+		//}
+		//}
 	}
 	return &emptypb.Empty{}, tx.Commit().Error
 

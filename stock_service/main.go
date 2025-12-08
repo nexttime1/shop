@@ -17,6 +17,7 @@ func main() {
 	global.Config = core.ReadConf()
 	//fmt.Println(global.Config)
 	global.DB = core.InitDB()
+	global.RedisMutex = core.InitRedisMutex()
 
 	flags.Run()
 	client := core.NewConsulRegister()
