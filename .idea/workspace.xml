@@ -5,45 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/order_service/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/common/list_query.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/conf/conf_consul.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/conf/conf_db.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/conf/conf_good_srv.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/conf/conf_local_info.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/conf/conf_nacos.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/conf/conf_redis.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/conf/config.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/core/init_db.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/core/init_redis_mutex.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/core/init_register.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/core/init_srv_client.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/core/init_yaml.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/core/init_zap.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/flags/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/flags/flag_db.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/global/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/handler/cart.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/handler/order.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/models/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/models/order_goods_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/models/order_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/models/shopping_cart_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/proto/goods.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/proto/goods.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/proto/inventory.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/proto/inventory.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/proto/order.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/service/cart.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/settings.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/utils/free_port/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/utils/nacos_get/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/utils/struct_to_map/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order_service/service/random_sns.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/core/init_srv_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/connect/srv_client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/handler/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/handler/order.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,38 +54,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "Go 构建.go build enter.go.executor": "Run",
-    "Go 构建.go build main.go (1).executor": "Run",
-    "Go 构建.go build main.go.executor": "Run",
-    "Go 构建.go build shop_api.executor": "Debug",
-    "Go 构建.go build shop_api/z_test/phone_register.executor": "Run",
-    "Go 构建.go build shop_api/z_test/zap_test.executor": "Run",
-    "Go 构建.go build shop_service.executor": "Debug",
-    "Go 构建.go build true11.go.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "main",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/order_service/proto",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.configurations.included.in.services": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Go 构建.go build enter.go.executor&quot;: &quot;Run&quot;,
+    &quot;Go 构建.go build main.go (1).executor&quot;: &quot;Run&quot;,
+    &quot;Go 构建.go build main.go.executor&quot;: &quot;Run&quot;,
+    &quot;Go 构建.go build shop_api.executor&quot;: &quot;Debug&quot;,
+    &quot;Go 构建.go build shop_api/z_test/phone_register.executor&quot;: &quot;Run&quot;,
+    &quot;Go 构建.go build shop_api/z_test/zap_test.executor&quot;: &quot;Run&quot;,
+    &quot;Go 构建.go build shop_service.executor&quot;: &quot;Debug&quot;,
+    &quot;Go 构建.go build true11.go.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/5524/go_project/xtm_shop/shop/order_service/proto&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\proto" />
@@ -129,11 +95,11 @@
       <recent name="D:\5524\go_project\xtm_shop\shop\stock_service" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\service" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\connect" />
       <recent name="D:\5524\go_project\xtm_shop\shop\goods_api" />
       <recent name="D:\5524\go_project\xtm_shop\shop\goods_service" />
       <recent name="D:\5524\go_project\xtm_shop\shop\shop_service\utils" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\service\redis_service" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\shop_api\z_test\aliyun" />
     </key>
   </component>
   <component name="RunDashboard">
