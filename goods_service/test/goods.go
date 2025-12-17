@@ -27,18 +27,6 @@ func Init() {
 	client = proto.NewGoodsClient(conn)
 }
 
-func BrandList() {
-	fmt.Println("GoodList")
-	var e *empty.Empty
-	list, err := client.BrandList(context.Background(), e)
-	if err != nil {
-		panic(err)
-	}
-	for _, brandModel := range list.Data {
-		fmt.Println(brandModel)
-	}
-}
-
 func GetAllCategorys() {
 	var e *empty.Empty
 	list, err := client.GetAllCategorysList(context.Background(), e)

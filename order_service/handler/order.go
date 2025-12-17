@@ -12,7 +12,6 @@ import (
 	"order_service/models"
 	"order_service/proto"
 	"order_service/service"
-	"time"
 )
 
 type OrderSever struct {
@@ -29,7 +28,7 @@ func (o OrderSever) CreateOrder(ctx context.Context, request *proto.OrderRequest
 	}).Find(&shopModels)
 	goodNumMap := make(map[int32]int32)
 	for _, shopModel := range shopModels {
-		goodsId  = append(goodsId, shopModel.Goods)
+		goodsId = append(goodsId, shopModel.Goods)
 		goodNumMap[shopModel.Goods] = shopModel.Nums
 	}
 
@@ -41,13 +40,11 @@ func (o OrderSever) CreateOrder(ctx context.Context, request *proto.OrderRequest
 		}
 	}()
 
-
-
 	// 调用good 微服务
 	goodClient, conn, err := connect.GoodConnectService()
 	if err != nil {
 		zap.S().Error(err)
-		return nil, status.Errorf(codes.Internal, "创建失败"))
+		return nil, status.Errorf(codes.Internal, "创建失败")
 	}
 	defer conn.Close()
 	goods, err := goodClient.BatchGetGoods(context.Background(), &proto.BatchGoodsIdInfo{
@@ -63,20 +60,20 @@ func (o OrderSever) CreateOrder(ctx context.Context, request *proto.OrderRequest
 	for _, goodModel := range goods.Data {
 		PriceSum += goodModel.ShopPrice * float32(goodNumMap[goodModel.Id])
 		orderGoods = append(orderGoods, &models.OrderGoodsModel{
-			Goods : goodModel.Id,
-			GoodsName : goodModel.Name,
-			GoodsPrice : goodModel.ShopPrice,
+			Goods:      goodModel.Id,
+			GoodsName:  goodModel.Name,
+			GoodsPrice: goodModel.ShopPrice,
 			GoodImages: goodModel.GoodsFrontImage,
-			Nums : goodNumMap[goodModel.Id],
+			Nums:       goodNumMap[goodModel.Id],
 		})
 		// 库存服务接收参数
 		goodsInfo = append(goodsInfo, &proto.GoodsInvInfo{
 			GoodsId: goodModel.Id,
-			Num: goodNumMap[goodModel.Id],
+			Num:     goodNumMap[goodModel.Id],
 		})
 	}
 	// 预扣减库存
-	inventoryClient ,inventoryConn, err := connect.InventoryConnectService()
+	inventoryClient, inventoryConn, err := connect.InventoryConnectService()
 	if err != nil {
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.Internal, "库存服务未开启")
@@ -112,7 +109,9 @@ func (o OrderSever) CreateOrder(ctx context.Context, request *proto.OrderRequest
 		return nil, status.Errorf(codes.Internal, "创建失败")
 	}
 	// 删除购物车中 已经生成订单的商品
-	err = tx.Model(&models.ShoppingCartModel{User: request.UserId, Checked: &check}).Delete(models.ShoppingCartModel{}).Error
+	err = tx.Model(&models.ShoppingCartModel{}). // Model传空指针，指定操作shoppingcart表
+		Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
+		Delete(&models.ShoppingCartModel{}).Error // Delete传指针（必须）
 	if err != nil {
 		zap.S().Error(err)
 		tx.Rollback()
@@ -212,7 +211,11 @@ func (o OrderSever) OrderDetail(ctx context.Context, request *proto.OrderRequest
 
 }
 
-func (o OrderSever) UpdateOrderStatus(ctx context.Context, status *proto.OrderStatus) (*emptypb.Empty, error) {
-	//TODO implement me
-	panic("implement me")
+func (o OrderSever) UpdateOrderStatus(ctx context.Context, req *proto.OrderStatus) (*emptypb.Empty, error) {
+	result := global.DB.Model(&models.OrderModel{}).Where("order_sn = ?", req.OrderSn).Update("status", req.Status)
+	if result.Error != nil || result.RowsAffected == 0 {
+		return nil, status.Errorf(codes.Internal, "订单不存在")
+	}
+
+	return &emptypb.Empty{}, nil
 }

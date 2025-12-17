@@ -37,10 +37,10 @@ func (o OrderSever) CartItemList(ctx context.Context, info *proto.UserInfo) (*pr
 func (o OrderSever) CreateCartItem(ctx context.Context, request *proto.CartItemRequest) (*proto.ShopCartInfoResponse, error) {
 	// 添加商品到购物车   如果存在 那就更新Num + 1
 	var model models.ShoppingCartModel
-	count := global.DB.Where("user = ?", request.UserId).First(&model).RowsAffected
+	count := global.DB.Where("user = ? and goods = ?", request.UserId, request.GoodsId).First(&model).RowsAffected
 	if count > 0 {
 		// 更新一下
-		err := global.DB.Model(&model).Update("nums", model.Nums+1).Error
+		err := global.DB.Debug().Model(&model).Update("nums", model.Nums+1).Error
 		if err != nil {
 			zap.S().Errorf(err.Error())
 			return nil, status.Error(codes.Internal, "加入错误")
@@ -50,7 +50,7 @@ func (o OrderSever) CreateCartItem(ctx context.Context, request *proto.CartItemR
 		model = models.ShoppingCartModel{
 			User:    request.UserId,
 			Goods:   request.GoodsId,
-			Nums:    request.Nums,
+			Nums:    1,
 			Checked: request.Checked,
 		}
 		err := global.DB.Create(&model).Error
@@ -79,11 +79,11 @@ func (o OrderSever) UpdateCartItem(ctx context.Context, request *proto.CartItemR
 		return nil, status.Error(codes.NotFound, "未找到")
 	}
 	structMap := service.CartUpdateMap{
-		Nums:    model.Nums,
-		Checked: model.Checked,
+		Nums:    request.Nums,
+		Checked: request.Checked,
 	}
 	toMap := struct_to_map.StructToMap(structMap)
-	err = global.DB.Model(&model).Updates(toMap).Error
+	err = global.DB.Debug().Model(&model).Updates(toMap).Error
 	if err != nil {
 		zap.S().Errorf(err.Error())
 		return nil, status.Error(codes.Internal, "更新失败")

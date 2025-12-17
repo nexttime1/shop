@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/order_service/service/random_sns.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order_service/test/client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/core/init_srv_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/connect/srv_client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order_service/handler/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/handler/order.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -200,6 +199,11 @@
           <url>file://$PROJECT_DIR$/goods_service/handler/goods.go</url>
           <line>277</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/order_service/handler/order.go</url>
+          <line>19</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
