@@ -101,6 +101,29 @@ func CreateOrder() error {
 	return nil
 }
 
+func OrderDetail() {
+	result, err2 := Client.OrderDetail(context.Background(), &proto.OrderRequest{
+		UserId: 1,
+	})
+	if err2 != nil {
+		zap.S().Error(err2)
+		return
+	}
+	fmt.Println(result)
+
+}
+
+func OrderList() {
+	list, err2 := Client.OrderList(context.Background(), &proto.OrderFilterRequest{
+		UserId: 1,
+	})
+	if err != nil {
+		zap.S().Error(err2)
+		return
+	}
+	fmt.Println(list)
+}
+
 func main() {
 	flags.Parse() //解析 yaml文件
 	core.InitZap()
@@ -117,6 +140,8 @@ func main() {
 	//result := CartList()
 	//fmt.Println(result)
 	//UpdateCheck()
-	CreateOrder()
+	//CreateOrder()
+	//OrderDetail()
+	OrderList()
 
 }

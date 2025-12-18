@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+
+option go_package = ".;proto";
+
+// Order 订单服务（包含购物车、订单全生命周期管理）
+service Order {
+  // CartItemList 获取用户购物车列表
+  rpc CartItemList(UserInfo) returns (CartItemListResponse);
+
+  // CreateCartItem 添加商品到购物车
+  rpc CreateCartItem(CartItemRequest) returns (ShopCartInfoResponse);
+
+  // UpdateCartItem 修改购物车商品（数量/勾选状态）
+  rpc UpdateCartItem(CartItemRequest) returns (google.protobuf.Empty);
+  // DeleteCartItem 删除购物车商品
+  rpc DeleteCartItem(CartItemRequest) returns (google.protobuf.Empty);
+
+  // CreateOrder 创建订单（从购物车勾选商品生成订单）
+  rpc CreateOrder(OrderRequest) returns (OrderInfoResponse);
+
+  // OrderList 获取用户订单列表（支持分页）
+  rpc OrderList(OrderFilterRequest) returns (OrderListResponse);
+
+  // OrderDetail 获取订单详情（包含订单商品明细）
+  rpc OrderDetail(OrderRequest) returns (OrderInfoDetailResponse);
+
+  // UpdateOrderStatus 修改订单状态（支付/发货/收货/取消等）
+  rpc UpdateOrderStatus(OrderStatus) returns (google.protobuf.Empty);
+
+}
+
+// UserInfo 用户信息（仅传递用户ID）
+message UserInfo {
+  int32 id = 1; // 用户ID
+}
+
+// OrderStatus 订单状态修改请求
+message OrderStatus {
+  int32 id = 1; // 订单ID
+  string orderSn = 2; // 订单编号（唯一标识）
+  string status = 3; // 目标状态（PAYING/TRADE_SUCCESS/SHIPPED等）
+}
+
+// CartItemRequest 购物车商品操作请求（新增/修改）
+message CartItemRequest {
+  int32 id = 1; // 购物车项ID（修改时必填，新增时不传）
+  int32 userId = 2; // 用户ID
+  int32 goodsId = 3; // 商品ID
+  string goodsName = 4; // 商品名称
+  string goodsImage = 5; // 商品图片URL
+  float goodsPrice = 6; // 商品单价（替换float为double，提升精度）
+  int32 nums = 7; // 商品数量
+  optional bool checked = 8; // 是否勾选（结算标识）
+}
+
+// OrderRequest 订单操作请求（创建/查询详情）
+message OrderRequest {
+  int32 id = 1; // 订单ID（查询详情时必填，创建时不传）
+  int32 userId = 2; // 用户ID
+  string address = 3; // 收货地址
+  string name = 4; // 签收人姓名
+  string mobile = 5; // 签收人手机号
+  string post = 6; // 物流单号（创建时可选，发货后填充）
+}
+
+// OrderInfoResponse 订单基础信息响应
+message OrderInfoResponse {
+  int32 id = 1; // 订单ID
+  int32 userId = 2; // 用户ID
+  string orderSn = 3; // 订单编号
+  string payType = 4; // 支付方式（alipay/wechat）
+  string status = 5; // 订单状态
+  string post = 6; // 物流单号
+  float total = 7; // 订单总金额
+  string address = 8; // 收货地址
+  string name = 9; // 签收人姓名
+  string mobile = 10; // 签收人手机号
+}
+
+// ShopCartInfoResponse 购物车商品信息响应
+message ShopCartInfoResponse {
+  int32 id = 1; // 购物车项ID
+  int32 userId = 2; // 用户ID
+  int32 goodsId = 3; // 商品ID
+  int32 nums = 4; // 商品数量
+  optional bool checked = 5; // 是否勾选
+}
+
+// OrderItemResponse 订单商品明细响应
+message OrderItemResponse {
+  int32 id = 1; // 订单商品项ID
+  int32 orderId = 2; // 订单ID
+  int32 goodsId = 3; // 商品ID
+  string goodsName = 4; // 商品名称
+  string goodsImage = 5; // 商品图片URL
+  float goodsPrice = 6; // 商品单价
+  int32 nums = 7; // 商品数量
+}
+
+// OrderInfoDetailResponse 订单详情响应（包含商品明细）
+message OrderInfoDetailResponse {
+  OrderInfoResponse orderInfo = 1; // 订单基础信息
+  repeated OrderItemResponse goods = 2; // 订单商品明细列表
+}
+
+// OrderFilterRequest 订单列表查询过滤条件（分页+用户筛选）
+message OrderFilterRequest {
+  int32 userId = 1; // 用户ID
+  int32 pageNum = 2; // 页码（修正原pages命名，符合行业惯例）
+  int32 pageSize = 3; // 每页条数（修正原pagePerNums命名）
+}
+
+// OrderListResponse 订单列表响应（分页结果）
+message OrderListResponse {
+  int32 total = 1; // 订单总数
+  repeated OrderInfoResponse data = 2; // 订单列表数据
+}
+
+// CartItemListResponse 购物车列表响应（分页结果）
+message CartItemListResponse {
+  int32 total = 1; // 购物车商品总数
+  repeated ShopCartInfoResponse data = 2; // 购物车商品列表
+}

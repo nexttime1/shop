@@ -110,8 +110,8 @@ func (o OrderSever) CreateOrder(ctx context.Context, request *proto.OrderRequest
 	}
 	// 删除购物车中 已经生成订单的商品
 	err = tx.Model(&models.ShoppingCartModel{}). // Model传空指针，指定操作shoppingcart表
-		Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
-		Delete(&models.ShoppingCartModel{}).Error // Delete传指针（必须）
+							Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
+							Delete(&models.ShoppingCartModel{}).Error                 // Delete传指针（必须）
 	if err != nil {
 		zap.S().Error(err)
 		tx.Rollback()
@@ -124,7 +124,7 @@ func (o OrderSever) CreateOrder(ctx context.Context, request *proto.OrderRequest
 
 func (o OrderSever) OrderList(ctx context.Context, request *proto.OrderFilterRequest) (*proto.OrderListResponse, error) {
 	// 管理员看所有的列表   而用户看自己的  区别是 看web端给我发不发id
-	var response *proto.OrderListResponse
+	response := &proto.OrderListResponse{}
 	pageInfo := common.PageInfo{
 		Page:  request.PageNum,
 		Limit: request.PageSize,
@@ -173,7 +173,7 @@ func (o OrderSever) OrderList(ctx context.Context, request *proto.OrderFilterReq
 
 func (o OrderSever) OrderDetail(ctx context.Context, request *proto.OrderRequest) (*proto.OrderInfoDetailResponse, error) {
 	// 如果传userId  那就查这个用户的  不传就是全部的
-	var response *proto.OrderInfoDetailResponse
+	response := &proto.OrderInfoDetailResponse{}
 	var model models.OrderModel
 	err := global.DB.Where(models.OrderModel{User: request.UserId, Model: models.Model{ID: request.Id}}).Take(&model).Error
 	if err != nil {
@@ -194,7 +194,7 @@ func (o OrderSever) OrderDetail(ctx context.Context, request *proto.OrderRequest
 	}
 	// 找一下商品
 	var goodModels []models.OrderGoodsModel
-	global.DB.Where("order = ?", model.ID).Find(&goodModels)
+	global.DB.Where("`order` = ?", model.ID).Find(&goodModels)
 	var Goods []*proto.OrderItemResponse
 	for _, item := range goodModels {
 		Goods = append(Goods, &proto.OrderItemResponse{
