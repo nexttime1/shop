@@ -154,6 +154,7 @@ func (o OrderSever) OrderList(ctx context.Context, request *proto.OrderFilterReq
 	response.Total = int32(count)
 	var modelsInfo []*proto.OrderInfoResponse
 	for _, item := range list {
+
 		modelsInfo = append(modelsInfo, &proto.OrderInfoResponse{
 			Id:      item.ID,
 			UserId:  item.User,

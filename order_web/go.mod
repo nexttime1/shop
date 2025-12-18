@@ -10,10 +10,8 @@ require (
 	github.com/go-playground/universal-translator v0.18.1
 	github.com/go-playground/validator/v10 v10.14.0
 	github.com/go-redis/redis v6.15.9+incompatible
-	github.com/golang/protobuf v1.5.4
 	github.com/hashicorp/consul/api v1.33.0
 	github.com/mbobakov/grpc-consul-resolver v1.5.3
-	github.com/nacos-group/nacos-sdk-go/v2 v2.2.3
 	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/viper v1.21.0
 	go.uber.org/zap v1.27.0
