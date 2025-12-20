@@ -78,6 +78,33 @@ func (CartApi) CartListView(c *gin.Context) {
 }
 
 func (CartApi) DeleteCartItemView(c *gin.Context) {
+	_claims, exist := c.Get("claims")
+	if !exist {
+		return
+	}
+	claims := _claims.(*jwts.MyClaims)
+
+	var cr cart_srv.CartIdRequest
+	err := c.ShouldBindUri(&cr)
+	if err != nil {
+		zap.S().Error(err)
+		res.FailWithErr(c, res.FailArgumentCode, err)
+	}
+	OrderClient, conn, err := connect.OrderConnectService(c)
+	if err != nil {
+		return
+	}
+	defer conn.Close()
+	_, err = OrderClient.DeleteCartItem(context.Background(), &proto.CartItemRequest{
+		UserId:  claims.UserID,
+		GoodsId: cr.Id,
+	})
+	if err != nil {
+		res.FailWithServiceMsg(c, err)
+		return
+	}
+
+	res.OkWithMessage(c, "删除成功")
 
 }
 
@@ -150,5 +177,39 @@ func (CartApi) AddItemView(c *gin.Context) {
 }
 
 func (CartApi) UpdatePatchView(c *gin.Context) {
+	_claims, exist := c.Get("claims")
+	if !exist {
+		return
+	}
+	claims := _claims.(*jwts.MyClaims)
+	var cr cart_srv.CartIdRequest
+	err := c.ShouldBindUri(&cr)
+	if err != nil {
+		zap.S().Error(err)
+		res.FailWithErr(c, res.FailArgumentCode, err)
+	}
+	var update cart_srv.CartUpdateRequest
+	err = c.ShouldBindJSON(&update)
+	if err != nil {
+		zap.S().Error(err)
+		res.FailWithErr(c, res.FailArgumentCode, err)
+		return
+	}
+	orderClient, conn, err := connect.OrderConnectService(c)
+	if err != nil {
+		return
+	}
+	defer conn.Close()
+	_, err = orderClient.UpdateCartItem(context.Background(), &proto.CartItemRequest{
+		UserId:  claims.UserID,
+		GoodsId: cr.Id,
+		Nums:    update.Num,
+		Checked: update.Checked,
+	})
+	if err != nil {
+		res.FailWithServiceMsg(c, err)
+		return
+	}
+	res.OkWithMessage(c, "更新成功")
 
 }

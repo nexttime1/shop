@@ -73,7 +73,7 @@ func (o OrderSever) CreateCartItem(ctx context.Context, request *proto.CartItemR
 func (o OrderSever) UpdateCartItem(ctx context.Context, request *proto.CartItemRequest) (*emptypb.Empty, error) {
 	// 更新check 或者 num
 	var model models.ShoppingCartModel
-	err := global.DB.Where("id = ?", request.Id).Take(&model).Error
+	err := global.DB.Where("user = ? and goods = ?", request.UserId, request.GoodsId).Take(&model).Error
 	if err != nil {
 		zap.S().Errorf(err.Error())
 		return nil, status.Error(codes.NotFound, "未找到")
@@ -95,7 +95,7 @@ func (o OrderSever) UpdateCartItem(ctx context.Context, request *proto.CartItemR
 func (o OrderSever) DeleteCartItem(ctx context.Context, request *proto.CartItemRequest) (*emptypb.Empty, error) {
 	//删除购物车的某个商品
 	var model models.ShoppingCartModel
-	err := global.DB.Where("id = ?", request.Id).Take(&model).Error
+	err := global.DB.Where("user = ? and goods = ?", request.UserId, request.GoodsId).Take(&model).Error
 	if err != nil {
 		zap.S().Errorf(err.Error())
 		return nil, status.Error(codes.NotFound, "未找到")
