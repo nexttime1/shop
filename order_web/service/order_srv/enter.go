@@ -6,6 +6,10 @@ type OrderCreateRequest struct {
 	Name    string `json:"name" binding:"required"`
 	Mobile  string `json:"mobile" binding:"required,mobile"`
 }
+type OrderCreateResponse struct {
+	Id        int32  `json:"id"`
+	AlipayUrl string `json:"alipay_url"`
+}
 
 type OrderIdRequest struct {
 	Id int32 `uri:"id" binding:"required,min=1"`

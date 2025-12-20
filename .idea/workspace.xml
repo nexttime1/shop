@@ -5,20 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/order_web/validator/mobile.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order_service/conf/conf_alipay.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order_web/conf/conf_alipay.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/core/init_rpc.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/core/init_rpc.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/handler/cart.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/handler/cart.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/api/cart_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/api/cart_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/conf/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order_web/api/order_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/api/order_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/router/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/router/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/conf/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order_web/router/order_router.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/router/order_router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/service/banner_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/service/order_srv/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/service/brand_srv/enter.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/service/cart_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/service/cart_srv/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/service/category_srv/enter.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/service/good_srv/enter.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/service/order_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/service/order_srv/enter.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +81,7 @@
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/order_web",
+    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/order_web/conf",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -98,8 +96,8 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\5524\go_project\xtm_shop\shop\order_web\conf" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\order_web\proto" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_web" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\order_web\proto" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\test" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\proto" />
     </key>

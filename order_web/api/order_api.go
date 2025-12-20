@@ -2,14 +2,19 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/smartwalle/alipay/v3"
+	"go.uber.org/zap"
 	"order_web/common"
 	"order_web/common/enum"
 	"order_web/common/res"
 	"order_web/connect"
+	"order_web/global"
 	"order_web/proto"
 	"order_web/service/order_srv"
 	"order_web/utils/jwts"
+	"strconv"
 )
 
 type OrderApi struct {
@@ -72,15 +77,18 @@ func (OrderApi) OrderListView(c *gin.Context) {
 func (OrderApi) OrderCreateView(c *gin.Context) {
 	_claims, exist := c.Get("claims")
 	if !exist {
+		fmt.Println("1111")
 		return
 	}
 	claims := _claims.(*jwts.MyClaims)
 	var cr order_srv.OrderCreateRequest
 	err := c.ShouldBindJSON(&cr)
 	if err != nil {
+
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
+	fmt.Println(cr)
 	OrderClient, conn, err := connect.OrderConnectService(c)
 	if err != nil {
 		return
@@ -97,7 +105,35 @@ func (OrderApi) OrderCreateView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	res.OkWithData(c, orderModel)
+
+	client, err := alipay.New(global.Config.Alipay.AppId, global.Config.Alipay.PrivateKey, false)
+	if err != nil {
+		panic(err)
+	}
+	err = client.LoadAliPayPublicKey(global.Config.Alipay.AliPublicKey)
+	if err != nil {
+		panic(err)
+	}
+
+	var p = alipay.TradePagePay{}
+	p.NotifyURL = global.Config.Alipay.NotifyUrl
+	p.ReturnURL = global.Config.Alipay.ReturnUrl
+	p.Subject = "下次一定_" + orderModel.OrderSn
+	p.OutTradeNo = orderModel.OrderSn
+	p.TotalAmount = strconv.FormatFloat(float64(orderModel.Total), 'f', 2, 64)
+	p.ProductCode = "FAST_INSTANT_TRADE_PAY"
+
+	result, err := client.TradePagePay(p)
+	if err != nil {
+		zap.S().Error(err)
+		res.FailWithMsg(c, res.FailServiceCode, "生成支付宝url失败")
+		return
+	}
+	response := order_srv.OrderCreateResponse{
+		Id:        orderModel.Id,
+		AlipayUrl: result.String(),
+	}
+	res.OkWithData(c, response)
 
 }
 

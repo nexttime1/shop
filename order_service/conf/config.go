@@ -8,4 +8,5 @@ type Config struct {
 	Redis        Redis      `mapstructure:"redis" yaml:"redis"`
 	GoodSrv      GoodSrv    `mapstructure:"good_srv" yaml:"good_srv"`
 	InventorySrv GoodSrv    `mapstructure:"inventory_srv" yaml:"inventory_srv"`
+	Alipay       Alipay     `mapstructure:"alipay" yaml:"alipay"`
 }
