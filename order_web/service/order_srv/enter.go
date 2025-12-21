@@ -35,17 +35,18 @@ type OrderListResponse struct {
 }
 
 type OrderDetailResponse struct {
-	Id       int32      `json:"id"`
-	UserId   int32      `json:"user_id"`
-	OrderSn  string     `json:"order_sn"`
-	PayType  string     `json:"pay_type"`
-	Status   string     `json:"status"`
-	Post     string     `json:"post"`
-	Total    float32    `json:"total"`
-	Address  string     `json:"address"`
-	Name     string     `json:"name"`
-	Mobile   string     `json:"mobile"`
-	GoodInfo []GoodInfo `json:"goods"`
+	Id        int32      `json:"id"`
+	UserId    int32      `json:"user_id"`
+	OrderSn   string     `json:"order_sn"`
+	PayType   string     `json:"pay_type"`
+	Status    string     `json:"status"`
+	Post      string     `json:"post"`
+	Total     float32    `json:"total"`
+	Address   string     `json:"address"`
+	Name      string     `json:"name"`
+	Mobile    string     `json:"mobile"`
+	GoodInfo  []GoodInfo `json:"goods"`
+	AlipayUrl string     `json:"alipay_url"`
 }
 
 type GoodInfo struct {

@@ -5,17 +5,51 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/order_service/conf/conf_alipay.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_web/conf/conf_alipay.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/common/list_query.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/conf/conf_alipay.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/conf/conf_consul.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/conf/conf_db.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/conf/conf_good_srv.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/conf/conf_local_info.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/conf/conf_nacos.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/conf/conf_redis.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/conf/config.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/connect/srv_client.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/core/init_db.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/core/init_redis_mutex.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/core/init_register.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/core/init_yaml.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/core/init_zap.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/flags/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/flags/flag_db.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/global/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/go.mod" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/handler/address.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/handler/collection.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/handler/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/handler/message.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/models/address_model.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/models/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/models/enum/message_type.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/models/leave_message_model.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/models/user_collection_model.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/proto/address.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/proto/collection.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/proto/message.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/service/cart.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/service/random_sns.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/settings.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/test/client.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/test/settings.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/utils/free_port/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/utils/nacos_get/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/utils/struct_to_map/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order_web/router/alipay_router.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/conf/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order_web/api/order_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/api/order_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/conf/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/router/order_router.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/router/order_router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/router/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/router/enter.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order_web/service/order_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/service/order_srv/enter.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -81,7 +115,7 @@
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/order_web/conf",
+    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/option_service",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -95,11 +129,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\option_service" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_web\conf" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_web" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_web\proto" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\test" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\proto" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\service" />

@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/smartwalle/alipay/v3"
 	"go.uber.org/zap"
+	"net/http"
 	"order_web/common"
 	"order_web/common/enum"
 	"order_web/common/res"
@@ -77,7 +78,6 @@ func (OrderApi) OrderListView(c *gin.Context) {
 func (OrderApi) OrderCreateView(c *gin.Context) {
 	_claims, exist := c.Get("claims")
 	if !exist {
-		fmt.Println("1111")
 		return
 	}
 	claims := _claims.(*jwts.MyClaims)
@@ -194,6 +194,67 @@ func (OrderApi) OrderDetailView(c *gin.Context) {
 		goodsInfo = append(goodsInfo, info)
 	}
 	response.GoodInfo = goodsInfo
+
+	client, err := alipay.New(global.Config.Alipay.AppId, global.Config.Alipay.PrivateKey, false)
+	if err != nil {
+		panic(err)
+	}
+	err = client.LoadAliPayPublicKey(global.Config.Alipay.AliPublicKey)
+	if err != nil {
+		panic(err)
+	}
+
+	var p = alipay.TradePagePay{}
+	p.NotifyURL = global.Config.Alipay.NotifyUrl
+	p.ReturnURL = global.Config.Alipay.ReturnUrl
+	p.Subject = "下次一定_" + response.OrderSn
+	p.OutTradeNo = response.OrderSn
+	p.TotalAmount = strconv.FormatFloat(float64(response.Total), 'f', 2, 64)
+	p.ProductCode = "FAST_INSTANT_TRADE_PAY"
+
+	rep, err := client.TradePagePay(p)
+	if err != nil {
+		zap.S().Error(err)
+		res.FailWithMsg(c, res.FailServiceCode, "生成支付宝url失败")
+		return
+	}
+	response.AlipayUrl = rep.String()
+
 	res.OkWithData(c, response)
+
+}
+
+func (OrderApi) AlipayCallBackView(c *gin.Context) {
+
+	client, err := alipay.New(global.Config.Alipay.AppId, global.Config.Alipay.PrivateKey, false)
+	if err != nil {
+		panic(err)
+	}
+	err = client.LoadAliPayPublicKey(global.Config.Alipay.AliPublicKey)
+	if err != nil {
+		panic(err)
+	}
+
+	notification, err := client.GetTradeNotification(c.Request)
+	if err != nil || notification == nil {
+		zap.S().Error(err)
+		res.FailWithMsg(c, res.FailServiceCode, "")
+		return
+
+	}
+	OrderClient, conn, err := connect.OrderConnectService(c)
+	if err != nil {
+		return
+	}
+	defer conn.Close()
+	_, err = OrderClient.UpdateOrderStatus(context.Background(), &proto.OrderStatus{
+		OrderSn: notification.OutTradeNo,
+		Status:  string(notification.TradeStatus),
+	})
+	if err != nil {
+		res.FailWithServiceMsg(c, err)
+		return
+	}
+	c.String(http.StatusOK, "success")
 
 }

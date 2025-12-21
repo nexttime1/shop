@@ -26,6 +26,7 @@ func Router() {
 	r.Use(middleware.Cors())
 	HealthRouter(r)
 	ApiGroup := r.Group("/o/v1")
+	AlipayRouter(ApiGroup)
 	OrderRouter(ApiGroup)
 	CartRouter(ApiGroup)
 	go func() {
