@@ -7,11 +7,11 @@ import (
 )
 
 func CollectionRouter(r *gin.RouterGroup) {
-	app := api.App.Collection
+	app := api.App.CollectionApi
 	userfavs := r.Group("userfavs").Use(middleware.AuthMiddleware)
-	userfavs.GET("", app.AddressListView)          //查看所有地址
-	userfavs.DELETE("/:id", app.DeleteAddressView) //删除地址
-	userfavs.POST("", app.AddressCreateView)       //创建地址
-	userfavs.GET("/:id", app.AddressListView)      //查看所有地址
+	userfavs.GET("", app.CollectionListView)               //查看收藏
+	userfavs.DELETE("/:good_id", app.CollectionDeleteView) //删除收藏
+	userfavs.POST("", app.CollectionAddView)               //添加收藏
+	userfavs.GET("/:good_id", app.CollectionDetailView)    //查看详情
 
 }

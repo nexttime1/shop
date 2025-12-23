@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"option_service/common"
+	"option_service/connect"
 	"option_service/global"
 
 	"option_service/models"
@@ -35,11 +36,26 @@ func (o OptionServer) GetFavList(ctx context.Context, request *proto.UserFavRequ
 }
 
 func (o OptionServer) AddUserFav(ctx context.Context, request *proto.UserFavRequest) (*emptypb.Empty, error) {
+
+	goodClient, conn, err := connect.GoodConnectService()
+	if err != nil {
+		zap.S().Error(err)
+		return nil, status.Errorf(codes.Internal, "连接失败")
+	}
+	defer conn.Close()
+	_, err = goodClient.GetGoodsDetail(context.Background(), &proto.GoodInfoRequest{
+		Id: request.GoodsId,
+	})
+	if err != nil {
+		zap.S().Error(err)
+		return nil, status.Errorf(codes.Internal, "商品不存在")
+	}
+
 	model := models.UserCollectionModel{
 		UserId: request.UserId,
 		GoodId: request.GoodsId,
 	}
-	err := global.DB.Create(&model).Error
+	err = global.DB.Create(&model).Error
 	if err != nil {
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.Internal, "创建失败")
@@ -57,8 +73,8 @@ func (o OptionServer) DeleteUserFav(ctx context.Context, request *proto.UserFavR
 }
 
 func (o OptionServer) GetUserFavDetail(ctx context.Context, request *proto.UserFavRequest) (*emptypb.Empty, error) {
-
-	count := global.DB.Where("good_id = ? and user_id = ?", request.UserId, request.UserId).RowsAffected
+	var model models.UserCollectionModel
+	count := global.DB.Debug().Where("good_id = ? and user_id = ?", request.GoodsId, request.UserId).Take(&model).RowsAffected
 	if count == 0 {
 		return nil, status.Errorf(codes.NotFound, "未找到")
 	}

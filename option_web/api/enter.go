@@ -2,8 +2,8 @@ package api
 
 type Api struct {
 	AddressApi    AddressApi
+	CollectionApi UserCollectionApi
 	MessageApi    MessageApi
-	CollectionApi CollectionApi
 }
 
 var App = Api{}

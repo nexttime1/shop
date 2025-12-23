@@ -20,14 +20,7 @@ type AddressCreateRequest struct {
 }
 
 type AddressCreateResponse struct {
-	Id           int32  `json:"id"`
-	UserId       int32  `json:"userId"`
-	Province     string `json:"province"`
-	City         string `json:"city"`
-	District     string `json:"district"`
-	Address      string `json:"address"`
-	SignerName   string `json:"signer_name"`
-	SignerMobile string `json:"signer_mobile"`
+	Id int32 `json:"id"`
 }
 type AddressIdRequest struct {
 	Id int32 `uri:"id" binding:"required,min=1"`
@@ -40,40 +33,4 @@ type AddressUpdateRequest struct {
 	Address      string `json:"address"`
 	SignerName   string `json:"signer_name"`
 	SignerMobile string `json:"signer_mobile"`
-}
-
-type OrderListResponse struct {
-	Id      int32   `json:"id"`
-	UserId  int32   `json:"user_id"`
-	OrderSn string  `json:"order_sn"`
-	PayType string  `json:"pay_type"`
-	Status  string  `json:"status"`
-	Post    string  `json:"post"`
-	Total   float32 `json:"total"`
-	Address string  `json:"address"`
-	Name    string  `json:"name"`
-	Mobile  string  `json:"mobile"`
-}
-
-type OrderDetailResponse struct {
-	Id        int32      `json:"id"`
-	UserId    int32      `json:"user_id"`
-	OrderSn   string     `json:"order_sn"`
-	PayType   string     `json:"pay_type"`
-	Status    string     `json:"status"`
-	Post      string     `json:"post"`
-	Total     float32    `json:"total"`
-	Address   string     `json:"address"`
-	Name      string     `json:"name"`
-	Mobile    string     `json:"mobile"`
-	GoodInfo  []GoodInfo `json:"goods"`
-	AlipayUrl string     `json:"alipay_url"`
-}
-
-type GoodInfo struct {
-	Id    int32   `json:"id"`
-	Name  string  `json:"name"`
-	Image string  `json:"image"`
-	Price float32 `json:"price"`
-	Nums  int32   `json:"nums"`
 }

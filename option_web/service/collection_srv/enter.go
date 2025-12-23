@@ -4,15 +4,16 @@ type CollectionRequest struct {
 	GoodID int32 `json:"good_id" binding:"required"`
 }
 
-type CartAddResponse struct {
-	Id int32 `json:"id"`
+type CollectionListResponse struct {
+	GoodId    int32   `json:"good_id"`
+	Name      string  `json:"name"`
+	ShopPrice float32 `json:"shop_price"`
 }
 
-type CartIdRequest struct {
-	Id int32 `uri:"id" binding:"required,min=1"`
+type CollectionAddRequest struct {
+	GoodId int32 `json:"good_id" binding:"required,min=1"`
 }
 
-type CartUpdateRequest struct {
-	Num     int32 `json:"num" binding:"required" min:"1"`
-	Checked *bool `json:"checked"`
+type CollectionIdRequest struct {
+	GoodId int32 `uri:"good_id" binding:"required,min=1"`
 }

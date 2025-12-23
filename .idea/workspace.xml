@@ -5,59 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/option_service/service/address.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/api/address_api.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/api/cart_api.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/api/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/common/enum/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/common/request.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/common/res/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/conf/conf_consul.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/conf/conf_good_srv.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/conf/conf_jwt.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/conf/conf_nacos.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/conf/conf_redis.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/conf/conf_system.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/conf/config.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/connect/service.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/core/init_log.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/core/init_redis.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/core/init_register.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/core/init_yaml.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/flags/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/global/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/middleware/auth_middleware.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/middleware/cors.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/proto/address.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/proto/address.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/proto/collection.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/proto/collection.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/proto/goods.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/proto/goods.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/proto/message.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/proto/message.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/router/address_router.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/router/collection_router.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/router/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/router/health_router.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/router/message_router.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/service/address_srv/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/service/collection_srv/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/service/message_srv/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/service/redis_service/redis_jwt/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/settings.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/utils/jwts/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/utils/nacos_get/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/utils/validate/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/option_web/validator/mobile.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/proto/goods.pb.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/option_service/proto/goods.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_service/connect/srv_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_service/connect/srv_client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/option_service/handler/address.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_service/handler/address.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/option_service/handler/collection.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_service/handler/collection.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/option_service/handler/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_service/handler/message.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/option_service/models/leave_message_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_service/models/leave_message_model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_web/api/address_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/api/address_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_web/api/collection_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/api/collection_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_web/api/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/api/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_web/global/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/global/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_web/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_web/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_web/router/collection_router.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/router/collection_router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_web/router/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/router/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_web/service/address_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/service/address_srv/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_web/service/collection_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/service/collection_srv/enter.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,7 +85,7 @@
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/option_web/proto",
+    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/option_service/proto",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -136,11 +99,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\option_service\proto" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\option_web\api" />
       <recent name="D:\5524\go_project\xtm_shop\shop\option_web\proto" />
       <recent name="D:\5524\go_project\xtm_shop\shop\option_web" />
       <recent name="D:\5524\go_project\xtm_shop\shop\option_service" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\order_web\conf" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\order_web" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\service" />

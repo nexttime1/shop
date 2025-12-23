@@ -72,6 +72,11 @@ func (o OptionServer) DeleteAddress(ctx context.Context, request *proto.AddressR
 		zap.S().Error(err)
 		return nil, status.Error(codes.NotFound, "不存在")
 	}
+	err = global.DB.Delete(&model).Error
+	if err != nil {
+		zap.S().Error(err)
+		return nil, status.Error(codes.Internal, "删除失败")
+	}
 	return &emptypb.Empty{}, nil
 
 }
@@ -84,12 +89,12 @@ func (o OptionServer) UpdateAddress(ctx context.Context, request *proto.AddressR
 		return nil, status.Error(codes.NotFound, "不存在")
 	}
 	modelMap := service.AddressMap{
-		Province:     model.Province,
-		City:         model.City,
-		District:     model.District,
-		Address:      model.Address,
-		SignerName:   model.SignerName,
-		SignerMobile: model.SignerMobile,
+		Province:     request.Province,
+		City:         request.City,
+		District:     request.District,
+		Address:      request.Address,
+		SignerName:   request.SignerName,
+		SignerMobile: request.SignerMobile,
 	}
 	toMap := struct_to_map.StructToMap(modelMap)
 	err = global.DB.Model(&model).Updates(toMap).Error

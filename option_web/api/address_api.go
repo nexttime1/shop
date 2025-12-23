@@ -83,14 +83,7 @@ func (AddressApi) AddressCreateView(c *gin.Context) {
 		return
 	}
 	response := address_srv.AddressCreateResponse{
-		Id:           address.Id,
-		UserId:       address.UserId,
-		Province:     address.Province,
-		City:         address.City,
-		District:     address.District,
-		Address:      address.Address,
-		SignerName:   address.SignerName,
-		SignerMobile: address.SignerMobile,
+		Id: address.Id,
 	}
 
 	res.OkWithData(c, response)
@@ -169,6 +162,6 @@ func (AddressApi) UpdateAddressView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	res.OkWithMessage(c, "修改成功")
+	res.OkWithMessage(c, "更新成功")
 
 }
