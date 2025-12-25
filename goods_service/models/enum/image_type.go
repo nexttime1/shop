@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap"
 )
 
-type ImageType int32
+type ImageType int
 
 const (
 	MainImageType   ImageType = 1
@@ -16,7 +16,7 @@ const (
 
 // Value 实现 driver.Valuer 接口：将 Go 类型转数据库类型（tinyint）
 func (t ImageType) Value() (driver.Value, error) {
-	return int32(t), nil
+	return int(t), nil
 }
 
 // Scan 实现 sql.Scanner 接口：将数据库类型（tinyint）转 Go 类型

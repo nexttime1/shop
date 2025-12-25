@@ -3,22 +3,30 @@ package core
 import (
 	"fmt"
 	"github.com/hashicorp/consul/api"
-	"github.com/satori/go.uuid"
-	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"net"
-	"os"
-	"os/signal"
-	"shop_service/global"
 	"shop_service/handler"
 	"shop_service/proto"
 	"shop_service/utils/free_port"
-	"syscall"
+
+	"github.com/satori/go.uuid"
+	"go.uber.org/zap"
+	"shop_service/global"
 )
 
-func InitRPC() error {
+type ServerRegister interface {
+	Register() error
+	Deregister() error
+}
+
+type ConsulRegister struct {
+	ServiceID string
+}
+
+// Go 编译器对指针类型调用值接收者方法时，会自动做 *ptr 解引用
+func (c ConsulRegister) Register() error {
 	// 动态获得 端口
 	port, err := free_port.GetFreePort()
 	if err != nil {
@@ -29,7 +37,7 @@ func InitRPC() error {
 	server := grpc.NewServer()
 	proto.RegisterUserServer(server, &handler.UserSever{})
 	// 监听的端口 一定是动态获取的 要不健康检查 识别不到
-	listenAddr := fmt.Sprintf("%s:%d", global.Config.UserRPC.IP, port)
+	listenAddr := fmt.Sprintf("%s:%d", global.Config.LocalInfo.Addr, port)
 	lis, err := net.Listen("tcp", listenAddr)
 	if err != nil {
 		return err
@@ -53,12 +61,11 @@ func InitRPC() error {
 		Timeout:                        "5s",                                                     // 检查超时时间
 		DeregisterCriticalServiceAfter: "10s",                                                    // 服务异常后多久注销
 	}
-	// 服务注册请求体 申请注册表  防止覆盖 id 不一样就可以
-	serviceID := uuid.NewV4().String()
+
 	registration := &api.AgentServiceRegistration{
-		ID:      serviceID,
+		ID:      c.ServiceID,
 		Name:    global.Config.ConsulInfo.Name,
-		Tags:    []string{"xtm", "skw", "love"},
+		Tags:    global.Config.ConsulInfo.Tags,
 		Address: global.Config.LocalInfo.Addr, // 告诉consul  我这个服务的ip 和 端口
 		Port:    port,
 		Check:   check,
@@ -66,7 +73,7 @@ func InitRPC() error {
 	//  注册服务到 Consul  发送
 	err = consulClient.Agent().ServiceRegister(registration)
 	if err != nil {
-		zap.S().Errorf("注册服务到 Consul错误 %s", err.Error())
+		zap.S().Errorf("注册服务到 Consul错误 %s", err)
 		return err
 	}
 	zap.S().Infof("%s 注册成功", global.Config.ConsulInfo.Name)
@@ -86,17 +93,29 @@ func InitRPC() error {
 			panic(err)
 		}
 	}()
-	// ctrl + C 自动注销 刚注册的consul  监听
-	quit := make(chan os.Signal)
-	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
-	<-quit // 阻塞
 
-	err = consulClient.Agent().ServiceDeregister(serviceID)
+	return nil
+}
+func (c ConsulRegister) Deregister() error {
+	// 服务注册
+	consulConfig := api.DefaultConfig()
+	// 改一下默认  这个是 虚拟机Consul 所在的ip
+	consulConfig.Address = global.Config.ConsulInfo.GetAddr()
+
+	consulClient, err := api.NewClient(consulConfig)
+
+	err = consulClient.Agent().ServiceDeregister(c.ServiceID)
 	if err != nil {
 		zap.S().Errorf("服务注销失败 %s", err.Error())
 		return err
 	}
-	zap.S().Info("服务注销成功")
-
 	return nil
+
+}
+
+func NewConsulRegister() ServerRegister {
+
+	return &ConsulRegister{
+		ServiceID: uuid.NewV4().String(),
+	}
 }

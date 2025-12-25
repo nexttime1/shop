@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/olivere/elastic/v7"
 	"go.uber.org/zap"
 	"goods_service/common"
 	"goods_service/global"
@@ -14,6 +15,7 @@ import (
 	"goods_service/utils/struct_to_map"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"strconv"
 )
 
 func GoodInfoFunction(goods models.GoodModel) proto.GoodsInfoResponse {
@@ -72,23 +74,30 @@ func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequ
 		Limit: request.PagePerNums,
 		Key:   request.KeyWords,
 	}
-	// 针对 商品的 特殊查询
-	query := global.DB.Model(models.GoodModel{})
+	// 针对 商品的 特殊查询  es 进行查询
+	query := elastic.NewBoolQuery()
+
 	if request.IsHot { //是否热卖
-		query = query.Where("is_hot = true")
+		// 这样不加权重  只有模糊匹配 才加权重
+		query = query.Filter(elastic.NewTermQuery("is_hot", request.IsHot))
 	}
 	if request.IsNew { //是否新品
-		query = query.Where("is_new = true")
+		query = query.Filter(elastic.NewTermQuery("is_new", request.IsNew))
 	}
 	if request.PriceMax > 0 { //价格区间
-		query = query.Where("shop_price <= ?", request.PriceMax)
+		query = query.Filter(elastic.NewRangeQuery("market_price").Lte(request.PriceMax))
 	}
 	if request.PriceMin > 0 { //价格区间
-		query = query.Where("shop_price >= ?", request.PriceMin)
+		query = query.Filter(elastic.NewRangeQuery("market_price").Gte(request.PriceMin))
+
 	}
 	if request.BrandID != 0 { // 是否规定品牌
-		query = query.Where("brands_id = ?", request.BrandID)
+		query = query.Filter(elastic.NewTermQuery("brand_id", request.BrandID))
 	}
+	if request.KeyWords != "" {
+		query = query.Must(elastic.NewMultiMatchQuery(request.KeyWords, "name", "desc"))
+	}
+
 	// 分类的 查询
 	var subQuery string
 	if request.TopCategoryID != 0 { //说明用户选择了 分类查询
@@ -107,21 +116,42 @@ func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequ
 		} else {
 			subQuery = fmt.Sprintf("%d", request.TopCategoryID)
 		}
+		type result struct {
+			Id int32 `json:"id"`
+		}
+		var results []result
 		search := fmt.Sprintf("category_id in (%s)", subQuery)
-		query = query.Where(search)
+		err = global.DB.Model(models.CategoryModel{}).Raw(search).Scan(&results).Error
+		if err != nil {
+			zap.S().Error(err)
+			return nil, status.Errorf(codes.NotFound, "不存在")
+		}
+		categoryIds := make([]interface{}, 0)
+		for _, v := range results {
+			categoryIds = append(categoryIds, strconv.Itoa(int(v.Id)))
+		}
+
+		query = query.Filter(elastic.NewTermsQuery("category_id", categoryIds...))
+
 	}
-	list, count, err := common.ListQuery(models.GoodModel{}, common.Options{
-		PageInfo: pageInfo,
-		Likes:    []string{"name"},
-		Preload:  []string{"Category", "Brands", "Images"},
-		Where:    query,
-		Debug:    true,
-	})
+	resp, err := global.EsClient.Search().Index(models.EsGoods{}.Index()).Query(query).From(int(pageInfo.GetOffset())).Size(int(pageInfo.GetLimit())).Do(context.Background())
 	if err != nil {
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.Internal, "查询错误")
 	}
-	response.Total = count
+	response.Total = int32(resp.Hits.TotalHits.Value)
+	ids := make([]int, 0)
+	for _, hit := range resp.Hits.Hits {
+		id, err := strconv.Atoi(hit.Id)
+		if err != nil {
+			zap.S().Error(err)
+			return nil, status.Errorf(codes.Internal, "错误")
+		}
+		ids = append(ids, id)
+	}
+	var list []models.GoodModel
+	global.DB.Preload("Category").Preload("Brands").Where("id in (?)", ids).Find(&list)
+
 	var InfoList []*proto.GoodsInfoResponse
 	for _, item := range list {
 		info := GoodInfoFunction(item)
@@ -152,14 +182,16 @@ func (g GoodSever) BatchGetGoods(ctx context.Context, info *proto.BatchGoodsIdIn
 }
 
 func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo) (*proto.GoodsInfoResponse, error) {
+	fmt.Println("CreateGoods 服务层")
+
 	var category models.CategoryModel
-	err := global.DB.Where("id = ?", info.CategoryId).Take(&category).Error
+	err := global.DB.Debug().Where("id = ?", info.CategoryId).Take(&category).Error
 	if err != nil {
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.NotFound, "分类不存在")
 	}
 	var brand models.Brands
-	err = global.DB.Where("id = ?", info.Brand).Take(&brand).Error
+	err = global.DB.Debug().Where("id = ?", info.Brand).Take(&brand).Error
 	if err != nil {
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.NotFound, "品牌不存在")
@@ -191,11 +223,11 @@ func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 		tx.Rollback()
 		return nil, status.Errorf(codes.Internal, "创建失败")
 	}
-
+	zap.S().Info(model)
 	// web 已经上传了 七牛云 这里就是 url
 	// 添加第三章表  图片
 	// 主图
-	err = tx.Create(&models.GoodsImageModel{
+	err = tx.Debug().Create(&models.GoodsImageModel{
 		GoodsID:   model.ID,
 		ImageURL:  info.GoodsFrontImage,
 		Sort:      0,
@@ -209,10 +241,10 @@ func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 	}
 
 	for i, image := range info.DescImages {
-		err = tx.Create(&models.GoodsImageModel{
+		err = tx.Debug().Create(&models.GoodsImageModel{
 			GoodsID:   model.ID,
 			ImageURL:  image,
-			Sort:      int32(i + 1),
+			Sort:      i + 1,
 			IsMain:    true,
 			ImageType: 2, //（1=主图，2=详情图，3=其他）
 		}).Error
@@ -223,10 +255,10 @@ func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 		}
 	}
 	for i, image := range info.Images {
-		err = tx.Create(&models.GoodsImageModel{
+		err = tx.Debug().Create(&models.GoodsImageModel{
 			GoodsID:   model.ID,
 			ImageURL:  image,
-			Sort:      int32(i + 1),
+			Sort:      i + 1,
 			IsMain:    true,
 			ImageType: 3, //（1=主图，2=详情图，3=其他）
 		}).Error
@@ -237,7 +269,11 @@ func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 		}
 	}
 	goodInfo := GoodInfoFunction(model)
-
+	err = tx.Commit().Error
+	if err != nil {
+		zap.S().Error(err)
+		return nil, status.Errorf(codes.Internal, "错误")
+	}
 	return &goodInfo, nil
 
 }
@@ -338,7 +374,7 @@ func (g GoodSever) UpdateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 			err = tx.Create(&models.GoodsImageModel{
 				GoodsID:   model.ID,
 				ImageURL:  image,
-				Sort:      int32(i + 1),
+				Sort:      i + 1,
 				IsMain:    true,
 				ImageType: 2, //（1=主图，2=详情图，3=其他）
 			}).Error
@@ -361,7 +397,7 @@ func (g GoodSever) UpdateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 			err = tx.Create(&models.GoodsImageModel{
 				GoodsID:   model.ID,
 				ImageURL:  image,
-				Sort:      int32(i + 1),
+				Sort:      i + 1,
 				IsMain:    true,
 				ImageType: 3, //（1=主图，2=详情图，3=其他）
 			}).Error

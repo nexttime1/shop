@@ -1,7 +1,10 @@
 package main
 
 import (
-	"fmt"
+	"go.uber.org/zap"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"shop_service/core"
 	"shop_service/flags"
@@ -12,16 +15,27 @@ func main() {
 	flags.Parse() //解析 yaml文件
 	core.InitZap()
 	global.Config = core.ReadConf()
-	//fmt.Println(global.Config)
+
 	global.DB = core.InitDB()
 
-	//core.InitLogrus()
 	flags.Run()
-	err := core.InitRPC()
+	client := core.NewConsulRegister()
 
+	err := client.Register()
 	if err != nil {
+		zap.L().Error("注册失败", zap.Error(err))
+		panic(err)
+	}
+	// ctrl + C 自动注销 刚注册的consul  监听
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit // 阻塞
+	err = client.Deregister()
+	if err != nil {
+		zap.L().Error("服务注销失败", zap.Error(err))
 		return
 	}
-	fmt.Println("运行成功")
+
+	zap.S().Info("服务注销成功")
 
 }

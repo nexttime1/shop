@@ -17,7 +17,7 @@ func GoodConnectService(c *gin.Context) (proto.GoodsClient, *grpc.ClientConn, er
 	// 这个是 consul 的 ip 和 port
 	connectAddr := "consul://" +
 		global.Config.ConsulInfo.GetAddr() +
-		"/good_service?wait=14s"
+		"/goods_service?wait=14s"
 
 	zap.S().Infof("try connecting to %s ...", connectAddr)
 	conn, err := grpc.NewClient(

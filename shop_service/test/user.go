@@ -21,7 +21,7 @@ func Init() {
 	global.DB = core.InitDB()
 	core.InitLogrus()
 	var err error
-	conn, err = grpc.NewClient(global.Config.UserRPC.GetAddr(), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.NewClient(global.Config.LocalInfo.GetAddr(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		panic(err)
 	}

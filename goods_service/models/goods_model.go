@@ -1,5 +1,14 @@
 package models
 
+import (
+	"context"
+	"fmt"
+	"go.uber.org/zap"
+	"goods_service/global"
+	"gorm.io/gorm"
+	"strconv"
+)
+
 type GoodModel struct {
 	Model
 	CategoryID int32          `gorm:"type:int;not null;comment:分类ID（逻辑外键）;index:idx_goods_category"`
@@ -23,4 +32,30 @@ type GoodModel struct {
 
 	// 方便查询商品的所有图片（Gorm虚拟字段，不存数据库）
 	Images []*GoodsImageModel `gorm:"foreignKey:GoodsID;references:ID;constraint:<-:false,foreignKey:no action"`
+}
+
+func (goodModel GoodModel) BeforeCreate(tx *gorm.DB) (err error) {
+	fmt.Println("开始添加")
+	model := EsGoods{
+		ID:          goodModel.ID,
+		CategoryID:  goodModel.CategoryID,
+		BrandsID:    goodModel.BrandsID,
+		Name:        goodModel.Name,
+		ClickNum:    goodModel.ClickNum,
+		SoldNum:     goodModel.SoldNum,
+		FavNum:      goodModel.FavNum,
+		MarketPrice: goodModel.MarketPrice,
+		GoodsBrief:  goodModel.GoodsBrief,
+		ShopPrice:   goodModel.ShopPrice,
+	}
+	if goodModel.ShipFree != nil {
+		model.ShipFree = *goodModel.ShipFree
+	}
+	_, err = global.EsClient.Index().Index(EsGoods{}.Index()).BodyJson(model).Id(strconv.Itoa(int(model.ID))).Do(context.Background())
+	if err != nil {
+		zap.S().Error(err)
+		return err
+	}
+	fmt.Println("添加完成")
+	return nil
 }

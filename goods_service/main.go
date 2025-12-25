@@ -17,7 +17,7 @@ func main() {
 	global.Config = core.ReadConf()
 	//fmt.Println(global.Config)
 	global.DB = core.InitDB()
-
+	global.EsClient = core.InitEs()
 	flags.Run()
 	client := core.NewConsulRegister()
 

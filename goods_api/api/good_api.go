@@ -45,7 +45,42 @@ func (GoodApi) GetGoodListView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	res.OkWithList(c, list.Data, list.Total)
+	var response []good_srv.GoodsInfoResponse
+	for _, model := range list.Data {
+		info := good_srv.GoodsInfoResponse{
+			ID:              model.Id,
+			CategoryID:      model.CategoryId,
+			Name:            model.Name,
+			GoodsSn:         model.GoodsSn,
+			ClickNum:        model.ClickNum,
+			SoldNum:         model.SoldNum,
+			FavNum:          model.FavNum,
+			Stocks:          model.Stocks,
+			MarketPrice:     model.MarketPrice,
+			ShopPrice:       model.ShopPrice,
+			GoodsBrief:      model.GoodsBrief,
+			GoodsDesc:       model.GoodsDesc,
+			ShipFree:        model.ShipFree,
+			Images:          model.Images,
+			DescImages:      model.DescImages,
+			GoodsFrontImage: model.GoodsFrontImage,
+			IsNew:           model.IsNew,
+			IsHot:           model.IsHot,
+			OnSale:          model.OnSale,
+			AddTime:         model.AddTime,
+			Category: good_srv.CategoryBriefInfoResponse{
+				ID:   model.Category.Id,
+				Name: model.Category.Name,
+			},
+			Brand: good_srv.BrandInfoResponse{
+				ID:   model.Brand.Id,
+				Name: model.Brand.Name,
+				Logo: model.Brand.Logo,
+			},
+		}
+		response = append(response, info)
+	}
+	res.OkWithList(c, response, list.Total)
 
 }
 
@@ -63,6 +98,7 @@ func (GoodApi) CreateGoodView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
+
 	goodInfo, err := client.CreateGoods(context.Background(), &proto.CreateGoodsInfo{
 		Name:            cr.Name,
 		GoodsSn:         cr.GoodsSn,
@@ -82,6 +118,7 @@ func (GoodApi) CreateGoodView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
+	fmt.Printf("=== Service层返回结果 ===\nerr: %v\n返回数据: %+v\n", err, goodInfo)
 	res.OkWithData(c, goodInfo)
 }
 

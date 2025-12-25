@@ -1,5 +1,5 @@
 nacos_info:
-  host: "192.168.163.50"
+  host: "192.168.163.132"
   port: 8848
   user: nacos
   password: nacos
