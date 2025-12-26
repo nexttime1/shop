@@ -14,16 +14,25 @@ const (
 	OtherImageType  ImageType = 3
 )
 
-// Value 实现 driver.Valuer 接口：将 Go 类型转数据库类型（tinyint）
 func (t ImageType) Value() (driver.Value, error) {
-	return int(t), nil
+	return int64(t), nil // 改为返回int64，符合driver.Value规范
 }
 
 // Scan 实现 sql.Scanner 接口：将数据库类型（tinyint）转 Go 类型
 func (t *ImageType) Scan(value interface{}) error {
-	val, ok := value.(int64)
-	if !ok {
-		zap.S().Error("转换失败")
+	// 兼容更多类型（比如int/uint），避免转换失败
+	var val int64
+	switch v := value.(type) {
+	case int64:
+		val = v
+	case int:
+		val = int64(v)
+	case uint:
+		val = int64(v)
+	case uint64:
+		val = int64(v)
+	default:
+		zap.S().Errorf("图片类型转换失败，不支持的类型: %T, 值: %v", value, value)
 		return errors.New("invalid image type value")
 	}
 	*t = ImageType(val)

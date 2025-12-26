@@ -36,35 +36,42 @@ func GoodInfoFunction(goods models.GoodModel) proto.GoodsInfoResponse {
 			otherImages = append(otherImages, imageModel.ImageURL)
 		}
 	}
-
-	return proto.GoodsInfoResponse{
-		Id:              goods.ID,
-		CategoryId:      goods.CategoryID,
-		Name:            goods.Name,
-		GoodsSn:         goods.GoodsSn,
-		ClickNum:        goods.ClickNum,
-		SoldNum:         goods.SoldNum,
-		FavNum:          goods.FavNum,
-		MarketPrice:     goods.MarketPrice,
-		ShopPrice:       goods.ShopPrice,
-		GoodsBrief:      goods.GoodsBrief,
-		ShipFree:        goods.ShipFree,
-		GoodsFrontImage: firstImage,
-		IsNew:           goods.IsNew,
-		IsHot:           goods.IsHot,
-		OnSale:          goods.OnSale,
-		DescImages:      descImages,
-		Images:          otherImages,
-		Category: &proto.CategoryBriefInfoResponse{
-			Id:   goods.Category.ID,
-			Name: goods.Category.Name,
-		},
-		Brand: &proto.BrandInfoResponse{
-			Id:   goods.Brands.ID,
-			Name: goods.Brands.Name,
-			Logo: goods.Brands.Logo,
-		},
+	var response proto.GoodsInfoResponse
+	if goods.ShipFree != nil {
+		response.ShipFree = goods.ShipFree
 	}
+	if goods.IsNew != nil {
+		response.IsNew = goods.IsNew
+	}
+	if goods.IsHot != nil {
+		response.IsHot = goods.IsHot
+	}
+	if goods.OnSale != nil {
+		response.OnSale = goods.OnSale
+	}
+	response.Id = goods.ID
+	response.Name = goods.Name
+	response.CategoryId = goods.CategoryID
+	response.GoodsSn = goods.GoodsSn
+	response.ClickNum = goods.ClickNum
+	response.SoldNum = goods.SoldNum
+	response.FavNum = goods.FavNum
+	response.MarketPrice = goods.MarketPrice
+	response.ShopPrice = goods.ShopPrice
+	response.GoodsBrief = goods.GoodsBrief
+	response.GoodsFrontImage = firstImage
+	response.DescImages = descImages
+	response.Images = otherImages
+	response.Brand = &proto.BrandInfoResponse{
+		Id:   goods.Brands.ID,
+		Name: goods.Brands.Name,
+		Logo: goods.Brands.Logo,
+	}
+	response.Category = &proto.CategoryBriefInfoResponse{
+		Id:   goods.Category.ID,
+		Name: goods.Category.Name,
+	}
+	return response
 }
 
 func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequest) (*proto.GoodsListResponse, error) {
@@ -182,16 +189,15 @@ func (g GoodSever) BatchGetGoods(ctx context.Context, info *proto.BatchGoodsIdIn
 }
 
 func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo) (*proto.GoodsInfoResponse, error) {
-	fmt.Println("CreateGoods 服务层")
 
 	var category models.CategoryModel
-	err := global.DB.Debug().Where("id = ?", info.CategoryId).Take(&category).Error
+	err := global.DB.Where("id = ?", info.CategoryId).Take(&category).Error
 	if err != nil {
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.NotFound, "分类不存在")
 	}
 	var brand models.Brands
-	err = global.DB.Debug().Where("id = ?", info.Brand).Take(&brand).Error
+	err = global.DB.Where("id = ?", info.Brand).Take(&brand).Error
 	if err != nil {
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.NotFound, "品牌不存在")
@@ -223,22 +229,27 @@ func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 		tx.Rollback()
 		return nil, status.Errorf(codes.Internal, "创建失败")
 	}
-	zap.S().Info(model)
+
 	// web 已经上传了 七牛云 这里就是 url
 	// 添加第三章表  图片
 	// 主图
-	err = tx.Debug().Create(&models.GoodsImageModel{
+	var ImagesModels []*models.GoodsImageModel
+
+	err = tx.Create(&models.GoodsImageModel{
 		GoodsID:   model.ID,
 		ImageURL:  info.GoodsFrontImage,
 		Sort:      0,
 		IsMain:    true,
-		ImageType: 1, //（1=主图，2=详情图，3=其他）
+		ImageType: enum.MainImageType, //（1=主图，2=详情图，3=其他）
 	}).Error
 	if err != nil {
 		zap.S().Error(err)
 		tx.Rollback()
 		return nil, status.Errorf(codes.Internal, "创建失败")
 	}
+	ImagesModels = append(ImagesModels, &models.GoodsImageModel{
+		ImageURL: info.GoodsFrontImage,
+	})
 
 	for i, image := range info.DescImages {
 		err = tx.Debug().Create(&models.GoodsImageModel{
@@ -246,34 +257,46 @@ func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 			ImageURL:  image,
 			Sort:      i + 1,
 			IsMain:    true,
-			ImageType: 2, //（1=主图，2=详情图，3=其他）
+			ImageType: enum.DetailImageType, //（1=主图，2=详情图，3=其他）
 		}).Error
 		if err != nil {
 			zap.S().Error(err)
 			tx.Rollback()
 			return nil, status.Errorf(codes.Internal, "创建失败")
 		}
+		ImagesModels = append(ImagesModels, &models.GoodsImageModel{
+			ImageURL: image,
+		})
 	}
+
 	for i, image := range info.Images {
-		err = tx.Debug().Create(&models.GoodsImageModel{
+		err = tx.Create(&models.GoodsImageModel{
 			GoodsID:   model.ID,
 			ImageURL:  image,
 			Sort:      i + 1,
 			IsMain:    true,
-			ImageType: 3, //（1=主图，2=详情图，3=其他）
+			ImageType: enum.OtherImageType, //（1=主图，2=详情图，3=其他）
 		}).Error
 		if err != nil {
 			zap.S().Error(err)
 			tx.Rollback()
 			return nil, status.Errorf(codes.Internal, "创建失败")
 		}
+		ImagesModels = append(ImagesModels, &models.GoodsImageModel{
+			ImageURL: image,
+		})
 	}
+	model.Category = &category
+	model.Brands = &brand
+	model.Images = ImagesModels
+
 	goodInfo := GoodInfoFunction(model)
 	err = tx.Commit().Error
 	if err != nil {
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.Internal, "错误")
 	}
+
 	return &goodInfo, nil
 
 }

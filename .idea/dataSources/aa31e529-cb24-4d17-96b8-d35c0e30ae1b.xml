@@ -1000,7 +1000,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     <schema id="289" parent="1" name="good-srv">
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2025-12-21.13:25:09</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-12-26.04:47:48</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="290" parent="1" name="gorm">
@@ -1015,13 +1015,13 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     <schema id="293" parent="1" name="option-srv">
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2025-12-21.13:25:15</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-12-26.04:46:01</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="294" parent="1" name="order-srv">
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2025-12-21.13:25:09</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-12-26.04:46:01</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="295" parent="1" name="performance_schema">
@@ -1039,7 +1039,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     <schema id="299" parent="1" name="stock-srv">
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2025-12-21.13:25:09</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-12-26.04:46:01</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="300" parent="1" name="sys">
@@ -1048,7 +1048,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     <schema id="301" parent="1" name="user-srv">
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2025-12-21.13:25:09</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-12-26.04:46:01</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <user id="302" parent="1" name="mysql.infoschema">
@@ -1325,7 +1325,7 @@ brands_id</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="357" parent="310" name="id">
-      <AutoIncrement>31</AutoIncrement>
+      <AutoIncrement>37</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>int|0s</StoredType>
@@ -1468,7 +1468,7 @@ brands_id</ColNames>
       <UnderlyingIndexName>idx_goods_sn</UnderlyingIndexName>
     </key>
     <column id="383" parent="311" name="id">
-      <AutoIncrement>54</AutoIncrement>
+      <AutoIncrement>69</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>int|0s</StoredType>
@@ -1533,7 +1533,7 @@ brands_id</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="395" parent="312" name="id">
-      <AutoIncrement>1</AutoIncrement>
+      <AutoIncrement>2</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>int|0s</StoredType>
@@ -1593,7 +1593,7 @@ brands_id</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="409" parent="313" name="id">
-      <AutoIncrement>1</AutoIncrement>
+      <AutoIncrement>2</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>int|0s</StoredType>
@@ -1645,7 +1645,7 @@ brands_id</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="421" parent="314" name="id">
-      <AutoIncrement>1</AutoIncrement>
+      <AutoIncrement>2</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>int|0s</StoredType>
