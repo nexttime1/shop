@@ -118,7 +118,7 @@ func (GoodApi) CreateGoodView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	fmt.Printf("=== Service层返回结果 ===\nerr: %v\n返回数据: %+v\n", err, goodInfo)
+
 	res.OkWithData(c, goodInfo)
 }
 
@@ -136,6 +136,7 @@ func (GoodApi) GoodDetailView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
+
 	goodInfo, err := client.GetGoodsDetail(context.Background(), &proto.GoodInfoRequest{
 		Id: cr.Id,
 	})
@@ -144,7 +145,52 @@ func (GoodApi) GoodDetailView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	res.OkWithData(c, goodInfo)
+	stockClient, clientConn, err := connect.StockConnectService(c)
+	if err != nil {
+		return
+	}
+	defer clientConn.Close()
+	detail, err := stockClient.InvDetail(context.Background(), &proto.GoodsInvInfo{
+		GoodsId: goodInfo.Id,
+	})
+	if err != nil {
+		zap.S().Error(err)
+		res.FailWithServiceMsg(c, err)
+		return
+	}
+	response := good_srv.GoodsInfoResponse{
+		ID:              goodInfo.Id,
+		CategoryID:      goodInfo.CategoryId,
+		Name:            goodInfo.Name,
+		GoodsSn:         goodInfo.GoodsSn,
+		ClickNum:        goodInfo.ClickNum,
+		SoldNum:         goodInfo.SoldNum,
+		FavNum:          goodInfo.FavNum,
+		Stocks:          detail.Num,
+		MarketPrice:     goodInfo.MarketPrice,
+		ShopPrice:       goodInfo.ShopPrice,
+		GoodsBrief:      goodInfo.GoodsBrief,
+		GoodsDesc:       goodInfo.GoodsDesc,
+		ShipFree:        goodInfo.ShipFree,
+		Images:          goodInfo.Images,
+		DescImages:      goodInfo.DescImages,
+		GoodsFrontImage: goodInfo.GoodsFrontImage,
+		IsNew:           goodInfo.IsNew,
+		IsHot:           goodInfo.IsHot,
+		OnSale:          goodInfo.OnSale,
+		AddTime:         goodInfo.AddTime,
+		Category: good_srv.CategoryBriefInfoResponse{
+			ID:   goodInfo.Category.Id,
+			Name: goodInfo.Category.Name,
+		},
+		Brand: good_srv.BrandInfoResponse{
+			ID:   goodInfo.Brand.Id,
+			Name: goodInfo.Brand.Name,
+			Logo: goodInfo.Brand.Logo,
+		},
+	}
+
+	res.OkWithData(c, response)
 
 }
 

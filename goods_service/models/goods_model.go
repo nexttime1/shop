@@ -34,7 +34,7 @@ type GoodModel struct {
 	Images []*GoodsImageModel `gorm:"foreignKey:GoodsID;references:ID;constraint:<-:false,foreignKey:no action"`
 }
 
-func (goodModel GoodModel) BeforeCreate(tx *gorm.DB) (err error) {
+func (goodModel GoodModel) AfterCreate(tx *gorm.DB) (err error) {
 	fmt.Println("开始添加")
 	model := EsGoods{
 		ID:          goodModel.ID,
@@ -58,4 +58,41 @@ func (goodModel GoodModel) BeforeCreate(tx *gorm.DB) (err error) {
 	}
 	fmt.Println("添加完成")
 	return nil
+}
+
+func (goodModel GoodModel) AfterUpdate(tx *gorm.DB) (err error) {
+	fmt.Println("开始更新es")
+	model := EsGoods{
+		ID:          goodModel.ID,
+		CategoryID:  goodModel.CategoryID,
+		BrandsID:    goodModel.BrandsID,
+		Name:        goodModel.Name,
+		ClickNum:    goodModel.ClickNum,
+		SoldNum:     goodModel.SoldNum,
+		FavNum:      goodModel.FavNum,
+		MarketPrice: goodModel.MarketPrice,
+		GoodsBrief:  goodModel.GoodsBrief,
+		ShopPrice:   goodModel.ShopPrice,
+	}
+	if goodModel.ShipFree != nil {
+		model.ShipFree = *goodModel.ShipFree
+	}
+	_, err = global.EsClient.Update().Index(EsGoods{}.Index()).Doc(model).Id(strconv.Itoa(int(model.ID))).Do(context.Background())
+	if err != nil {
+		zap.S().Error(err)
+		return err
+	}
+	fmt.Println("更新完成es")
+	return nil
+}
+
+func (goodModel GoodModel) AfterDelete(tx *gorm.DB) (err error) {
+	_, err = global.EsClient.Delete().Index(EsGoods{}.Index()).Id(strconv.Itoa(int(goodModel.ID))).Do(context.Background())
+	if err != nil {
+		zap.S().Error(err)
+		return err
+	}
+	fmt.Println("es删除成功")
+	return nil
+
 }
