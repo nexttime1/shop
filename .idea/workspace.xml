@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/goods_api/proto/inventory.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/goods_api/proto/inventory.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_api/api/good_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/api/good_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_api/connect/good.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/connect/client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/models/goods_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/models/goods_model.go" afterDir="false" />
-    </list>
+    <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
