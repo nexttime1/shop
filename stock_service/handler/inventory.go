@@ -63,8 +63,17 @@ func (i InventorySever) Sell(ctx context.Context, info *proto.SellInfo) (*emptyp
 			tx.Rollback()
 		}
 	}()
+	// 生成历史记录
+	var record models.StockSellDetail
+	record.OrderSn = info.OrderSn
+	record.Status = 1 // 扣减未归还
 
+	var DetailList []models.GoodsDetail
 	for _, invInfo := range info.GoodsInfo {
+		DetailList = append(DetailList, models.GoodsDetail{
+			GoodId: invInfo.GoodsId,
+			Num:    invInfo.Num,
+		})
 		// redis 分布式锁
 		mutexName := fmt.Sprintf("good_%d", invInfo.GoodsId)
 		mutex := global.RedisMutex.NewMutex(mutexName)
@@ -111,6 +120,13 @@ func (i InventorySever) Sell(ctx context.Context, info *proto.SellInfo) (*emptyp
 		//}
 		//}
 	}
+	record.Detail = DetailList
+	err := tx.Create(&record).Error
+	if err != nil {
+		tx.Rollback()
+		return nil, status.Error(codes.Internal, "创建订单历史记录错误")
+	}
+
 	return &emptypb.Empty{}, tx.Commit().Error
 
 }

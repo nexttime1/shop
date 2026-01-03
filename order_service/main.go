@@ -26,6 +26,7 @@ func main() {
 		zap.L().Error("注册失败", zap.Error(err))
 		panic(err)
 	}
+
 	// ctrl + C 自动注销 刚注册的consul  监听
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)

@@ -2,123 +2,59 @@ package handler
 
 import (
 	"context"
+	"encoding/json"
+	"github.com/apache/rocketmq-client-go/v2"
+	"github.com/apache/rocketmq-client-go/v2/primitive"
+	"github.com/apache/rocketmq-client-go/v2/producer"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"order_service/common"
-	"order_service/connect"
+
 	"order_service/global"
 	"order_service/models"
 	"order_service/proto"
 	"order_service/service"
+	"order_service/utils/mq"
 )
 
 type OrderSever struct {
 }
 
 func (o OrderSever) CreateOrder(ctx context.Context, request *proto.OrderRequest) (*proto.OrderInfoResponse, error) {
-	//先拿到 选中的 good ID
-	check := true
-	var goodsId []int32
-	var shopModels []models.ShoppingCartModel
-	global.DB.Where(models.ShoppingCartModel{
-		User:    request.UserId,
-		Checked: &check,
-	}).Find(&shopModels)
-	goodNumMap := make(map[int32]int32)
-	for _, shopModel := range shopModels {
-		goodsId = append(goodsId, shopModel.Goods)
-		goodNumMap[shopModel.Goods] = shopModel.Nums
+	model := service.OrderTransitionRequest{
+		Id:       request.Id,
+		UserId:   request.UserId,
+		Address:  request.Address,
+		Name:     request.Name,
+		Mobile:   request.Mobile,
+		Post:     request.Post,
+		OrderSns: service.RandomSns(request.UserId),
+	}
+	data, _ := json.Marshal(model)
+	var orderListener mq.TransactionProducer
+	transactionProducer, err := rocketmq.NewTransactionProducer(
+		&orderListener,
+		producer.WithNameServer([]string{"192.168.163.132:9876"}),
+	)
+	if err != nil {
+		panic(err)
+	}
+	err = transactionProducer.Start()
+	if err != nil {
+		panic(err)
+	}
+	_, err = transactionProducer.SendMessageInTransaction(context.Background(), primitive.NewMessage("shop_reback", data))
+	if err != nil {
+		zap.S().Error(err)
+		return nil, err
+	}
+	if orderListener.Code != codes.OK {
+		return nil, status.Error(orderListener.Code, orderListener.Detail)
 	}
 
-	// 开启事务，保证操作原子性
-	tx := global.DB.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-
-	// 调用good 微服务
-	goodClient, conn, err := connect.GoodConnectService()
-	if err != nil {
-		zap.S().Error(err)
-		return nil, status.Errorf(codes.Internal, "创建失败")
-	}
-	defer conn.Close()
-	goods, err := goodClient.BatchGetGoods(context.Background(), &proto.BatchGoodsIdInfo{
-		Id: goodsId,
-	})
-	if err != nil {
-		zap.S().Error(err)
-		return nil, status.Errorf(codes.Internal, "商品查询失败")
-	}
-	var PriceSum float32
-	var orderGoods []*models.OrderGoodsModel
-	var goodsInfo []*proto.GoodsInvInfo
-	for _, goodModel := range goods.Data {
-		PriceSum += goodModel.ShopPrice * float32(goodNumMap[goodModel.Id])
-		orderGoods = append(orderGoods, &models.OrderGoodsModel{
-			Goods:      goodModel.Id,
-			GoodsName:  goodModel.Name,
-			GoodsPrice: goodModel.ShopPrice,
-			GoodImages: goodModel.GoodsFrontImage,
-			Nums:       goodNumMap[goodModel.Id],
-		})
-		// 库存服务接收参数
-		goodsInfo = append(goodsInfo, &proto.GoodsInvInfo{
-			GoodsId: goodModel.Id,
-			Num:     goodNumMap[goodModel.Id],
-		})
-	}
-	// 预扣减库存
-	inventoryClient, inventoryConn, err := connect.InventoryConnectService()
-	if err != nil {
-		zap.S().Error(err)
-		return nil, status.Errorf(codes.Internal, "库存服务未开启")
-	}
-	defer inventoryConn.Close()
-	inventoryClient.Sell(context.Background(), &proto.SellInfo{GoodsInfo: goodsInfo})
-
-	// 生成订单表
-	order := models.OrderModel{
-		User:         request.UserId,
-		OrderSn:      service.RandomSns(request.UserId),
-		OrderMount:   PriceSum,
-		Address:      request.Address,
-		SignerName:   request.Name,
-		SignerMobile: request.Mobile,
-		Post:         request.Post,
-	}
-	err = tx.Create(&order).Error
-	if err != nil {
-		zap.S().Error(err)
-		tx.Rollback()
-		return nil, status.Errorf(codes.Internal, "创建失败")
-	}
-	// 加上 订单ID
-	for _, orderGood := range orderGoods {
-		orderGood.Order = order.ID
-	}
-	// 生成 OrderGoodsModel 表数据
-	err = tx.CreateInBatches(&orderGoods, 100).Error
-	if err != nil {
-		zap.S().Error(err)
-		tx.Rollback()
-		return nil, status.Errorf(codes.Internal, "创建失败")
-	}
-	// 删除购物车中 已经生成订单的商品
-	err = tx.Model(&models.ShoppingCartModel{}). // Model传空指针，指定操作shoppingcart表
-							Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
-							Delete(&models.ShoppingCartModel{}).Error                 // Delete传指针（必须）
-	if err != nil {
-		zap.S().Error(err)
-		tx.Rollback()
-		return nil, status.Errorf(codes.Internal, "删除失败")
-	}
-
-	return &proto.OrderInfoResponse{Id: order.ID, OrderSn: order.OrderSn, Total: PriceSum}, tx.Commit().Error
+	return &proto.OrderInfoResponse{Id: orderListener.ID, OrderSn: model.OrderSns, Total: orderListener.PriceSum}, nil
 
 }
 
