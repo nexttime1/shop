@@ -3,7 +3,9 @@ package mq
 import (
 	"context"
 	"encoding/json"
+	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
+	"github.com/apache/rocketmq-client-go/v2/producer"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"order_service/connect"
@@ -22,9 +24,12 @@ type TransactionProducer struct {
 
 // When send transactional prepare(half) message succeed, this method will be invoked to execute local transaction.
 func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) primitive.LocalTransactionState {
-	//先拿到 选中的 good ID
+	var code codes.Code
+	var detail string
+	//var priceSum float32
 	var request service.OrderTransitionRequest
 	_ = json.Unmarshal(msg.Body, &request)
+	//先拿到 选中的 good ID
 	check := true
 	var goodsId []int32
 	var shopModels []models.ShoppingCartModel
@@ -32,6 +37,11 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 		User:    request.UserId,
 		Checked: &check,
 	}).Find(&shopModels)
+	if len(shopModels) == 0 {
+		code = codes.NotFound
+		detail = "请选择商品"
+		return primitive.RollbackMessageState
+	}
 	goodNumMap := make(map[int32]int32)
 	for _, shopModel := range shopModels {
 		goodsId = append(goodsId, shopModel.Goods)
@@ -101,7 +111,7 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 		SignerMobile: request.Mobile,
 		Post:         request.Post,
 	}
-
+	//return primitive.CommitMessageState
 	// 开启事务，保证操作原子性
 	tx := global.DB.Begin()
 	defer func() {
@@ -144,6 +154,32 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	t.Code = codes.OK
 	t.ID = order.ID
 	t.PriceSum = PriceSum
+	// 发送延时消息  确保归还库存  发送普通消息就行
+	p, err := rocketmq.NewProducer(producer.WithNameServer([]string{"192.168.163.132:9876"}))
+	if err != nil {
+		tx.Rollback()
+		t.Code = codes.Internal
+		t.Detail = "发送延时消息失败"
+		return primitive.CommitMessageState
+	}
+	err = p.Start()
+	if err != nil {
+		tx.Rollback()
+		t.Code = codes.Internal
+		t.Detail = "发送延时消息失败"
+		return primitive.CommitMessageState
+	}
+	message := primitive.NewMessage("order_timeout", msg.Body)
+	message.WithDelayTimeLevel(3)
+	_, err = p.SendSync(context.Background(), message)
+
+	if err != nil {
+		tx.Rollback()
+		t.Code = codes.Internal
+		t.Detail = "发送延时消息失败"
+		return primitive.CommitMessageState
+	}
+
 	tx.Commit()
 	return primitive.RollbackMessageState
 }

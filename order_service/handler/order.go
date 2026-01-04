@@ -37,6 +37,7 @@ func (o OrderSever) CreateOrder(ctx context.Context, request *proto.OrderRequest
 	transactionProducer, err := rocketmq.NewTransactionProducer(
 		&orderListener,
 		producer.WithNameServer([]string{"192.168.163.132:9876"}),
+		producer.WithGroupName("order_producer"),
 	)
 	if err != nil {
 		panic(err)

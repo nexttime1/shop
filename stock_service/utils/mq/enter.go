@@ -18,9 +18,10 @@ func ListenMq() {
 	if err != nil {
 		panic(err)
 	}
-	messgaes.Start()
-	defer messgaes.Shutdown()
 	messgaes.Subscribe("shop_reback", consumer.MessageSelector{}, AutoReBack)
+	messgaes.Start()
+	select {}
+
 }
 
 func AutoReBack(ctx context.Context, msg ...*primitive.MessageExt) (consumer.ConsumeResult, error) {
@@ -38,17 +39,20 @@ func AutoReBack(ctx context.Context, msg ...*primitive.MessageExt) (consumer.Con
 		// 找到了  进行归还库存 并且 改历史记录 状态 变成2
 		tx := global.DB.Begin()
 		for _, inv := range history.Detail {
-			err := tx.Model(models.InventoryModel{Goods: inv.GoodId}).Update("stock", gorm.Expr("stock + ?", inv.Num)).Error
+			err := tx.Model(&models.InventoryModel{}).
+				Where("goods = ?", inv.GoodId).
+				Update("stock", gorm.Expr("stock + ?", inv.Num)).Error
 			if err != nil {
 				tx.Rollback()
 				return consumer.ConsumeRetryLater, err
 			}
 		}
-		err = tx.Model(&history).Update("status", 1).Error
+		err = tx.Model(&history).Update("status", 2).Error
 		if err != nil {
 			tx.Rollback()
 			return consumer.ConsumeRetryLater, err
 		}
+		tx.Commit()
 
 	}
 	return consumer.ConsumeSuccess, nil

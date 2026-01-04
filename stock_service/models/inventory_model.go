@@ -26,16 +26,16 @@ type GoodsDetail struct {
 	Num    int32
 }
 
-func (g GoodsDetailList) Value() (driver.Value, error) {
+func (g *GoodsDetailList) Value() (driver.Value, error) {
 	return json.Marshal(g)
 }
 
-func (g GoodsDetail) Scan(value interface{}) error {
+func (g *GoodsDetailList) Scan(value interface{}) error {
 	b, ok := value.([]byte)
 	if !ok {
 		zap.S().Error("错误：type assertion to []byte failed")
 		return errors.New("type assertion to []byte failed")
 	}
-	err := json.Unmarshal(b, &g)
+	err := json.Unmarshal(b, g)
 	return err
 }

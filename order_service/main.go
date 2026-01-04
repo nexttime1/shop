@@ -2,6 +2,7 @@ package main
 
 import (
 	"go.uber.org/zap"
+	"order_service/utils/mq"
 	"os"
 	"os/signal"
 	"syscall"
@@ -18,7 +19,6 @@ func main() {
 	//fmt.Println(global.Config)
 	global.DB = core.InitDB()
 	global.RedisMutex = core.InitRedisMutex()
-
 	flags.Run()
 	client := core.NewConsulRegister()
 	err := client.Register()
@@ -26,7 +26,7 @@ func main() {
 		zap.L().Error("注册失败", zap.Error(err))
 		panic(err)
 	}
-
+	mq.ListenMq()
 	// ctrl + C 自动注销 刚注册的consul  监听
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)

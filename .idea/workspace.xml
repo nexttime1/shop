@@ -5,23 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/order_service/service/order.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/utils/mq/enter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/stock_service/service/order.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/stock_service/utils/mq/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order_service/core/init_producer.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order_service/utils/mq/listen_timeout.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/global/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/global/enter.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order_service/handler/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/handler/order.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order_service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/proto/inventory.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/proto/inventory.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/proto/inventory.proto" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/proto/inventory.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock_service/flags/flag_db.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/flags/flag_db.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock_service/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock_service/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock_service/handler/inventory.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/handler/inventory.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/models/order_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/models/order_model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/test/mq.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/test/mq.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/test/mq_message_rev.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/test/mq_message_rev.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/utils/mq/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/utils/mq/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/api/order_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/api/order_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_api/connect/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/connect/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock_service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock_service/models/inventory_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/models/inventory_model.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock_service/proto/inventory.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/proto/inventory.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock_service/proto/inventory.proto" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/proto/inventory.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock_service/utils/mq/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/utils/mq/enter.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +90,8 @@
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "run.configurations.included.in.services": "true"
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
@@ -107,11 +108,11 @@
       <recent name="D:\5524\go_project\xtm_shop\shop\shop_service\core" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\core" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\order_service" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\service" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\connect" />
       <recent name="D:\5524\go_project\xtm_shop\shop\goods_api" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\goods_service" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\shop_service\utils" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -210,8 +211,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/order_service/utils/mq/enter.go</url>
-          <line>8</line>
+          <line>10</line>
           <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/stock_service/utils/mq/enter.go</url>
+          <line>26</line>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

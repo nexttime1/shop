@@ -8,7 +8,7 @@ type OrderModel struct {
 	User         int32      `gorm:"type:int;index;comment:用户ID"`
 	OrderSn      string     `gorm:"type:varchar(30);index;comment:订单编号（唯一）"`
 	PayType      string     `gorm:"type:varchar(20);comment:支付方式（alipay/wechat）"`
-	Status       string     `gorm:"type:varchar(20);comment:订单状态（PAYING/TRADE_SUCCESS等）"`
+	Status       string     `gorm:"type:varchar(20);comment:订单状态（PAYING/TRADE_SUCCESS/CLOSED）"`
 	TradeNo      string     `gorm:"type:varchar(100);comment:第三方支付交易号"`
 	OrderMount   float32    `gorm:"comment:订单总金额"`
 	PayTime      *time.Time `gorm:"comment:支付时间"`

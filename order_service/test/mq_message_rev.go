@@ -15,7 +15,7 @@ func main() {
 		panic(err)
 	}
 	messgaes.Start()
-	defer messgaes.Shutdown()
+
 	messgaes.Subscribe("xtm", consumer.MessageSelector{}, func(ctx context.Context, m ...*primitive.MessageExt) (consumer.ConsumeResult, error) {
 		for i := range m {
 			fmt.Printf("消息是：%v", m[i].Body)

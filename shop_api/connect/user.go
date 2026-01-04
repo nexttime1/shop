@@ -20,8 +20,7 @@ func UserConnectService(c *gin.Context) (proto.UserClient, *grpc.ClientConn, err
 	// 这个是 consul 的 ip 和 port
 	connectAddr := "consul://" +
 		global.Config.ConsulInfo.GetAddr() +
-		"/user_service?wait=14s" +
-		"&tag=xtm"
+		"/user_service?wait=14s"
 
 	zap.S().Infof("try connecting to %s ...", connectAddr)
 	conn, err := grpc.NewClient(

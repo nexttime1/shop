@@ -84,7 +84,8 @@ func (OrderApi) OrderCreateView(c *gin.Context) {
 	var cr order_srv.OrderCreateRequest
 	err := c.ShouldBindJSON(&cr)
 	if err != nil {
-
+		fmt.Println(2222)
+		fmt.Println(err)
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}

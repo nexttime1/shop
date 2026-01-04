@@ -18,7 +18,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer p.Shutdown()
+
 	result, err := p.SendSync(context.Background(), primitive.NewMessage("xtm", []byte("hello world")))
 
 	if err != nil {
