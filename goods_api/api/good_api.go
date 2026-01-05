@@ -29,7 +29,8 @@ func (GoodApi) GetGoodListView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
-	list, err := client.GoodsList(context.Background(), &proto.GoodsFilterRequest{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	list, err := client.GoodsList(ctx, &proto.GoodsFilterRequest{
 		PriceMin:      cr.PriceMin,
 		PriceMax:      cr.PriceMax,
 		IsHot:         cr.IsHot,

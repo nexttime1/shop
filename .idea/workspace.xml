@@ -5,23 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/order_service/core/init_producer.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order_service/utils/mq/listen_timeout.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_api/conf/conf_jaeger.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_api/core/init_tracer.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_api/middleware/tracing.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_service/conf/conf_jaeger.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order_service/test/tracer.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/global/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/global/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/handler/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/handler/order.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/models/order_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/models/order_model.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/test/mq.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/test/mq.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/test/mq_message_rev.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/test/mq_message_rev.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/api/good_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/api/good_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/conf/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/connect/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/connect/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/global/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/global/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_api/router/good_router.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/router/good_router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/conf/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/test/settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/test/settings.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order_service/utils/mq/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/utils/mq/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/api/order_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/api/order_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_api/connect/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_api/connect/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock_service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock_service/models/inventory_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/models/inventory_model.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock_service/utils/mq/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/utils/mq/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock_service/handler/inventory.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/handler/inventory.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +90,7 @@
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/stock_service/service",
+    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/goods_api/service",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -101,11 +105,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\goods_api\service" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\goods_api\conf" />
       <recent name="D:\5524\go_project\xtm_shop\shop\stock_service\service" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\proto" />
       <recent name="D:\5524\go_project\xtm_shop\shop\goods_api\proto" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\goods_service\test" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\shop_service\core" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\core" />

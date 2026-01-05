@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"goods_api/core"
 	"goods_api/flags"
@@ -23,6 +24,16 @@ func main() {
 		zap.L().Error("注册失败", zap.Error(err))
 		panic(err)
 	}
+	tracer, closer, err := core.InitTracer()
+	if err != nil {
+		zap.L().Error("启动jaeger失败")
+		return
+	}
+	global.Tracer = tracer
+	global.TracerClose = closer
+	opentracing.SetGlobalTracer(global.Tracer)
+	defer global.TracerClose.Close()
+
 	router.Router()
 	// ctrl + C 自动注销 刚注册的consul  监听
 	quit := make(chan os.Signal)

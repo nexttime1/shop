@@ -142,8 +142,8 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	}
 	// 删除购物车中 已经生成订单的商品
 	err = tx.Model(&models.ShoppingCartModel{}). // Model传空指针，指定操作shoppingcart表
-		Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
-		Delete(&models.ShoppingCartModel{}).Error // Delete传指针（必须）
+							Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
+							Delete(&models.ShoppingCartModel{}).Error                 // Delete传指针（必须）
 	if err != nil {
 		zap.S().Error(err)
 		tx.Rollback()

@@ -10,6 +10,7 @@ import (
 	"stock_service/global"
 	"stock_service/models"
 	"stock_service/proto"
+	"time"
 )
 
 type InventorySever struct {
@@ -63,6 +64,7 @@ func (i InventorySever) Sell(ctx context.Context, info *proto.SellInfo) (*emptyp
 			tx.Rollback()
 		}
 	}()
+
 	// 生成历史记录
 	var record models.StockSellDetail
 	record.OrderSn = info.OrderSn
@@ -140,22 +142,36 @@ func (i InventorySever) Reback(ctx context.Context, info *proto.SellInfo) (*empt
 		}
 	}()
 	for _, invInfo := range info.GoodsInfo {
-		var model models.InventoryModel
-		err := tx.Where("goods = ?", invInfo.GoodsId).Take(&model).Error
-		if err != nil {
-			zap.S().Error(err)
-			tx.Rollback()
-			return nil, status.Error(codes.NotFound, "商品库存不存在")
-		}
-		// 库存 +
-		model.Stock += invInfo.Num
-		err = tx.Save(&model).Error
-		if err != nil {
-			zap.S().Error(err)
-			tx.Rollback()
-			return nil, status.Error(codes.Internal, "库存更新失败")
-		}
+		// 乐观锁保证 高并发情况下 不会发生错误  比如两个请求同一个商品进行归还  读取的值都是100 都加50  防止最后是150
+		retryCount := 0
+		maxOptimisticRetry := 10
+		for retryCount < maxOptimisticRetry {
+			var model models.InventoryModel
+			err := tx.Where("goods = ?", invInfo.GoodsId).Take(&model).Error
+			if err != nil {
+				zap.S().Error(err)
+				tx.Rollback()
+				return nil, status.Error(codes.NotFound, "商品库存不存在")
+			}
+			// 库存 +
+			model.Stock += invInfo.Num
 
+			err = tx.Model(models.InventoryModel{}).Where("goods = ? and version = ?", model.Goods, model.Version).Select("stock", "version").Updates(map[string]interface{}{"stock": model.Stock, "version": model.Version + 1}).Error
+			if err != nil {
+				retryCount++
+				zap.S().Warnf("商品%d乐观锁重试，当前次数: %d", invInfo.GoodsId, retryCount)
+				time.Sleep(10 * time.Millisecond)
+				continue
+			} else {
+				break
+			}
+		}
+		// 重试次数耗尽仍未成功
+		if retryCount >= maxOptimisticRetry {
+			_ = tx.Rollback()
+			zap.S().Errorf("商品%d乐观锁重试次数耗尽，更新失败", invInfo.GoodsId)
+			return nil, status.Error(codes.Internal, "库存更新并发冲突，请重试")
+		}
 	}
 	return &emptypb.Empty{}, tx.Commit().Error
 }

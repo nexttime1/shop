@@ -9,10 +9,13 @@ require (
 	github.com/go-redsync/redsync/v4 v4.14.1
 	github.com/hashicorp/consul/api v1.33.0
 	github.com/mbobakov/grpc-consul-resolver v1.5.3
+	github.com/opentracing/opentracing-go v1.2.0
 	github.com/redis/go-redis/v9 v9.17.2
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.21.0
+	github.com/uber/jaeger-client-go v2.30.0+incompatible
+	github.com/uber/jaeger-lib v2.4.1+incompatible
 	go.uber.org/zap v1.27.1
 	google.golang.org/grpc v1.77.0
 	google.golang.org/protobuf v1.36.10
@@ -23,6 +26,7 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
+	github.com/HdrHistogram/hdrhistogram-go v1.2.0 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect

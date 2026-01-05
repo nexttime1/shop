@@ -6,4 +6,5 @@ type Config struct {
 	LocalInfo  LocalInfo  `mapstructure:"local_info" yaml:"local_info"`
 	NacosInfo  NacosInfo  `mapstructure:"nacos_info" yaml:"nacos_info"`
 	EsInfo     ConsulInfo `mapstructure:"es_info" yaml:"es_info"`
+	JaegerInfo JaegerInfo `mapstructure:"jaeger_info" yaml:"jaeger_info"`
 }
