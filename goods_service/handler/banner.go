@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"goods_service/global"
 	"goods_service/models"
@@ -23,6 +24,9 @@ func BannerFunction(model models.BannerModel) proto.BannerResponse {
 }
 
 func (g GoodSever) BannerList(ctx context.Context, empty *empty.Empty) (*proto.BannerListResponse, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	var response proto.BannerListResponse
 	var bannerModels []models.BannerModel
 	count := global.DB.Find(&bannerModels).RowsAffected
@@ -37,6 +41,7 @@ func (g GoodSever) BannerList(ctx context.Context, empty *empty.Empty) (*proto.B
 		response.Data = bannerList
 		return &response, nil
 	}
+	mysqlSpan.Finish()
 	response.Total = int32(count)
 	var bannerList []*proto.BannerResponse
 	for _, model := range bannerModels {
@@ -49,7 +54,9 @@ func (g GoodSever) BannerList(ctx context.Context, empty *empty.Empty) (*proto.B
 }
 
 func (g GoodSever) CreateBanner(ctx context.Context, request *proto.BannerRequest) (*proto.BannerResponse, error) {
-
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	model := models.BannerModel{
 		Image: request.Image,
 		Url:   request.Url,
@@ -61,6 +68,7 @@ func (g GoodSever) CreateBanner(ctx context.Context, request *proto.BannerReques
 		zap.S().Error(err.Error())
 		return nil, status.Error(codes.Internal, "创建失败")
 	}
+	mysqlSpan.Finish()
 	return &proto.BannerResponse{
 		Id:    model.ID,
 		Image: model.Image,
@@ -71,6 +79,9 @@ func (g GoodSever) CreateBanner(ctx context.Context, request *proto.BannerReques
 }
 
 func (g GoodSever) DeleteBanner(ctx context.Context, request *proto.BannerRequest) (*empty.Empty, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	var model models.BannerModel
 	err := global.DB.Take(&model, request.Id).Error
 	if err != nil {
@@ -82,10 +93,14 @@ func (g GoodSever) DeleteBanner(ctx context.Context, request *proto.BannerReques
 		zap.S().Error(err.Error())
 		return nil, status.Error(codes.Internal, "删除失败")
 	}
+	mysqlSpan.Finish()
 	return &empty.Empty{}, nil
 }
 
 func (g GoodSever) UpdateBanner(ctx context.Context, request *proto.BannerRequest) (*empty.Empty, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	var model models.BannerModel
 	err := global.DB.Take(&model, request.Id).Error
 	if err != nil {
@@ -103,6 +118,6 @@ func (g GoodSever) UpdateBanner(ctx context.Context, request *proto.BannerReques
 		zap.S().Error(err)
 		return nil, status.Error(codes.Internal, "修改失败")
 	}
-
+	mysqlSpan.Finish()
 	return &empty.Empty{}, nil
 }

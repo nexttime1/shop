@@ -21,8 +21,8 @@ func (BannerApi) GetBannerListView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-
-	list, err := client.BannerList(context.Background(), &empty.Empty{})
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	list, err := client.BannerList(ctx, &empty.Empty{})
 	if err != nil {
 		zap.S().Error(err)
 		res.FailWithServiceMsg(c, err)
@@ -46,7 +46,8 @@ func (BannerApi) CreateBannerView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
-	bannerInfo, err := client.CreateBanner(context.Background(), &proto.BannerRequest{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	bannerInfo, err := client.CreateBanner(ctx, &proto.BannerRequest{
 		Image: cr.Image,
 		Index: cr.Index,
 		Url:   cr.Url,
@@ -74,7 +75,8 @@ func (BannerApi) DeleteBannerView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
-	_, err = client.DeleteBanner(context.Background(), &proto.BannerRequest{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	_, err = client.DeleteBanner(ctx, &proto.BannerRequest{
 		Id: cr.Id,
 	})
 	if err != nil {
@@ -106,7 +108,8 @@ func (BannerApi) UpdateBannerView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
-	_, err = client.UpdateBanner(context.Background(), &proto.BannerRequest{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	_, err = client.UpdateBanner(ctx, &proto.BannerRequest{
 		Id:    int32(id),
 		Image: cr.Image,
 		Index: cr.Index,

@@ -22,7 +22,8 @@ func (CategoryApi) GetAllCategoryView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	list, err := client.GetAllCategorysList(context.Background(), &empty.Empty{})
+
+	list, err := client.GetAllCategorysList(context.WithValue(context.Background(), "ginContext", c), &empty.Empty{})
 	if err != nil {
 		zap.S().Error(err)
 		res.FailWithServiceMsg(c, err)
@@ -55,7 +56,7 @@ func (CategoryApi) GetSubCategoryView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
-	categoryInfo, err := client.GetSubCategory(context.Background(), &proto.CategoryListRequest{
+	categoryInfo, err := client.GetSubCategory(context.WithValue(context.Background(), "ginContext", c), &proto.CategoryListRequest{
 		Id: cr.Id,
 	})
 	if err != nil {
@@ -81,7 +82,7 @@ func (CategoryApi) CreateCategoryView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
-	category, err := client.CreateCategory(context.Background(), &proto.CategoryInfoRequest{
+	category, err := client.CreateCategory(context.WithValue(context.Background(), "ginContext", c), &proto.CategoryInfoRequest{
 		Name:             cr.Name,
 		ParentCategoryID: cr.ParentCategory,
 		Level:            cr.Level,
@@ -118,7 +119,7 @@ func (CategoryApi) UpdateCategoryView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
-	_, err = client.UpdateCategory(context.Background(), &proto.CategoryInfoRequest{
+	_, err = client.UpdateCategory(context.WithValue(context.Background(), "ginContext", c), &proto.CategoryInfoRequest{
 		Id:    int32(id),
 		Name:  cr.Name,
 		IsTab: cr.IsTab,
@@ -146,7 +147,7 @@ func (CategoryApi) DeleteCategoryView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
-	_, err = client.DeleteCategory(context.Background(), &proto.DeleteCategoryRequest{
+	_, err = client.DeleteCategory(context.WithValue(context.Background(), "ginContext", c), &proto.DeleteCategoryRequest{
 		Id: cr.Id,
 	})
 	if err != nil {

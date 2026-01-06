@@ -3,9 +3,11 @@ package core
 import (
 	"fmt"
 	"github.com/hashicorp/consul/api"
+	"github.com/opentracing/opentracing-go"
 	"goods_service/handler"
 	"goods_service/proto"
 	"goods_service/utils/free_port"
+	"goods_service/utils/otgrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
@@ -34,7 +36,8 @@ func (c ConsulRegister) Register() error {
 		return err
 	}
 	zap.S().Infof("用户服务获得的端口号为: %d", port)
-	server := grpc.NewServer()
+	// 链路追踪 拦截器  来了grpc请求就拦截住 然后抽取出web层塞入的parentSpan
+	server := grpc.NewServer(grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(opentracing.GlobalTracer())))
 	proto.RegisterGoodsServer(server, &handler.GoodSever{})
 	// 监听的端口 一定是动态获取的 要不健康检查 识别不到
 	listenAddr := fmt.Sprintf("%s:%d", global.Config.LocalInfo.Addr, port)

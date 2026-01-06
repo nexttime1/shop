@@ -99,8 +99,8 @@ func (GoodApi) CreateGoodView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
-
-	goodInfo, err := client.CreateGoods(context.Background(), &proto.CreateGoodsInfo{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	goodInfo, err := client.CreateGoods(ctx, &proto.CreateGoodsInfo{
 		Name:            cr.Name,
 		GoodsSn:         cr.GoodsSn,
 		Stocks:          cr.Stocks,
@@ -137,8 +137,8 @@ func (GoodApi) GoodDetailView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
-
-	goodInfo, err := client.GetGoodsDetail(context.Background(), &proto.GoodInfoRequest{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	goodInfo, err := client.GetGoodsDetail(ctx, &proto.GoodInfoRequest{
 		Id: cr.Id,
 	})
 	if err != nil {
@@ -218,8 +218,8 @@ func (GoodApi) GoodUpdateView(c *gin.Context) {
 		return
 	}
 	zap.S().Info(cr)
-
-	_, err = client.UpdateGoods(context.Background(), &proto.CreateGoodsInfo{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	_, err = client.UpdateGoods(ctx, &proto.CreateGoodsInfo{
 		Id:              int32(id),
 		Name:            cr.Name,
 		GoodsSn:         cr.GoodsSn,
@@ -258,7 +258,8 @@ func (GoodApi) GoodPatchUpdateView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
-	_, err = client.UpdateGoods(context.Background(), &proto.CreateGoodsInfo{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	_, err = client.UpdateGoods(ctx, &proto.CreateGoodsInfo{
 		IsNew:  cr.IsNew,
 		IsHot:  cr.IsHot,
 		OnSale: cr.OnSale,
@@ -288,8 +289,8 @@ func (GoodApi) GoodDeleteView(c *gin.Context) {
 		return
 	}
 	fmt.Println(cr)
-
-	_, err = client.DeleteGoods(context.Background(), &proto.DeleteGoodsInfo{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	_, err = client.DeleteGoods(ctx, &proto.DeleteGoodsInfo{
 		Id: cr.Id,
 	})
 

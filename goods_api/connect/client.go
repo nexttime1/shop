@@ -8,7 +8,7 @@ import (
 	"goods_api/common/res"
 	"goods_api/global"
 	"goods_api/proto"
-	"goods_api/service/otgrpc"
+	"goods_api/utils/otgrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -51,6 +51,7 @@ func StockConnectService(c *gin.Context) (proto.InventoryClient, *grpc.ClientCon
 		connectAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
+		grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(opentracing.GlobalTracer())), // 设置拦截器  只要调用 grpc 就拦截
 	)
 	if err != nil {
 		zap.S().Errorf("创建 grpc 客户端连接失败：%v", err)

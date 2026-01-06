@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/olivere/elastic/v7"
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"goods_service/common"
 	"goods_service/global"
@@ -75,6 +76,9 @@ func GoodInfoFunction(goods models.GoodModel) proto.GoodsInfoResponse {
 }
 
 func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequest) (*proto.GoodsListResponse, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	prepareSpan := opentracing.GlobalTracer().StartSpan("prepare_option", opentracing.ChildOf(parentSpan.Context()))
 	response := proto.GoodsListResponse{}
 	pageInfo := common.PageInfo{
 		Page:  request.Pages,
@@ -82,8 +86,8 @@ func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequ
 		Key:   request.KeyWords,
 	}
 	// 针对 商品的 特殊查询  es 进行查询
-	query := elastic.NewBoolQuery()
 
+	query := elastic.NewBoolQuery()
 	if request.IsHot { //是否热卖
 		// 这样不加权重  只有模糊匹配 才加权重
 		query = query.Filter(elastic.NewTermQuery("is_hot", request.IsHot))
@@ -141,12 +145,16 @@ func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequ
 		query = query.Filter(elastic.NewTermsQuery("category_id", categoryIds...))
 
 	}
+	prepareSpan.Finish()
+	// 链路记录
+	esSpan := opentracing.GlobalTracer().StartSpan("good_es_search", opentracing.ChildOf(parentSpan.Context()))
 	resp, err := global.EsClient.Search().Index(models.EsGoods{}.Index()).Query(query).From(int(pageInfo.GetOffset())).Size(int(pageInfo.GetLimit())).Do(context.Background())
 	if err != nil {
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.Internal, "查询错误")
 	}
 	response.Total = int32(resp.Hits.TotalHits.Value)
+	esSpan.Finish() //es 完成
 	ids := make([]int, 0)
 	for _, hit := range resp.Hits.Hits {
 		id, err := strconv.Atoi(hit.Id)
@@ -156,10 +164,13 @@ func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequ
 		}
 		ids = append(ids, id)
 	}
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("good_mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	var list []models.GoodModel
 	global.DB.Preload("Category").Preload("Brands").Where("id in (?)", ids).Find(&list)
 
 	var InfoList []*proto.GoodsInfoResponse
+	mysqlSpan.Finish() // mysql 查询完成
 	for _, item := range list {
 		info := GoodInfoFunction(item)
 		InfoList = append(InfoList, &info)
@@ -170,6 +181,9 @@ func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequ
 }
 
 func (g GoodSever) BatchGetGoods(ctx context.Context, info *proto.BatchGoodsIdInfo) (*proto.GoodsListResponse, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	var GoodsModels []models.GoodModel
 	global.DB.Where("id in ?", info.Id).Preload("Category").Preload("Brands").Preload("Images").Find(&GoodsModels)
 	if len(GoodsModels) != len(info.Id) {
@@ -180,7 +194,7 @@ func (g GoodSever) BatchGetGoods(ctx context.Context, info *proto.BatchGoodsIdIn
 		goodInfo := GoodInfoFunction(good)
 		response = append(response, &goodInfo)
 	}
-
+	mysqlSpan.Finish()
 	return &proto.GoodsListResponse{
 		Total: int32(len(GoodsModels)),
 		Data:  response,
@@ -189,7 +203,9 @@ func (g GoodSever) BatchGetGoods(ctx context.Context, info *proto.BatchGoodsIdIn
 }
 
 func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo) (*proto.GoodsInfoResponse, error) {
-
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	var category models.CategoryModel
 	err := global.DB.Where("id = ?", info.CategoryId).Take(&category).Error
 	if err != nil {
@@ -286,6 +302,7 @@ func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 			ImageURL: image,
 		})
 	}
+	mysqlSpan.Finish()
 	model.Category = &category
 	model.Brands = &brand
 	model.Images = ImagesModels
@@ -302,6 +319,9 @@ func (g GoodSever) CreateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 }
 
 func (g GoodSever) DeleteGoods(ctx context.Context, info *proto.DeleteGoodsInfo) (*empty.Empty, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	var model models.GoodModel
 	err := global.DB.Where("id = ?", info.Id).Take(&model).Error
 	if err != nil {
@@ -328,11 +348,14 @@ func (g GoodSever) DeleteGoods(ctx context.Context, info *proto.DeleteGoodsInfo)
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.Internal, "删除失败")
 	}
+	mysqlSpan.Finish()
 	return new(empty.Empty), tx.Commit().Error
 }
 
 func (g GoodSever) UpdateGoods(ctx context.Context, info *proto.CreateGoodsInfo) (*empty.Empty, error) {
-
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	var model models.GoodModel
 	err := global.DB.Where("id = ?", info.Id).Take(&model).Error
 	if err != nil {
@@ -455,18 +478,22 @@ func (g GoodSever) UpdateGoods(ctx context.Context, info *proto.CreateGoodsInfo)
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.Internal, "更新错误")
 	}
+	mysqlSpan.Finish()
 	return new(empty.Empty), tx.Commit().Error
 
 }
 
 func (g GoodSever) GetGoodsDetail(ctx context.Context, request *proto.GoodInfoRequest) (*proto.GoodsInfoResponse, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	var GoodsModel models.GoodModel
 	err := global.DB.Where("id = ?", request.Id).Preload("Category").Preload("Brands").Preload("Images").Take(&GoodsModel).Error
 	if err != nil {
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.NotFound, "商品不存在")
 	}
-
+	mysqlSpan.Finish()
 	goodInfo := GoodInfoFunction(GoodsModel)
 	return &goodInfo, nil
 

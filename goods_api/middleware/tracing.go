@@ -13,6 +13,7 @@ func Trace(c *gin.Context) {
 	zap.L().Info(c.Request.URL.Path)
 	defer parentScan.Finish()
 	c.Set("parent_scan", parentScan)
+	zap.S().Infof("parent_scan: %v", parentScan)
 	zap.S().Infof("ServiceName 为 %s", global.Config.JaegerInfo.ServiceName)
 	c.Next()
 

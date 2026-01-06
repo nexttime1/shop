@@ -3,10 +3,12 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"goods_api/api"
+	"goods_api/middleware"
 )
 
 func BrandRouter(r *gin.RouterGroup) {
 	var app = api.App.BrandApi
+	r.Use(middleware.Trace) //链路追踪
 	// 品牌自身
 	r.GET("brands", app.BrandListView)
 	r.POST("brands", app.CreateBrandView)

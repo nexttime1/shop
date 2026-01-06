@@ -26,7 +26,8 @@ func (BrandApi) BrandListView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	list, err := client.BrandList(context.Background(), &proto.PageInfo{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	list, err := client.BrandList(ctx, &proto.PageInfo{
 		Page:  cr.Page,
 		Limit: cr.Limit,
 	})
@@ -51,7 +52,8 @@ func (BrandApi) CreateBrandView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	brandInfo, err := client.CreateBrand(context.Background(), &proto.BrandRequest{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	brandInfo, err := client.CreateBrand(ctx, &proto.BrandRequest{
 		Name: cr.Name,
 		Logo: cr.Logo,
 	})
@@ -84,7 +86,8 @@ func (BrandApi) UpdateBrandView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	_, err = client.UpdateBrand(context.Background(), &proto.BrandRequest{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	_, err = client.UpdateBrand(ctx, &proto.BrandRequest{
 		Id:   int32(id),
 		Name: cr.Name,
 		Logo: cr.Logo,
@@ -110,7 +113,8 @@ func (BrandApi) DeleteBrandView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	_, err = client.DeleteBrand(context.Background(), &proto.BrandRequest{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	_, err = client.DeleteBrand(ctx, &proto.BrandRequest{
 		Id: cr.Id,
 	})
 	if err != nil {
@@ -134,8 +138,8 @@ func (BrandApi) CategoryBrandListView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-
-	list, err := client.CategoryBrandList(context.Background(), &proto.CategoryBrandFilterRequest{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	list, err := client.CategoryBrandList(ctx, &proto.CategoryBrandFilterRequest{
 		Pages:       cr.Page,
 		PagePerNums: cr.Limit,
 	})
@@ -160,7 +164,8 @@ func (BrandApi) CategoryAllBrandView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	list, err := client.GetCategoryBrandList(context.Background(), &proto.CategoryInfoRequest{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	list, err := client.GetCategoryBrandList(ctx, &proto.CategoryInfoRequest{
 		Id: cr.Id,
 	})
 	if err != nil {
@@ -184,8 +189,8 @@ func (BrandApi) CreateCategoryBrandView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-
-	Info, err := client.CreateCategoryBrand(context.Background(), &proto.CategoryBrandRequest{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	Info, err := client.CreateCategoryBrand(ctx, &proto.CategoryBrandRequest{
 		BrandId:    cr.BrandId,
 		CategoryId: cr.CategoryId,
 	})
@@ -209,7 +214,8 @@ func (BrandApi) DeleteCategoryBrandView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	_, err = client.DeleteCategoryBrand(context.Background(), &proto.CategoryBrandRequest{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	_, err = client.DeleteCategoryBrand(ctx, &proto.CategoryBrandRequest{
 		Id: cr.Id,
 	})
 	if err != nil {
@@ -239,8 +245,10 @@ func (BrandApi) UpdateCategoryBrandView(c *gin.Context) {
 	if err != nil {
 		return
 	}
+
 	defer conn.Close()
-	_, err = client.UpdateCategoryBrand(context.Background(), &proto.CategoryBrandRequest{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	_, err = client.UpdateCategoryBrand(ctx, &proto.CategoryBrandRequest{
 		Id:         int32(id),
 		BrandId:    cr.BrandId,
 		CategoryId: cr.CategoryId,

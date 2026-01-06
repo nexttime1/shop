@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"goods_service/common"
 	"goods_service/global"
@@ -15,7 +16,9 @@ import (
 )
 
 func (g GoodSever) BrandList(ctx context.Context, pageInfo *proto.PageInfo) (*proto.BrandListResponse, error) {
-
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	list, count, err := common.ListQuery(models.Brands{}, common.Options{
 		PageInfo: common.PageInfo{
 			Page:  pageInfo.Page,
@@ -30,7 +33,7 @@ func (g GoodSever) BrandList(ctx context.Context, pageInfo *proto.PageInfo) (*pr
 	// 总返回
 	var Response proto.BrandListResponse
 	Response.Total = count
-
+	mysqlSpan.Finish()
 	var brandInfo []*proto.BrandInfoResponse
 	for _, brandModel := range list {
 		brandInfo = append(brandInfo, &proto.BrandInfoResponse{
@@ -44,6 +47,9 @@ func (g GoodSever) BrandList(ctx context.Context, pageInfo *proto.PageInfo) (*pr
 }
 
 func (g GoodSever) CreateBrand(ctx context.Context, request *proto.BrandRequest) (*proto.BrandInfoResponse, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	// 搜索一下 有没有
 	var model models.Brands
 	count := global.DB.Where("name = ?", request.Name).Find(&model).RowsAffected
@@ -58,6 +64,7 @@ func (g GoodSever) CreateBrand(ctx context.Context, request *proto.BrandRequest)
 		zap.S().Error(err)
 		return nil, status.Error(codes.Internal, "数据创建失败")
 	}
+	mysqlSpan.Finish()
 	response := &proto.BrandInfoResponse{
 		Id:   model.ID,
 		Name: model.Name,
@@ -68,7 +75,9 @@ func (g GoodSever) CreateBrand(ctx context.Context, request *proto.BrandRequest)
 }
 
 func (g GoodSever) DeleteBrand(ctx context.Context, request *proto.BrandRequest) (*empty.Empty, error) {
-
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	var model models.Brands
 	err := global.DB.Take(&model, request.Id).Error
 	if err != nil {
@@ -117,16 +126,22 @@ func (g GoodSever) DeleteBrand(ctx context.Context, request *proto.BrandRequest)
 		zap.S().Error(err)
 		return nil, status.Error(codes.Internal, "删除失败")
 	}
+	mysqlSpan.Finish()
+
 	// 提交事务
 	if err = tx.Commit().Error; err != nil {
 		tx.Rollback() // 提交失败也需回滚
 		zap.S().Errorf("提交删除品牌[id:%d]事务失败: %v", request.Id, err)
 		return nil, status.Error(codes.Internal, "事务提交失败")
 	}
+
 	return &empty.Empty{}, nil
 }
 
 func (g GoodSever) UpdateBrand(ctx context.Context, request *proto.BrandRequest) (*empty.Empty, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	var model models.Brands
 	err := global.DB.Take(&model, request.Id).Error
 	if err != nil {
@@ -143,6 +158,7 @@ func (g GoodSever) UpdateBrand(ctx context.Context, request *proto.BrandRequest)
 		zap.S().Error(err)
 		return nil, status.Error(codes.Internal, "修改失败")
 	}
+	mysqlSpan.Finish()
 
 	return &empty.Empty{}, nil
 
