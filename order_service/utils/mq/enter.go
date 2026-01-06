@@ -13,13 +13,50 @@ import (
 	"order_service/models"
 	"order_service/proto"
 	"order_service/service"
+	"sync"
 )
 
-type TransactionProducer struct {
+// TransactionStatus 定义每个事务请求的状态（非单例）
+type TransactionStatus struct {
 	ID       int32
 	Code     codes.Code
 	Detail   string
 	PriceSum float32
+}
+
+// TransactionProducer 事务监听器：用并发安全Map存储请求状态
+type TransactionProducer struct {
+	// 并发安全Map：key=消息TransactionId，value=该请求的状态
+	statusMap sync.Map
+	// 复用的延时消息生产者
+	delayProducer rocketmq.Producer
+}
+
+// InitDelayProducer 初始化延时消息生产者（只执行一次）
+func (t *TransactionProducer) InitDelayProducer() error {
+	if t.delayProducer != nil {
+		return nil
+	}
+	p, err := rocketmq.NewProducer(
+		producer.WithNameServer([]string{global.Config.RocketMQ.Addr()}),
+		producer.WithGroupName(global.Config.RocketMQ.GroupName+"_delay"),
+	)
+	if err != nil {
+		return err
+	}
+	if err = p.Start(); err != nil {
+		return err
+	}
+	t.delayProducer = p
+	return nil
+}
+
+// 关闭延时消息生产者
+func (t *TransactionProducer) CloseDelayProducer() error {
+	if t.delayProducer != nil {
+		return t.delayProducer.Shutdown()
+	}
+	return nil
 }
 
 // When send transactional prepare(half) message succeed, this method will be invoked to execute local transaction.
@@ -142,8 +179,8 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	}
 	// 删除购物车中 已经生成订单的商品
 	err = tx.Model(&models.ShoppingCartModel{}). // Model传空指针，指定操作shoppingcart表
-							Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
-							Delete(&models.ShoppingCartModel{}).Error                 // Delete传指针（必须）
+		Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
+		Delete(&models.ShoppingCartModel{}).Error // Delete传指针（必须）
 	if err != nil {
 		zap.S().Error(err)
 		tx.Rollback()

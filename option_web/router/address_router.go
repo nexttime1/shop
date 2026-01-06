@@ -8,7 +8,8 @@ import (
 
 func AddressRouter(r *gin.RouterGroup) {
 	app := api.App.AddressApi
-	order := r.Group("address").Use(middleware.AuthMiddleware)
+
+	order := r.Group("address").Use(middleware.AuthMiddleware).Use(middleware.Trace) //跟踪
 
 	order.GET("", app.AddressListView)          //查看所有地址
 	order.DELETE("/:id", app.DeleteAddressView) //删除地址

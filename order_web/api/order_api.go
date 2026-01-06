@@ -43,7 +43,7 @@ func (OrderApi) OrderListView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	list, err := orderClient.OrderList(context.Background(), &proto.OrderFilterRequest{
+	list, err := orderClient.OrderList(context.WithValue(context.Background(), "ginContext", c), &proto.OrderFilterRequest{
 		PageNum:  cr.Page,
 		PageSize: cr.Limit,
 		UserId:   userId,
@@ -95,7 +95,7 @@ func (OrderApi) OrderCreateView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	orderModel, err := OrderClient.CreateOrder(context.Background(), &proto.OrderRequest{
+	orderModel, err := OrderClient.CreateOrder(context.WithValue(context.Background(), "ginContext", c), &proto.OrderRequest{
 		UserId:  claims.UserID,
 		Address: cr.Address,
 		Name:    cr.Name,
@@ -164,7 +164,7 @@ func (OrderApi) OrderDetailView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	result, err := orderClient.OrderDetail(context.Background(), &proto.OrderRequest{
+	result, err := orderClient.OrderDetail(context.WithValue(context.Background(), "ginContext", c), &proto.OrderRequest{
 		UserId: userId,
 	})
 	if err != nil {
@@ -248,7 +248,7 @@ func (OrderApi) AlipayCallBackView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	_, err = OrderClient.UpdateOrderStatus(context.Background(), &proto.OrderStatus{
+	_, err = OrderClient.UpdateOrderStatus(context.WithValue(context.Background(), "ginContext", c), &proto.OrderStatus{
 		OrderSn: notification.OutTradeNo,
 		Status:  string(notification.TradeStatus),
 	})

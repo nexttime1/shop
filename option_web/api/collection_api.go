@@ -27,7 +27,7 @@ func (UserCollectionApi) CollectionListView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	list, err := collectionClient.GetFavList(context.Background(), &proto.UserFavRequest{
+	list, err := collectionClient.GetFavList(context.WithValue(context.Background(), "ginContext", c), &proto.UserFavRequest{
 		UserId: claims.UserID,
 	})
 	if err != nil {
@@ -49,7 +49,7 @@ func (UserCollectionApi) CollectionListView(c *gin.Context) {
 		return
 	}
 	defer goodCtConn.Close()
-	goodsInfo, err := goodClient.BatchGetGoods(context.Background(), &proto.BatchGoodsIdInfo{
+	goodsInfo, err := goodClient.BatchGetGoods(context.WithValue(context.Background(), "ginContext", c), &proto.BatchGoodsIdInfo{
 		Id: idList,
 	})
 	if err != nil {
@@ -94,7 +94,7 @@ func (UserCollectionApi) CollectionAddView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	_, err = collectionClient.AddUserFav(context.Background(), &proto.UserFavRequest{
+	_, err = collectionClient.AddUserFav(context.WithValue(context.Background(), "ginContext", c), &proto.UserFavRequest{
 		UserId:  claims.UserID,
 		GoodsId: cr.GoodId,
 	})
@@ -126,7 +126,7 @@ func (UserCollectionApi) CollectionDeleteView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	_, err = collectionClient.DeleteUserFav(context.Background(), &proto.UserFavRequest{
+	_, err = collectionClient.DeleteUserFav(context.WithValue(context.Background(), "ginContext", c), &proto.UserFavRequest{
 		UserId:  claims.UserID,
 		GoodsId: cr.GoodId,
 	})
@@ -158,7 +158,7 @@ func (UserCollectionApi) CollectionDetailView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	_, err = collectionClient.GetUserFavDetail(context.Background(), &proto.UserFavRequest{
+	_, err = collectionClient.GetUserFavDetail(context.WithValue(context.Background(), "ginContext", c), &proto.UserFavRequest{
 		UserId:  claims.UserID,
 		GoodsId: cr.GoodId,
 	})

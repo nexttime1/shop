@@ -15,6 +15,7 @@ type CartApi struct {
 }
 
 func (CartApi) CartListView(c *gin.Context) {
+
 	_claims, exist := c.Get("claims")
 	if !exist {
 		return
@@ -26,7 +27,7 @@ func (CartApi) CartListView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	cartList, err := OrderClient.CartItemList(context.Background(), &proto.UserInfo{
+	cartList, err := OrderClient.CartItemList(context.WithValue(context.Background(), "ginContext", c), &proto.UserInfo{
 		Id: claims.UserID,
 	})
 
@@ -44,7 +45,7 @@ func (CartApi) CartListView(c *gin.Context) {
 		return
 	}
 	defer GoodConn.Close()
-	goodsList, err := GoodClient.BatchGetGoods(context.Background(), &proto.BatchGoodsIdInfo{Id: idList})
+	goodsList, err := GoodClient.BatchGetGoods(context.WithValue(context.Background(), "ginContext", c), &proto.BatchGoodsIdInfo{Id: idList})
 	if err != nil {
 		res.FailWithServiceMsg(c, err)
 		return
@@ -95,7 +96,7 @@ func (CartApi) DeleteCartItemView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	_, err = OrderClient.DeleteCartItem(context.Background(), &proto.CartItemRequest{
+	_, err = OrderClient.DeleteCartItem(context.WithValue(context.Background(), "ginContext", c), &proto.CartItemRequest{
 		UserId:  claims.UserID,
 		GoodsId: cr.Id,
 	})
@@ -132,7 +133,7 @@ func (CartApi) AddItemView(c *gin.Context) {
 		return
 	}
 	defer clientConn.Close()
-	goodModel, err := goodClient.GetGoodsDetail(context.Background(), &proto.GoodInfoRequest{Id: cr.GoodID})
+	goodModel, err := goodClient.GetGoodsDetail(context.WithValue(context.Background(), "ginContext", c), &proto.GoodInfoRequest{Id: cr.GoodID})
 	if err != nil {
 		res.FailWithServiceMsg(c, err)
 		return
@@ -146,7 +147,7 @@ func (CartApi) AddItemView(c *gin.Context) {
 	}
 	defer inventoryConn.Close()
 
-	detail, err := InventoryClient.InvDetail(context.Background(), &proto.GoodsInvInfo{
+	detail, err := InventoryClient.InvDetail(context.WithValue(context.Background(), "ginContext", c), &proto.GoodsInvInfo{
 		GoodsId: cr.GoodID,
 	})
 	if err != nil {
@@ -159,7 +160,7 @@ func (CartApi) AddItemView(c *gin.Context) {
 	}
 
 	checked := true
-	req, err := orderClient.CreateCartItem(context.Background(), &proto.CartItemRequest{
+	req, err := orderClient.CreateCartItem(context.WithValue(context.Background(), "ginContext", c), &proto.CartItemRequest{
 		UserId:     claims.UserID,
 		GoodsId:    cr.GoodID,
 		GoodsName:  goodModel.Name,
@@ -200,7 +201,7 @@ func (CartApi) UpdatePatchView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	_, err = orderClient.UpdateCartItem(context.Background(), &proto.CartItemRequest{
+	_, err = orderClient.UpdateCartItem(context.WithValue(context.Background(), "ginContext", c), &proto.CartItemRequest{
 		UserId:  claims.UserID,
 		GoodsId: cr.Id,
 		Nums:    update.Num,

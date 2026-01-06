@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"errors"
+	"github.com/opentracing/opentracing-go"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -33,7 +34,10 @@ func UserResponseFunction(user models.UserModel) proto.UserInfoResponse {
 	return response
 }
 
-func (UserSever) GetUserList(c context.Context, pageInfo *proto.PageInfo) (*proto.UserListResponse, error) {
+func (UserSever) GetUserList(ctx context.Context, pageInfo *proto.PageInfo) (*proto.UserListResponse, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_option", opentracing.ChildOf(parentSpan.Context()))
 	list, count, err := common.ListQuery(models.UserModel{}, common.Options{
 		PageInfo: common.PageInfo{
 			Limit: pageInfo.Limit,
@@ -49,7 +53,7 @@ func (UserSever) GetUserList(c context.Context, pageInfo *proto.PageInfo) (*prot
 		response := UserResponseFunction(user)
 		userList = append(userList, &response)
 	}
-
+	mysqlSpan.Finish()
 	return &proto.UserListResponse{
 		Total: int32(count),
 		Data:  userList,
@@ -58,16 +62,23 @@ func (UserSever) GetUserList(c context.Context, pageInfo *proto.PageInfo) (*prot
 }
 
 func (UserSever) GetUserInfo(ctx context.Context, id *proto.IdRequest) (*proto.UserInfoResponse, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_option", opentracing.ChildOf(parentSpan.Context()))
 	var user models.UserModel
 	count := global.DB.Where("id = ?", id.Id).First(&user).RowsAffected
 	if count != 1 {
 		return nil, status.Error(codes.NotFound, "用户不存在")
 	}
+	mysqlSpan.Finish()
 	response := UserResponseFunction(user)
 	return &response, nil
 }
 
 func (UserSever) GetUserMobile(ctx context.Context, mobile *proto.MobileRequest) (*proto.UserInfoResponse, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_option", opentracing.ChildOf(parentSpan.Context()))
 	var user models.UserModel
 	result := global.DB.Where("mobile = ?", mobile.Mobile).First(&user)
 	if result.RowsAffected == 0 {
@@ -76,11 +87,15 @@ func (UserSever) GetUserMobile(ctx context.Context, mobile *proto.MobileRequest)
 	if result.Error != nil {
 		return nil, result.Error
 	}
+	mysqlSpan.Finish()
 	response := UserResponseFunction(user)
 	return &response, nil
 
 }
 func (UserSever) CreateUser(ctx context.Context, req *proto.CreateUserReq) (*proto.UserInfoResponse, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_option", opentracing.ChildOf(parentSpan.Context()))
 	var user models.UserModel
 	count := global.DB.Where("mobile = ?", req.Mobile).First(&user).RowsAffected
 	if count != 0 {
@@ -94,12 +109,16 @@ func (UserSever) CreateUser(ctx context.Context, req *proto.CreateUserReq) (*pro
 		logrus.Errorf("create user error: %v", err)
 		return nil, status.Error(codes.Internal, "创建用户失败")
 	}
+	mysqlSpan.Finish()
 	response := UserResponseFunction(user)
 	return &response, nil
 
 }
 
 func (UserSever) UpdateUser(ctx context.Context, req *proto.UpdateUserReq) (*proto.Response, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_option", opentracing.ChildOf(parentSpan.Context()))
 	var user models.UserModel
 	count := global.DB.Where("id = ?", req.Id).First(&user).RowsAffected
 	if count == 0 {
@@ -121,6 +140,7 @@ func (UserSever) UpdateUser(ctx context.Context, req *proto.UpdateUserReq) (*pro
 		logrus.Errorf("update user error: %v", err)
 		return nil, status.Error(codes.Internal, "用户更新失败")
 	}
+	mysqlSpan.Finish()
 	response := proto.Response{
 		Code: int32(codes.OK),
 		Msg:  "更新成功",
@@ -129,7 +149,9 @@ func (UserSever) UpdateUser(ctx context.Context, req *proto.UpdateUserReq) (*pro
 
 }
 func (UserSever) CheckPassword(ctx context.Context, check *proto.CheckPasswordReq) (*proto.CheckPasswordResponse, error) {
-
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_option", opentracing.ChildOf(parentSpan.Context()))
 	var response proto.CheckPasswordResponse
 	if check.Password == check.EncryptedPassword {
 		response = proto.CheckPasswordResponse{
@@ -140,6 +162,7 @@ func (UserSever) CheckPassword(ctx context.Context, check *proto.CheckPasswordRe
 			IsValid: false,
 		}
 	}
+	mysqlSpan.Finish()
 
 	return &response, nil
 }

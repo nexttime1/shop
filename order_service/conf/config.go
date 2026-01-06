@@ -9,4 +9,6 @@ type Config struct {
 	GoodSrv      GoodSrv    `mapstructure:"good_srv" yaml:"good_srv"`
 	InventorySrv GoodSrv    `mapstructure:"inventory_srv" yaml:"inventory_srv"`
 	Alipay       Alipay     `mapstructure:"alipay" yaml:"alipay"`
+	JaegerInfo   JaegerInfo `mapstructure:"jaeger_info" yaml:"jaeger_info"`
+	RocketMQ     RocketMQ   `mapstructure:"rocketmq" yaml:"rocketmq"`
 }

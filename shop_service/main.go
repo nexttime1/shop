@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"os"
 	"os/signal"
@@ -19,9 +20,17 @@ func main() {
 	global.DB = core.InitDB()
 
 	flags.Run()
-	client := core.NewConsulRegister()
+	tracer, closer, err := core.InitTracer()
+	if err != nil {
+		zap.L().Error("tracer 初始化失败", zap.Error(err))
+		panic(err)
+	}
+	global.Tracer = tracer
+	global.TracerClose = closer
+	opentracing.SetGlobalTracer(tracer)
 
-	err := client.Register()
+	client := core.NewConsulRegister()
+	err = client.Register()
 	if err != nil {
 		zap.L().Error("注册失败", zap.Error(err))
 		panic(err)
@@ -31,6 +40,7 @@ func main() {
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit // 阻塞
 	err = client.Deregister()
+	global.TracerClose.Close()
 	if err != nil {
 		zap.L().Error("服务注销失败", zap.Error(err))
 		return

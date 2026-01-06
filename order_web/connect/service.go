@@ -3,12 +3,14 @@ package connect
 import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/mbobakov/grpc-consul-resolver" // It's important
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"order_web/common/res"
 	"order_web/global"
 	"order_web/proto"
+	"order_web/utils/otgrpc"
 )
 
 func OrderConnectService(c *gin.Context) (proto.OrderClient, *grpc.ClientConn, error) {
@@ -24,6 +26,7 @@ func OrderConnectService(c *gin.Context) (proto.OrderClient, *grpc.ClientConn, e
 		connectAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
+		grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(opentracing.GlobalTracer())), // 设置拦截器  只要调用 grpc 就拦截
 	)
 	if err != nil {
 		zap.S().Errorf("创建 grpc 客户端连接失败：%v", err)
@@ -51,6 +54,7 @@ func GoodConnectService() (proto.GoodsClient, *grpc.ClientConn, error) {
 		connectAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
+		grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(opentracing.GlobalTracer())), // 设置拦截器  只要调用 grpc 就拦截
 	)
 	if err != nil {
 		zap.S().Errorf("创建 grpc 客户端连接失败：%v", err)
@@ -78,6 +82,7 @@ func InventoryConnectService() (proto.InventoryClient, *grpc.ClientConn, error) 
 		connectAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
+		grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(opentracing.GlobalTracer())), // 设置拦截器  只要调用 grpc 就拦截
 	)
 	if err != nil {
 		zap.S().Errorf("创建 grpc 客户端连接失败：%v", err)

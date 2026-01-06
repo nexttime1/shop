@@ -7,4 +7,5 @@ type Config struct {
 	Redis      Redis      `mapstructure:"redis" yaml:"redis"`
 	ConsulInfo ConsulInfo `mapstructure:"consul_info" yaml:"consul_info"`
 	NacosInfo  NacosInfo  `mapstructure:"nacos_info" yaml:"nacos_info"`
+	JaegerInfo JaegerInfo `mapstructure:"jaeger_info" yaml:"jaeger_info"`
 }

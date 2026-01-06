@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"github.com/hashicorp/consul/api"
+	"github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
@@ -10,6 +11,7 @@ import (
 	"shop_service/handler"
 	"shop_service/proto"
 	"shop_service/utils/free_port"
+	"shop_service/utils/otgrpc"
 
 	"github.com/satori/go.uuid"
 	"go.uber.org/zap"
@@ -34,7 +36,7 @@ func (c ConsulRegister) Register() error {
 		return err
 	}
 	zap.S().Infof("用户服务获得的端口号为: %d", port)
-	server := grpc.NewServer()
+	server := grpc.NewServer(grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(opentracing.GlobalTracer())))
 	proto.RegisterUserServer(server, &handler.UserSever{})
 	// 监听的端口 一定是动态获取的 要不健康检查 识别不到
 	listenAddr := fmt.Sprintf("%s:%d", global.Config.LocalInfo.Addr, port)

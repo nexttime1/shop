@@ -20,9 +20,45 @@ import (
 )
 
 type OrderSever struct {
+	transactionProducer rocketmq.TransactionProducer // 复用的生产者实例
+	// 事务监听器需要考虑线程安全，监听器也作为成员变量
+	orderListener *mq.TransactionProducer // 假设你的监听器是指针类型，便于复用
 }
 
-func (o OrderSever) CreateOrder(ctx context.Context, request *proto.OrderRequest) (*proto.OrderInfoResponse, error) {
+// InitProducer 初始化方法：在服务启动时调用 只执行一次
+func (o *OrderSever) InitProducer() error {
+	// 初始化事务监听器
+	o.orderListener = &mq.TransactionProducer{}
+
+	// 创建事务生产者（只执行一次）
+	producerIns, err := rocketmq.NewTransactionProducer(
+		o.orderListener,
+		producer.WithNameServer([]string{global.Config.RocketMQ.Addr()}),
+		producer.WithGroupName(global.Config.RocketMQ.GroupName),
+	)
+	if err != nil {
+		zap.L().Error("RocketMQ创建事务生产者失败", zap.Error(err))
+		return err
+	}
+
+	// 启动生产者
+	if err = producerIns.Start(); err != nil {
+		return err
+	}
+
+	// 赋值给成员变量，供后续复用
+	o.transactionProducer = producerIns
+	return nil
+}
+
+// CloseProducer 新增关闭方法：程序退出时调用，释放资源
+func (o *OrderSever) CloseProducer() error {
+	if o.transactionProducer != nil {
+		return o.transactionProducer.Shutdown()
+	}
+	return nil
+}
+func (o *OrderSever) CreateOrder(ctx context.Context, request *proto.OrderRequest) (*proto.OrderInfoResponse, error) {
 	model := service.OrderTransitionRequest{
 		Id:       request.Id,
 		UserId:   request.UserId,
@@ -33,33 +69,21 @@ func (o OrderSever) CreateOrder(ctx context.Context, request *proto.OrderRequest
 		OrderSns: service.RandomSns(request.UserId),
 	}
 	data, _ := json.Marshal(model)
-	var orderListener mq.TransactionProducer
-	transactionProducer, err := rocketmq.NewTransactionProducer(
-		&orderListener,
-		producer.WithNameServer([]string{"192.168.163.132:9876"}),
-		producer.WithGroupName("order_producer"),
-	)
-	if err != nil {
-		panic(err)
-	}
-	err = transactionProducer.Start()
-	if err != nil {
-		panic(err)
-	}
-	_, err = transactionProducer.SendMessageInTransaction(context.Background(), primitive.NewMessage("shop_reback", data))
+
+	_, err := o.transactionProducer.SendMessageInTransaction(context.Background(), primitive.NewMessage("shop_reback", data))
 	if err != nil {
 		zap.S().Error(err)
 		return nil, err
 	}
-	if orderListener.Code != codes.OK {
-		return nil, status.Error(orderListener.Code, orderListener.Detail)
+	if o.orderListener.Code != codes.OK {
+		return nil, status.Error(o.orderListener.Code, o.orderListener.Detail)
 	}
 
-	return &proto.OrderInfoResponse{Id: orderListener.ID, OrderSn: model.OrderSns, Total: orderListener.PriceSum}, nil
+	return &proto.OrderInfoResponse{Id: o.orderListener.ID, OrderSn: model.OrderSns, Total: o.orderListener.PriceSum}, nil
 
 }
 
-func (o OrderSever) OrderList(ctx context.Context, request *proto.OrderFilterRequest) (*proto.OrderListResponse, error) {
+func (o *OrderSever) OrderList(ctx context.Context, request *proto.OrderFilterRequest) (*proto.OrderListResponse, error) {
 	// 管理员看所有的列表   而用户看自己的  区别是 看web端给我发不发id
 	response := &proto.OrderListResponse{}
 	pageInfo := common.PageInfo{
@@ -109,7 +133,7 @@ func (o OrderSever) OrderList(ctx context.Context, request *proto.OrderFilterReq
 	return response, nil
 }
 
-func (o OrderSever) OrderDetail(ctx context.Context, request *proto.OrderRequest) (*proto.OrderInfoDetailResponse, error) {
+func (o *OrderSever) OrderDetail(ctx context.Context, request *proto.OrderRequest) (*proto.OrderInfoDetailResponse, error) {
 	// 如果传userId  那就查这个用户的  不传就是全部的
 	response := &proto.OrderInfoDetailResponse{}
 	var model models.OrderModel
@@ -149,7 +173,7 @@ func (o OrderSever) OrderDetail(ctx context.Context, request *proto.OrderRequest
 
 }
 
-func (o OrderSever) UpdateOrderStatus(ctx context.Context, req *proto.OrderStatus) (*emptypb.Empty, error) {
+func (o *OrderSever) UpdateOrderStatus(ctx context.Context, req *proto.OrderStatus) (*emptypb.Empty, error) {
 	result := global.DB.Model(&models.OrderModel{}).Where("order_sn = ?", req.OrderSn).Update("status", req.Status)
 	if result.Error != nil || result.RowsAffected == 0 {
 		return nil, status.Errorf(codes.Internal, "订单不存在")

@@ -8,7 +8,7 @@ import (
 
 func CartRouter(r *gin.RouterGroup) {
 	app := api.App.CartApi
-	cart := r.Group("shopcarts").Use(middleware.AuthMiddleware)
+	cart := r.Group("shopcarts").Use(middleware.AuthMiddleware).Use(middleware.Trace)
 
 	cart.GET("", app.CartListView)              //购物车列表
 	cart.DELETE("/:id", app.DeleteCartItemView) //删除条目

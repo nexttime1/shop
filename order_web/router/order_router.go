@@ -8,7 +8,7 @@ import (
 
 func OrderRouter(r *gin.RouterGroup) {
 	app := api.App.OrderApi
-	order := r.Group("orders").Use(middleware.AuthMiddleware)
+	order := r.Group("orders").Use(middleware.AuthMiddleware).Use(middleware.Trace)
 
 	order.GET("", app.OrderListView)          //查看所有订单
 	order.DELETE("/:id", app.DeleteOrderView) //删除订单

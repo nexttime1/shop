@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"github.com/hashicorp/consul/api"
+	"github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
@@ -10,6 +11,7 @@ import (
 	"order_service/handler"
 	"order_service/proto"
 	"order_service/utils/free_port"
+	"order_service/utils/otgrpc"
 
 	"github.com/satori/go.uuid"
 	"go.uber.org/zap"
@@ -17,7 +19,7 @@ import (
 )
 
 type ServerRegister interface {
-	Register() error
+	Register() (*handler.OrderSever, error)
 	Deregister() error
 }
 
@@ -26,21 +28,27 @@ type ConsulRegister struct {
 }
 
 // Go 编译器对指针类型调用值接收者方法时，会自动做 *ptr 解引用
-func (c ConsulRegister) Register() error {
+func (c ConsulRegister) Register() (*handler.OrderSever, error) {
 	// 动态获得 端口
 	port, err := free_port.GetFreePort()
 	if err != nil {
 		zap.L().Error("端口获得错误 ", zap.Error(err))
-		return err
+		return nil, err
 	}
 	zap.S().Infof("用户服务获得的端口号为: %d", port)
-	server := grpc.NewServer()
-	proto.RegisterOrderServer(server, &handler.OrderSever{})
+	server := grpc.NewServer(grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(opentracing.GlobalTracer())))
+	// 初始化 mq的生产者
+	orderSever := &handler.OrderSever{}
+	err = orderSever.InitProducer()
+	if err != nil {
+		return nil, err
+	}
+	proto.RegisterOrderServer(server, orderSever)
 	// 监听的端口 一定是动态获取的 要不健康检查 识别不到
 	listenAddr := fmt.Sprintf("%s:%d", global.Config.LocalInfo.Addr, port)
 	lis, err := net.Listen("tcp", listenAddr)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// 健康检查注册 gRPC 服务端 内部注册一个服务   Consul Client 来调用它
@@ -74,7 +82,7 @@ func (c ConsulRegister) Register() error {
 	err = consulClient.Agent().ServiceRegister(registration)
 	if err != nil {
 		zap.S().Errorf("注册服务到 Consul错误 %s", err)
-		return err
+		return nil, err
 	}
 	zap.S().Infof("%s 注册成功", global.Config.ConsulInfo.Name)
 
@@ -94,7 +102,7 @@ func (c ConsulRegister) Register() error {
 		}
 	}()
 
-	return nil
+	return orderSever, nil
 }
 func (c ConsulRegister) Deregister() error {
 	// 服务注册

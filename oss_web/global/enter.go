@@ -2,11 +2,15 @@ package global
 
 import (
 	"github.com/go-redis/redis"
+	"github.com/opentracing/opentracing-go"
+	"io"
 	"oss_web/conf"
 )
 
 var (
-	Config    *conf.Config
-	Redis     *redis.Client
-	LevelFlag bool
+	Config      *conf.Config
+	Redis       *redis.Client
+	LevelFlag   bool
+	Tracer      opentracing.Tracer
+	TracerClose io.Closer
 )

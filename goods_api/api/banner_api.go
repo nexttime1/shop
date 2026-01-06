@@ -73,6 +73,7 @@ func (BannerApi) DeleteBannerView(c *gin.Context) {
 	if err != nil {
 		zap.S().Error(err)
 		res.FailWithErr(c, res.FailArgumentCode, err)
+
 		return
 	}
 	ctx := context.WithValue(context.Background(), "ginContext", c)

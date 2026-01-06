@@ -7,4 +7,5 @@ type Config struct {
 	ConsulInfo ConsulInfo `mapstructure:"consul_info" yaml:"consul_info"`
 	NacosInfo  NacosInfo  `mapstructure:"nacos_info" yaml:"nacos_info"`
 	QiNiu      QiNiu      `yaml:"qiniu"`
+	JaegerInfo JaegerInfo `mapstructure:"jaeger_info" yaml:"jaeger_info"`
 }

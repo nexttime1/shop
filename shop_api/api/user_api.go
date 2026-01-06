@@ -23,7 +23,7 @@ func (UserApi) UserListView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	userListResponse, err := client.GetUserList(context.Background(), &proto.PageInfo{
+	userListResponse, err := client.GetUserList(context.WithValue(context.Background(), "ginContext", c), &proto.PageInfo{
 		Page:  1,
 		Limit: 5,
 	})
@@ -57,7 +57,7 @@ func (UserApi) UserLoginView(c *gin.Context) {
 	}
 	defer conn.Close()
 	// get User Info By Module
-	ctx := context.Background()
+	ctx := context.WithValue(context.Background(), "ginContext", c)
 	userInfo, err := client.GetUserMobile(ctx, &proto.MobileRequest{
 		Mobile: userLoginRequest.Mobile,
 	})
@@ -65,7 +65,7 @@ func (UserApi) UserLoginView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	passwordResponse, err := client.CheckPassword(ctx, &proto.CheckPasswordReq{
+	passwordResponse, err := client.CheckPassword(context.WithValue(context.Background(), "ginContext", c), &proto.CheckPasswordReq{
 		Password:          userLoginRequest.Password,
 		EncryptedPassword: userInfo.Password,
 	})
@@ -113,8 +113,8 @@ func (UserApi) UserRegisterView(c *gin.Context) {
 	}
 	defer conn.Close()
 
-	// 查一下 有没有这个手机号
-	ctx := context.Background()
+	// 查一下 有没有这个手机号  链路追踪
+	ctx := context.WithValue(context.Background(), "ginContext", c)
 	userInfo, err := client.GetUserMobile(ctx, &proto.MobileRequest{
 		Mobile: cr.Mobile,
 	})

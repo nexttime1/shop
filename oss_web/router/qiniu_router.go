@@ -4,11 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"oss_web/common/res"
 	"oss_web/global"
+	"oss_web/middleware"
 	"oss_web/utils/qiniu"
 )
 
 func QiNiuRouter(r *gin.RouterGroup) {
-
+	r.Use(middleware.Trace)
 	r.GET("/token", func(c *gin.Context) {
 		filename := c.Query("filename")
 		if filename == "" {

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -28,6 +29,9 @@ func AddressFunction(model models.Address) proto.AddressResponse {
 }
 
 func (o OptionServer) GetAddressList(ctx context.Context, request *proto.AddressRequest) (*proto.AddressListResponse, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	var response proto.AddressListResponse
 	var addresses []*proto.AddressResponse
 	var addressModels []models.Address
@@ -36,7 +40,7 @@ func (o OptionServer) GetAddressList(ctx context.Context, request *proto.Address
 		result := AddressFunction(model)
 		addresses = append(addresses, &result)
 	}
-
+	mysqlSpan.Finish()
 	response.Total = int32(len(addresses))
 	response.Data = addresses
 	return &response, nil
@@ -44,6 +48,9 @@ func (o OptionServer) GetAddressList(ctx context.Context, request *proto.Address
 }
 
 func (o OptionServer) CreateAddress(ctx context.Context, request *proto.AddressRequest) (*proto.AddressResponse, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_search", opentracing.ChildOf(parentSpan.Context()))
 	model := models.Address{
 		UserId:       request.UserId,
 		Province:     request.Province,
@@ -58,6 +65,7 @@ func (o OptionServer) CreateAddress(ctx context.Context, request *proto.AddressR
 		zap.S().Error(err)
 		return nil, status.Error(codes.Internal, "创建失败")
 	}
+	mysqlSpan.Finish()
 	response := proto.AddressResponse{
 		Id: model.ID,
 	}
@@ -66,6 +74,9 @@ func (o OptionServer) CreateAddress(ctx context.Context, request *proto.AddressR
 }
 
 func (o OptionServer) DeleteAddress(ctx context.Context, request *proto.AddressRequest) (*emptypb.Empty, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_option", opentracing.ChildOf(parentSpan.Context()))
 	var model models.Address
 	err := global.DB.Where("id = ? and user_id = ?", request.Id, request.UserId).Take(&model).Error
 	if err != nil {
@@ -77,11 +88,15 @@ func (o OptionServer) DeleteAddress(ctx context.Context, request *proto.AddressR
 		zap.S().Error(err)
 		return nil, status.Error(codes.Internal, "删除失败")
 	}
+	mysqlSpan.Finish()
 	return &emptypb.Empty{}, nil
 
 }
 
 func (o OptionServer) UpdateAddress(ctx context.Context, request *proto.AddressRequest) (*emptypb.Empty, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_option", opentracing.ChildOf(parentSpan.Context()))
 	var model models.Address
 	err := global.DB.Where("id = ? and user_id = ?", request.Id, request.UserId).Take(&model).Error
 	if err != nil {
@@ -102,7 +117,7 @@ func (o OptionServer) UpdateAddress(ctx context.Context, request *proto.AddressR
 		zap.S().Error(err)
 		return nil, status.Error(codes.Internal, "更新失败")
 	}
-
+	mysqlSpan.Finish()
 	response := emptypb.Empty{}
 	return &response, nil
 

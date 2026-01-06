@@ -26,7 +26,7 @@ func (AddressApi) AddressListView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	list, err := addressClient.GetAddressList(context.Background(), &proto.AddressRequest{
+	list, err := addressClient.GetAddressList(context.WithValue(context.Background(), "ginContext", c), &proto.AddressRequest{
 		UserId: claims.UserID,
 	})
 	if err != nil {
@@ -69,7 +69,7 @@ func (AddressApi) AddressCreateView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	address, err := AddressClient.CreateAddress(context.Background(), &proto.AddressRequest{
+	address, err := AddressClient.CreateAddress(context.WithValue(context.Background(), "ginContext", c), &proto.AddressRequest{
 		UserId:       claims.UserID,
 		Province:     cr.Province,
 		City:         cr.City,
@@ -110,7 +110,7 @@ func (AddressApi) DeleteAddressView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	_, err = AddressClient.DeleteAddress(context.Background(), &proto.AddressRequest{
+	_, err = AddressClient.DeleteAddress(context.WithValue(context.Background(), "ginContext", c), &proto.AddressRequest{
 		Id:     cr.Id,
 		UserId: claims.UserID,
 	})
@@ -148,7 +148,7 @@ func (AddressApi) UpdateAddressView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	_, err = addressClient.UpdateAddress(context.Background(), &proto.AddressRequest{
+	_, err = addressClient.UpdateAddress(context.WithValue(context.Background(), "ginContext", c), &proto.AddressRequest{
 		Id:           idRequest.Id,
 		UserId:       claims.UserID,
 		Province:     cr.Province,

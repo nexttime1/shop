@@ -28,13 +28,13 @@ func (MessageApi) MessageListView(c *gin.Context) {
 	if claims.Role == enum.AdminRole {
 		request.UserId = 0
 	}
-	
+
 	OrderClient, conn, err := connect.MessageConnectService(c)
 	if err != nil {
 		return
 	}
 	defer conn.Close()
-	List, err := OrderClient.MessageList(context.Background(), &request)
+	List, err := OrderClient.MessageList(context.WithValue(context.Background(), "ginContext", c), &request)
 
 	if err != nil {
 		zap.S().Error(err)
@@ -79,7 +79,7 @@ func (MessageApi) CreateMessageView(c *gin.Context) {
 	}
 	defer conn.Close()
 
-	req, err := messageClient.CreateMessage(context.Background(), &proto.MessageRequest{
+	req, err := messageClient.CreateMessage(context.WithValue(context.Background(), "ginContext", c), &proto.MessageRequest{
 		UserId:      claims.UserID,
 		MessageType: cr.MessageType,
 		Subject:     cr.Subject,

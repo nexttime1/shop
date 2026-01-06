@@ -6,12 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/hashicorp/consul/api"
 	_ "github.com/mbobakov/grpc-consul-resolver" // It's important
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"shop_api/common/res"
 	"shop_api/global"
 	"shop_api/proto"
+	"shop_api/utils/otgrpc"
 )
 
 func UserConnectService(c *gin.Context) (proto.UserClient, *grpc.ClientConn, error) {
@@ -27,6 +29,7 @@ func UserConnectService(c *gin.Context) (proto.UserClient, *grpc.ClientConn, err
 		connectAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
+		grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(opentracing.GlobalTracer())), // 设置拦截器  只要调用 grpc 就拦截
 	)
 	if err != nil {
 		zap.S().Errorf("创建 grpc 客户端连接失败：%v", err)

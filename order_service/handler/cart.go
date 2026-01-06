@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -15,10 +16,14 @@ import (
 
 // CartItemList 查找某个用户的购物车
 func (o OrderSever) CartItemList(ctx context.Context, info *proto.UserInfo) (*proto.CartItemListResponse, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_option", opentracing.ChildOf(parentSpan.Context()))
 	var cartModels []models.ShoppingCartModel
 	var response proto.CartItemListResponse
 	count := global.DB.Where("user = ?", info.Id).Find(&cartModels).RowsAffected
 	response.Total = int32(count)
+	mysqlSpan.Finish()
 	var modelsInfo []*proto.ShopCartInfoResponse
 	for _, model := range cartModels {
 		modelsInfo = append(modelsInfo, &proto.ShopCartInfoResponse{
@@ -35,6 +40,9 @@ func (o OrderSever) CartItemList(ctx context.Context, info *proto.UserInfo) (*pr
 }
 
 func (o OrderSever) CreateCartItem(ctx context.Context, request *proto.CartItemRequest) (*proto.ShopCartInfoResponse, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_option", opentracing.ChildOf(parentSpan.Context()))
 	// 添加商品到购物车   如果存在 那就更新Num + 1
 	var model models.ShoppingCartModel
 	count := global.DB.Where("user = ? and goods = ?", request.UserId, request.GoodsId).First(&model).RowsAffected
@@ -58,6 +66,7 @@ func (o OrderSever) CreateCartItem(ctx context.Context, request *proto.CartItemR
 			zap.S().Errorf(err.Error())
 			return nil, status.Error(codes.Internal, "创建错误")
 		}
+		mysqlSpan.Finish()
 
 	}
 	return &proto.ShopCartInfoResponse{
@@ -71,6 +80,10 @@ func (o OrderSever) CreateCartItem(ctx context.Context, request *proto.CartItemR
 }
 
 func (o OrderSever) UpdateCartItem(ctx context.Context, request *proto.CartItemRequest) (*emptypb.Empty, error) {
+
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_option", opentracing.ChildOf(parentSpan.Context()))
 	// 更新check 或者 num
 	var model models.ShoppingCartModel
 	err := global.DB.Where("user = ? and goods = ?", request.UserId, request.GoodsId).Take(&model).Error
@@ -88,11 +101,15 @@ func (o OrderSever) UpdateCartItem(ctx context.Context, request *proto.CartItemR
 		zap.S().Errorf(err.Error())
 		return nil, status.Error(codes.Internal, "更新失败")
 	}
+	mysqlSpan.Finish()
 	return &emptypb.Empty{}, nil
 
 }
 
 func (o OrderSever) DeleteCartItem(ctx context.Context, request *proto.CartItemRequest) (*emptypb.Empty, error) {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	mysqlSpan := opentracing.GlobalTracer().StartSpan("mysql_option", opentracing.ChildOf(parentSpan.Context()))
 	//删除购物车的某个商品
 	var model models.ShoppingCartModel
 	err := global.DB.Where("user = ? and goods = ?", request.UserId, request.GoodsId).Take(&model).Error
@@ -105,5 +122,6 @@ func (o OrderSever) DeleteCartItem(ctx context.Context, request *proto.CartItemR
 		zap.S().Errorf(err.Error())
 		return nil, status.Error(codes.Internal, "删除失败")
 	}
+	mysqlSpan.Finish()
 	return &emptypb.Empty{}, nil
 }

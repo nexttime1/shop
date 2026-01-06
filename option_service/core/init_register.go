@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"github.com/hashicorp/consul/api"
+	"github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
@@ -10,6 +11,7 @@ import (
 	"option_service/handler"
 	"option_service/proto"
 	"option_service/utils/free_port"
+	"option_service/utils/otgrpc"
 
 	"github.com/satori/go.uuid"
 	"go.uber.org/zap"
@@ -34,7 +36,7 @@ func (c ConsulRegister) Register() error {
 		return err
 	}
 	zap.S().Infof("用户服务获得的端口号为: %d", port)
-	server := grpc.NewServer()
+	server := grpc.NewServer(grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(opentracing.GlobalTracer())))
 	proto.RegisterAddressServer(server, &handler.OptionServer{})
 	proto.RegisterMessageServer(server, &handler.OptionServer{})
 	proto.RegisterUserFavServer(server, &handler.OptionServer{})
