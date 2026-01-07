@@ -6,6 +6,7 @@ type RocketMQ struct {
 	Host      string `mapstructure:"host" yaml:"host"`
 	Port      uint64 `mapstructure:"port" yaml:"port"`
 	GroupName string `mapstructure:"group_name" yaml:"group_name"`
+	Topic     string `mapstructure:"topic" yaml:"topic"`
 }
 
 func (info RocketMQ) Addr() string {

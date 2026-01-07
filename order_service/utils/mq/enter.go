@@ -51,7 +51,7 @@ func (t *TransactionProducer) InitDelayProducer() error {
 	return nil
 }
 
-// 关闭延时消息生产者
+// CloseDelayProducer 关闭延时消息生产者
 func (t *TransactionProducer) CloseDelayProducer() error {
 	if t.delayProducer != nil {
 		return t.delayProducer.Shutdown()
@@ -61,8 +61,27 @@ func (t *TransactionProducer) CloseDelayProducer() error {
 
 // When send transactional prepare(half) message succeed, this method will be invoked to execute local transaction.
 func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) primitive.LocalTransactionState {
-	var code codes.Code
-	var detail string
+	// 初始化当前请求的状态
+	status := &TransactionStatus{
+		Code:   codes.Internal,
+		Detail: "未知错误",
+	}
+	// 关联消息ID和状态（TransactionId是每个事务消息的唯一标识）
+	transactionId := msg.TransactionId
+	zap.S().Infof("transactionId为: %s", transactionId)
+	// 空值保护
+	if transactionId == "" {
+		zap.S().Warn("事务消息 TransactionId 为空")
+		status.Code = codes.Internal
+		status.Detail = "事务标识为空"
+		return primitive.RollbackMessageState
+	}
+	history := models.OrderStockHistory{
+		OrderSn: transactionId,
+		Status:  0,
+	}
+	global.DB.Create(&history) // 不会错
+	t.statusMap.Store(transactionId, status)
 	//var priceSum float32
 	var request service.OrderTransitionRequest
 	_ = json.Unmarshal(msg.Body, &request)
@@ -75,8 +94,8 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 		Checked: &check,
 	}).Find(&shopModels)
 	if len(shopModels) == 0 {
-		code = codes.NotFound
-		detail = "请选择商品"
+		status.Code = codes.NotFound
+		status.Detail = "请选择商品"
 		return primitive.RollbackMessageState
 	}
 	goodNumMap := make(map[int32]int32)
@@ -89,8 +108,8 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	goodClient, conn, err := connect.GoodConnectService()
 	if err != nil {
 		zap.S().Error(err)
-		t.Code = codes.Internal
-		t.Detail = "服务启动失败"
+		status.Code = codes.Internal
+		status.Detail = "服务启动失败"
 		return primitive.RollbackMessageState
 	}
 	defer conn.Close()
@@ -99,8 +118,8 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	})
 	if err != nil {
 		zap.S().Error(err)
-		t.Code = codes.Internal
-		t.Detail = "商品查询失败"
+		status.Code = codes.Internal
+		status.Detail = "商品查询失败"
 		return primitive.RollbackMessageState
 	}
 	var PriceSum float32
@@ -125,19 +144,21 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	inventoryClient, inventoryConn, err := connect.InventoryConnectService()
 	if err != nil {
 		zap.S().Error(err)
-		t.Code = codes.Internal
-		t.Detail = "服务启动失败"
+		status.Code = codes.Internal
+		status.Detail = "服务启动失败"
 		return primitive.RollbackMessageState
 	}
 	defer inventoryConn.Close()
 	_, err = inventoryClient.Sell(context.Background(), &proto.SellInfo{GoodsInfo: goodsInfo, OrderSn: request.OrderSns})
 	if err != nil {
 		zap.S().Error(err)
-		t.Code = codes.Internal
-		t.Detail = "库存不足"
+		status.Code = codes.Internal
+		status.Detail = "库存不足"
 		return primitive.RollbackMessageState
 	}
-
+	// 这个时候 去修改一下 history
+	history.Status = 1
+	global.DB.Save(&history)
 	// 生成订单表
 	order := models.OrderModel{
 		User:         request.UserId,
@@ -160,8 +181,8 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	if err != nil {
 		zap.S().Error(err)
 		tx.Rollback()
-		t.Code = codes.Internal
-		t.Detail = "创建失败"
+		status.Code = codes.Internal
+		status.Detail = "创建失败"
 		return primitive.CommitMessageState
 	}
 	// 加上 订单ID
@@ -173,8 +194,8 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	if err != nil {
 		zap.S().Error(err)
 		tx.Rollback()
-		t.Code = codes.Internal
-		t.Detail = "创建失败"
+		status.Code = codes.Internal
+		status.Detail = "创建失败"
 		return primitive.CommitMessageState
 	}
 	// 删除购物车中 已经生成订单的商品
@@ -184,53 +205,82 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	if err != nil {
 		zap.S().Error(err)
 		tx.Rollback()
-		t.Code = codes.Internal
-		t.Detail = "删除失败"
-		return primitive.CommitMessageState
-	}
-	t.Code = codes.OK
-	t.ID = order.ID
-	t.PriceSum = PriceSum
-	// 发送延时消息  确保归还库存  发送普通消息就行
-	p, err := rocketmq.NewProducer(producer.WithNameServer([]string{"192.168.163.132:9876"}))
-	if err != nil {
-		tx.Rollback()
-		t.Code = codes.Internal
-		t.Detail = "发送延时消息失败"
-		return primitive.CommitMessageState
-	}
-	err = p.Start()
-	if err != nil {
-		tx.Rollback()
-		t.Code = codes.Internal
-		t.Detail = "发送延时消息失败"
-		return primitive.CommitMessageState
-	}
-	message := primitive.NewMessage("order_timeout", msg.Body)
-	message.WithDelayTimeLevel(3)
-	_, err = p.SendSync(context.Background(), message)
-
-	if err != nil {
-		tx.Rollback()
-		t.Code = codes.Internal
-		t.Detail = "发送延时消息失败"
+		status.Code = codes.Internal
+		status.Detail = "删除失败"
 		return primitive.CommitMessageState
 	}
 
-	tx.Commit()
+	// 发送延时消息  确保归还库存  发送普通消息就行   复用生产者
+	delayMsg := primitive.NewMessage("order_timeout", msg.Body)
+	delayMsg.WithDelayTimeLevel(3) // 延时级别3（根据RocketMQ配置对应时间）
+	if _, err = t.delayProducer.SendSync(context.Background(), delayMsg); err != nil {
+		zap.S().Error("发送延时消息失败", zap.Error(err))
+		tx.Rollback()
+		status.Detail = "发送延时消息失败"
+		return primitive.CommitMessageState
+	}
+
+	err = tx.Commit().Error
+	if err != nil {
+		zap.S().Error("事务提交错误", zap.Error(err))
+		status.Code = codes.Internal
+		status.Detail = "事务提交错误"
+		return primitive.CommitMessageState
+	}
+
+	status.Code = codes.OK
+	status.ID = order.ID
+	status.PriceSum = PriceSum
 	return primitive.RollbackMessageState
 }
 
-// When no response to prepare(half) message. broker will send check message to check the transaction status, and this
+// CheckLocalTransaction When no response to prepare(half) message. broker will send check message to check the transaction status, and this
 // method will be invoked to get local transaction status.
 func (t *TransactionProducer) CheckLocalTransaction(msg *primitive.MessageExt) primitive.LocalTransactionState {
+	// 先拿出 事务ID 如果 都执行成功 本地事务 扣减库存 全部完成 但是MQ 没收到最后的 return 首先判断 Code == OK
+	id := msg.TransactionId
+	status, ok := t.GetTransactionStatus(id)
+	if !ok {
+		zap.S().Errorf("id 为: %v", status)
+		zap.S().Errorf("怎么可能走到这里")
+		return primitive.RollbackMessageState
+	}
+	if status.Code == codes.OK {
+		return primitive.RollbackMessageState
+	}
+	// 这里说明遇到问题了  需要看看 到底是 扣没扣减库存
+	var history models.OrderStockHistory
+	err := global.DB.Where("order_sn = ?", id).Take(&history).Error
+	if err != nil {
+		zap.S().Errorf("不可能错 %v", err)
+		return primitive.RollbackMessageState
+	}
+	if history.Status == 0 {
+		return primitive.RollbackMessageState
+	}
+	
 	var request service.OrderTransitionRequest
 	_ = json.Unmarshal(msg.Body, &request)
 	var model models.OrderModel
-	err := global.DB.Where("order_sn = ?", request.OrderSns).Take(&model).Error
+	err = global.DB.Where("order_sn = ?", request.OrderSns).Take(&model).Error
 	if err != nil {
 		return primitive.CommitMessageState
 	}
 
 	return primitive.RollbackMessageState
+}
+
+// GetTransactionStatus 根据TransactionId获取请求状态（供外层调用）
+func (t *TransactionProducer) GetTransactionStatus(transactionId string) (*TransactionStatus, bool) {
+	val, ok := t.statusMap.Load(transactionId)
+	if !ok {
+		return nil, false
+	}
+	status, ok := val.(*TransactionStatus)
+	return status, ok
+}
+
+// DeleteTransactionStatus 清理已完成的事务状态（避免内存泄漏）
+func (t *TransactionProducer) DeleteTransactionStatus(transactionId string) {
+	t.statusMap.Delete(transactionId)
 }

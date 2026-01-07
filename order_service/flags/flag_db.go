@@ -11,6 +11,7 @@ func FlagDB() {
 		&models.OrderModel{},
 		&models.OrderGoodsModel{},
 		&models.ShoppingCartModel{},
+		&models.OrderStockHistory{},
 	)
 	if err != nil {
 		zap.S().Errorf("\n数据库迁移失败  %s", err)

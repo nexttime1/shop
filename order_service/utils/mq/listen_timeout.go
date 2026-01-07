@@ -15,7 +15,7 @@ import (
 )
 
 func ListenMq() {
-	messgaes, err := rocketmq.NewPushConsumer(consumer.WithNameServer([]string{"192.168.163.132:9876"}),
+	messgaes, err := rocketmq.NewPushConsumer(consumer.WithNameServer([]string{global.Config.RocketMQ.Addr()}),
 		consumer.WithGroupName("shop_order"))
 	if err != nil {
 		panic(err)

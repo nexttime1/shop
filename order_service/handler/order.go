@@ -6,6 +6,7 @@ import (
 	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/producer"
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -22,7 +23,7 @@ import (
 type OrderSever struct {
 	transactionProducer rocketmq.TransactionProducer // 复用的生产者实例
 	// 事务监听器需要考虑线程安全，监听器也作为成员变量
-	orderListener *mq.TransactionProducer // 假设你的监听器是指针类型，便于复用
+	orderListener *mq.TransactionProducer // 监听器 便于复用
 }
 
 // InitProducer 初始化方法：在服务启动时调用 只执行一次
@@ -30,6 +31,11 @@ func (o *OrderSever) InitProducer() error {
 	// 初始化事务监听器
 	o.orderListener = &mq.TransactionProducer{}
 
+	// 初始化延时消息生产者
+	if err := o.orderListener.InitDelayProducer(); err != nil {
+		zap.L().Error("初始化延时消息生产者失败", zap.Error(err))
+		return err
+	}
 	// 创建事务生产者（只执行一次）
 	producerIns, err := rocketmq.NewTransactionProducer(
 		o.orderListener,
@@ -51,10 +57,21 @@ func (o *OrderSever) InitProducer() error {
 	return nil
 }
 
-// CloseProducer 新增关闭方法：程序退出时调用，释放资源
+// CloseProducer 程序退出时调用，释放资源
 func (o *OrderSever) CloseProducer() error {
+	// 关闭事务生产者
 	if o.transactionProducer != nil {
-		return o.transactionProducer.Shutdown()
+		if err := o.transactionProducer.Shutdown(); err != nil {
+			zap.L().Error("关闭事务生产者失败", zap.Error(err))
+			return err
+		}
+	}
+	// 关闭延时消息生产者
+	if o.orderListener != nil {
+		if err := o.orderListener.CloseDelayProducer(); err != nil {
+			zap.L().Error("关闭延时消息生产者失败", zap.Error(err))
+			return err
+		}
 	}
 	return nil
 }
@@ -69,17 +86,34 @@ func (o *OrderSever) CreateOrder(ctx context.Context, request *proto.OrderReques
 		OrderSns: service.RandomSns(request.UserId),
 	}
 	data, _ := json.Marshal(model)
-
-	_, err := o.transactionProducer.SendMessageInTransaction(context.Background(), primitive.NewMessage("shop_reback", data))
+	msg := primitive.NewMessage(global.Config.RocketMQ.Topic, data)
+	//half 消息 如果回复了 我就调用本地事务 也就是 ExecuteLocalTransaction
+	parentSpan := opentracing.SpanFromContext(ctx)
+	// 链路记录
+	halfSpan := opentracing.GlobalTracer().StartSpan("发送 half消息", opentracing.ChildOf(parentSpan.Context()))
+	result, err := o.transactionProducer.SendMessageInTransaction(ctx, msg)
 	if err != nil {
 		zap.S().Error(err)
 		return nil, err
 	}
-	if o.orderListener.Code != codes.OK {
-		return nil, status.Error(o.orderListener.Code, o.orderListener.Detail)
+	halfSpan.Finish()
+	transactionID := result.TransactionID
+	if transactionID == "" {
+		zap.S().Error("发送事务消息后 TransactionId 为空")
+		return nil, status.Error(codes.Internal, "事务标识生成失败")
+	}
+	//根据 TransactionId 获取请求状态
+	statusInfo, ok := o.orderListener.GetTransactionStatus(transactionID)
+	if !ok {
+		zap.S().Error("获取事务状态失败", zap.String("txId", transactionID))
+		return nil, status.Error(codes.Internal, "获取订单状态失败")
 	}
 
-	return &proto.OrderInfoResponse{Id: o.orderListener.ID, OrderSn: model.OrderSns, Total: o.orderListener.PriceSum}, nil
+	if statusInfo.Code != codes.OK {
+		return nil, status.Error(statusInfo.Code, statusInfo.Detail)
+	}
+
+	return &proto.OrderInfoResponse{Id: statusInfo.ID, OrderSn: model.OrderSns, Total: statusInfo.PriceSum}, nil
 
 }
 
