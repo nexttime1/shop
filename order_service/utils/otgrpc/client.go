@@ -53,6 +53,8 @@ func OpenTracingClientInterceptor(tracer opentracing.Tracer, optFuncs ...Option)
 			if exists {
 				parentCtx = parentScan.(*jaegerClient.Span).Context()
 			}
+		case opentracing.Span:
+			parentCtx = ginContext.(opentracing.SpanContext)
 		}
 		if otgrpcOpts.inclusionFunc != nil &&
 			!otgrpcOpts.inclusionFunc(parentCtx, method, req, resp) {

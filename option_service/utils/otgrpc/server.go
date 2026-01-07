@@ -14,9 +14,9 @@ import (
 //
 // For example:
 //
-//     s := grpc.NewServer(
-//         ...,  // (existing ServerOptions)
-//         grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(tracer)))
+//	s := grpc.NewServer(
+//	    ...,  // (existing ServerOptions)
+//	    grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(tracer)))
 //
 // All gRPC server spans will look for an OpenTracing SpanContext in the gRPC
 // metadata; if found, the server span will act as the ChildOf that RPC
@@ -33,6 +33,14 @@ func OpenTracingServerInterceptor(tracer opentracing.Tracer, optFuncs ...Option)
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (resp interface{}, err error) {
+		//过滤 健康检查
+		method := info.FullMethod
+		//fmt.Println("method:", method)        /grpc.health.v1.Health/Check
+		if method == "/grpc.health.v1.Health/Check" {
+			resp, err = handler(ctx, req)
+			return
+		}
+		// 提取出web 的parentScan
 		spanContext, err := extractSpanContext(ctx, tracer)
 		if err != nil && err != opentracing.ErrSpanContextNotFound {
 			// TODO: establish some sort of error reporting mechanism here. We
@@ -76,9 +84,9 @@ func OpenTracingServerInterceptor(tracer opentracing.Tracer, optFuncs ...Option)
 //
 // For example:
 //
-//     s := grpc.NewServer(
-//         ...,  // (existing ServerOptions)
-//         grpc.StreamInterceptor(otgrpc.OpenTracingStreamServerInterceptor(tracer)))
+//	s := grpc.NewServer(
+//	    ...,  // (existing ServerOptions)
+//	    grpc.StreamInterceptor(otgrpc.OpenTracingStreamServerInterceptor(tracer)))
 //
 // All gRPC server spans will look for an OpenTracing SpanContext in the gRPC
 // metadata; if found, the server span will act as the ChildOf that RPC

@@ -2,11 +2,13 @@ package connect
 
 import (
 	_ "github.com/mbobakov/grpc-consul-resolver" // It's important
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"option_service/global"
 	"option_service/proto"
+	"option_service/utils/otgrpc"
 )
 
 func GoodConnectService() (proto.GoodsClient, *grpc.ClientConn, error) {
@@ -24,6 +26,7 @@ func GoodConnectService() (proto.GoodsClient, *grpc.ClientConn, error) {
 		connectAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
+		grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(opentracing.GlobalTracer())), // 设置拦截器  只要调用 grpc 就拦截
 	)
 	if err != nil {
 		zap.S().Errorf("创建 grpc 客户端连接失败：%v", err)

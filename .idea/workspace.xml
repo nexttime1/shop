@@ -5,10 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/goods_api/test/tracer.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_api/middleware/tracing.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/middleware/tracing.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_api/service/otgrpc/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_api/service/otgrpc/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_service/connect/srv_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_service/connect/srv_client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_service/utils/otgrpc/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_service/utils/otgrpc/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/conf/conf_mq.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/conf/conf_mq.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/core/init_producer.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/handler/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/handler/order.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/utils/mq/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/utils/mq/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/utils/mq/listen_timeout.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/utils/listen_handler/listen_timeout.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/utils/otgrpc/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/utils/otgrpc/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/utils/otgrpc/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/utils/otgrpc/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_service/utils/otgrpc/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/utils/otgrpc/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock_service/models/inventory_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/models/inventory_model.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +84,7 @@
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/goods_api/service",
+    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/option_service/utils",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -90,18 +99,18 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\5524\go_project\xtm_shop\shop\goods_api\service" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\goods_api\conf" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\stock_service\service" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\proto" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\goods_api\proto" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\option_service\utils" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\utils" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\shop_service\utils" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\core" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\conf" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\utils\listen_handler" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\service" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\goods_api\utils" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\core" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\service" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\connect" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\goods_api" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -202,13 +211,8 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/order_service/utils/mq/enter.go</url>
-          <line>10</line>
+          <line>11</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/stock_service/utils/mq/enter.go</url>
-          <line>26</line>
-          <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/goods_api/api/good_api.go</url>
@@ -221,12 +225,12 @@
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/goods_api/service/otgrpc/client.go</url>
+          <url>file://$PROJECT_DIR$/goods_api/utils/otgrpc/client.go</url>
           <line>43</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/goods_api/service/otgrpc/client.go</url>
+          <url>file://$PROJECT_DIR$/goods_api/utils/otgrpc/client.go</url>
           <line>72</line>
           <option name="timeStamp" value="15" />
         </line-breakpoint>
@@ -234,6 +238,11 @@
           <url>file://$PROJECT_DIR$/goods_api/connect/client.go</url>
           <line>23</line>
           <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/shop_api/connect/user.go</url>
+          <line>45</line>
+          <option name="timeStamp" value="23" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

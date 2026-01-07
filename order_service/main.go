@@ -3,7 +3,8 @@ package main
 import (
 	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
-	"order_service/utils/mq"
+	"order_service/handler"
+	"order_service/utils/listen_handler"
 	"os"
 	"os/signal"
 	"syscall"
@@ -30,19 +31,19 @@ func main() {
 	global.TracerClose = closer
 	opentracing.SetGlobalTracer(tracer)
 	client := core.NewConsulRegister()
-	orderServer, err := client.Register()
+	handler.GlobalOrderServer, err = client.Register()
 	if err != nil {
 		zap.L().Error("注册失败", zap.Error(err))
 		panic(err)
 	}
-	mq.ListenMq()
+	go listen_handler.ListenMq()
 	// ctrl + C 自动注销 刚注册的consul  监听
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit // 阻塞
 	err = client.Deregister()
 	global.TracerClose.Close()
-	orderServer.CloseProducer()
+	handler.GlobalOrderServer.CloseProducer()
 	if err != nil {
 		zap.L().Error("服务注销失败", zap.Error(err))
 		return

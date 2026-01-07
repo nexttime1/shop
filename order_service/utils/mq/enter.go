@@ -6,6 +6,7 @@ import (
 	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/producer"
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"order_service/connect"
@@ -66,8 +67,33 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 		Code:   codes.Internal,
 		Detail: "未知错误",
 	}
+	// 链路追踪
+	var span opentracing.Span
+	// 从 message 属性创建 carrier
+	carrier := make(opentracing.TextMapCarrier)
+	for k, v := range msg.GetProperties() {
+		carrier.Set(k, v)
+	}
+	// 提取 span 上下文
+	parentCtx, err := opentracing.GlobalTracer().Extract(
+		opentracing.TextMap,
+		carrier,
+	)
+	if err != nil {
+		// 提取失败则创建根 span
+		span = opentracing.GlobalTracer().StartSpan("ExecuteLocalTransaction")
+	} else {
+		// 提取成功则创建子 span
+		span = opentracing.GlobalTracer().StartSpan("ExecuteLocalTransaction", opentracing.ChildOf(parentCtx))
+	}
+
+	ctx := opentracing.ContextWithSpan(context.Background(), span) // 为调用微服务传递 跟踪链路
+
+	local_prepare := opentracing.GlobalTracer().StartSpan("local_prepare", opentracing.ChildOf(span.Context()))
 	// 关联消息ID和状态（TransactionId是每个事务消息的唯一标识）
-	transactionId := msg.TransactionId
+	var request service.OrderTransitionRequest
+	_ = json.Unmarshal(msg.Body, &request)
+	transactionId := request.OrderSns
 	zap.S().Infof("transactionId为: %s", transactionId)
 	// 空值保护
 	if transactionId == "" {
@@ -83,8 +109,7 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	global.DB.Create(&history) // 不会错
 	t.statusMap.Store(transactionId, status)
 	//var priceSum float32
-	var request service.OrderTransitionRequest
-	_ = json.Unmarshal(msg.Body, &request)
+
 	//先拿到 选中的 good ID
 	check := true
 	var goodsId []int32
@@ -103,8 +128,9 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 		goodsId = append(goodsId, shopModel.Goods)
 		goodNumMap[shopModel.Goods] = shopModel.Nums
 	}
-
+	local_prepare.Finish()
 	// 调用good 微服务
+	goodService := opentracing.GlobalTracer().StartSpan("good_service", opentracing.ChildOf(span.Context()))
 	goodClient, conn, err := connect.GoodConnectService()
 	if err != nil {
 		zap.S().Error(err)
@@ -113,7 +139,7 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 		return primitive.RollbackMessageState
 	}
 	defer conn.Close()
-	goods, err := goodClient.BatchGetGoods(context.Background(), &proto.BatchGoodsIdInfo{
+	goods, err := goodClient.BatchGetGoods(ctx, &proto.BatchGoodsIdInfo{
 		Id: goodsId,
 	})
 	if err != nil {
@@ -140,7 +166,10 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 			Num:     goodNumMap[goodModel.Id],
 		})
 	}
+	goodService.Finish()
+
 	// 预扣减库存
+	stockService := opentracing.GlobalTracer().StartSpan("stock_service", opentracing.ChildOf(span.Context()))
 	inventoryClient, inventoryConn, err := connect.InventoryConnectService()
 	if err != nil {
 		zap.S().Error(err)
@@ -149,14 +178,16 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 		return primitive.RollbackMessageState
 	}
 	defer inventoryConn.Close()
-	_, err = inventoryClient.Sell(context.Background(), &proto.SellInfo{GoodsInfo: goodsInfo, OrderSn: request.OrderSns})
+	_, err = inventoryClient.Sell(ctx, &proto.SellInfo{GoodsInfo: goodsInfo, OrderSn: request.OrderSns})
 	if err != nil {
 		zap.S().Error(err)
 		status.Code = codes.Internal
 		status.Detail = "库存不足"
 		return primitive.RollbackMessageState
 	}
+	stockService.Finish()
 	// 这个时候 去修改一下 history
+	localMysql := opentracing.GlobalTracer().StartSpan("update_local_mysql", opentracing.ChildOf(span.Context()))
 	history.Status = 1
 	global.DB.Save(&history)
 	// 生成订单表
@@ -198,10 +229,12 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 		status.Detail = "创建失败"
 		return primitive.CommitMessageState
 	}
+	localMysql.Finish()
+	DeleteCart := opentracing.GlobalTracer().StartSpan("delete_shop_cart", opentracing.ChildOf(span.Context()))
 	// 删除购物车中 已经生成订单的商品
 	err = tx.Model(&models.ShoppingCartModel{}). // Model传空指针，指定操作shoppingcart表
-		Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
-		Delete(&models.ShoppingCartModel{}).Error // Delete传指针（必须）
+							Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
+							Delete(&models.ShoppingCartModel{}).Error                 // Delete传指针（必须）
 	if err != nil {
 		zap.S().Error(err)
 		tx.Rollback()
@@ -209,8 +242,9 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 		status.Detail = "删除失败"
 		return primitive.CommitMessageState
 	}
-
+	DeleteCart.Finish()
 	// 发送延时消息  确保归还库存  发送普通消息就行   复用生产者
+	delayMessage := opentracing.GlobalTracer().StartSpan("send_delay_message", opentracing.ChildOf(span.Context()))
 	delayMsg := primitive.NewMessage("order_timeout", msg.Body)
 	delayMsg.WithDelayTimeLevel(3) // 延时级别3（根据RocketMQ配置对应时间）
 	if _, err = t.delayProducer.SendSync(context.Background(), delayMsg); err != nil {
@@ -219,6 +253,7 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 		status.Detail = "发送延时消息失败"
 		return primitive.CommitMessageState
 	}
+	delayMessage.Finish()
 
 	err = tx.Commit().Error
 	if err != nil {
@@ -237,6 +272,26 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 // CheckLocalTransaction When no response to prepare(half) message. broker will send check message to check the transaction status, and this
 // method will be invoked to get local transaction status.
 func (t *TransactionProducer) CheckLocalTransaction(msg *primitive.MessageExt) primitive.LocalTransactionState {
+	// 链路追踪
+	var span opentracing.Span
+	// 从 message 属性创建 carrier
+	carrier := make(opentracing.TextMapCarrier)
+	for k, v := range msg.GetProperties() {
+		carrier.Set(k, v)
+	}
+	// 提取 span 上下文
+	parentCtx, err := opentracing.GlobalTracer().Extract(
+		opentracing.TextMap,
+		carrier,
+	)
+	if err != nil {
+		// 提取失败则创建根 span
+		span = opentracing.GlobalTracer().StartSpan("CheckLocalTransaction")
+	} else {
+		// 提取成功则创建子 span
+		span = opentracing.GlobalTracer().StartSpan("CheckLocalTransaction", opentracing.ChildOf(parentCtx))
+	}
+	defer span.Finish()
 	// 先拿出 事务ID 如果 都执行成功 本地事务 扣减库存 全部完成 但是MQ 没收到最后的 return 首先判断 Code == OK
 	id := msg.TransactionId
 	status, ok := t.GetTransactionStatus(id)
@@ -250,7 +305,7 @@ func (t *TransactionProducer) CheckLocalTransaction(msg *primitive.MessageExt) p
 	}
 	// 这里说明遇到问题了  需要看看 到底是 扣没扣减库存
 	var history models.OrderStockHistory
-	err := global.DB.Where("order_sn = ?", id).Take(&history).Error
+	err = global.DB.Where("order_sn = ?", id).Take(&history).Error
 	if err != nil {
 		zap.S().Errorf("不可能错 %v", err)
 		return primitive.RollbackMessageState
@@ -258,7 +313,7 @@ func (t *TransactionProducer) CheckLocalTransaction(msg *primitive.MessageExt) p
 	if history.Status == 0 {
 		return primitive.RollbackMessageState
 	}
-	
+
 	var request service.OrderTransitionRequest
 	_ = json.Unmarshal(msg.Body, &request)
 	var model models.OrderModel

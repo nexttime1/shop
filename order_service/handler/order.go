@@ -20,8 +20,11 @@ import (
 	"order_service/utils/mq"
 )
 
+var GlobalOrderServer *OrderSever
+
 type OrderSever struct {
 	transactionProducer rocketmq.TransactionProducer // 复用的生产者实例
+	MessageProducer     rocketmq.Producer            //复用 普通消息的生产者实例
 	// 事务监听器需要考虑线程安全，监听器也作为成员变量
 	orderListener *mq.TransactionProducer // 监听器 便于复用
 }
@@ -49,11 +52,25 @@ func (o *OrderSever) InitProducer() error {
 
 	// 启动生产者
 	if err = producerIns.Start(); err != nil {
+		zap.L().Error("启动生产者错误", zap.Error(err))
 		return err
 	}
 
 	// 赋值给成员变量，供后续复用
 	o.transactionProducer = producerIns
+
+	// 初始化 普通消息
+	p, err := rocketmq.NewProducer(producer.WithNameServer([]string{global.Config.RocketMQ.Addr()}))
+	if err != nil {
+		zap.L().Error("RocketMQ创建普通生产者失败", zap.Error(err))
+		return err
+	}
+	err = p.Start()
+	if err != nil {
+		zap.L().Error("启动生产者错误", zap.Error(err))
+		return err
+	}
+	o.MessageProducer = p
 	return nil
 }
 
@@ -66,6 +83,14 @@ func (o *OrderSever) CloseProducer() error {
 			return err
 		}
 	}
+	// 关闭普通生产者
+	if o.MessageProducer != nil {
+		if err := o.MessageProducer.Shutdown(); err != nil {
+			zap.L().Error("关闭普通生产者失败", zap.Error(err))
+			return err
+		}
+	}
+
 	// 关闭延时消息生产者
 	if o.orderListener != nil {
 		if err := o.orderListener.CloseDelayProducer(); err != nil {
@@ -89,23 +114,37 @@ func (o *OrderSever) CreateOrder(ctx context.Context, request *proto.OrderReques
 	msg := primitive.NewMessage(global.Config.RocketMQ.Topic, data)
 	//half 消息 如果回复了 我就调用本地事务 也就是 ExecuteLocalTransaction
 	parentSpan := opentracing.SpanFromContext(ctx)
+	if parentSpan != nil {
+		// 创建 carrier 用于存储 span 上下文（用 message 属性作为载体）
+		carrier := make(opentracing.TextMapCarrier)
+		// 将 span 上下文注入到 carrier
+		err := opentracing.GlobalTracer().Inject(
+			parentSpan.Context(),
+			opentracing.TextMap,
+			carrier,
+		)
+		if err == nil {
+			// 将 carrier 中的键值对存入 message 属性
+			for k, v := range carrier {
+				msg.WithProperty(k, v)
+			}
+		} else {
+			zap.S().Warn("注入链路上下文到消息失败", zap.Error(err))
+		}
+	}
 	// 链路记录
 	halfSpan := opentracing.GlobalTracer().StartSpan("发送 half消息", opentracing.ChildOf(parentSpan.Context()))
-	result, err := o.transactionProducer.SendMessageInTransaction(ctx, msg)
+	_, err := o.transactionProducer.SendMessageInTransaction(ctx, msg)
 	if err != nil {
 		zap.S().Error(err)
 		return nil, err
 	}
 	halfSpan.Finish()
-	transactionID := result.TransactionID
-	if transactionID == "" {
-		zap.S().Error("发送事务消息后 TransactionId 为空")
-		return nil, status.Error(codes.Internal, "事务标识生成失败")
-	}
+
 	//根据 TransactionId 获取请求状态
-	statusInfo, ok := o.orderListener.GetTransactionStatus(transactionID)
+	statusInfo, ok := o.orderListener.GetTransactionStatus(model.OrderSns)
 	if !ok {
-		zap.S().Error("获取事务状态失败", zap.String("txId", transactionID))
+		zap.S().Error("获取事务状态失败", zap.String("txId", model.OrderSns))
 		return nil, status.Error(codes.Internal, "获取订单状态失败")
 	}
 

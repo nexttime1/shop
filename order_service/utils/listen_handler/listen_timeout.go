@@ -1,4 +1,4 @@
-package mq
+package listen_handler
 
 import (
 	"context"
@@ -6,21 +6,21 @@ import (
 	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/consumer"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
-	"github.com/apache/rocketmq-client-go/v2/producer"
 	"go.uber.org/zap"
+	"order_service/handler"
+	"order_service/service"
 
 	"order_service/global"
 	"order_service/models"
-	"order_service/service"
 )
 
 func ListenMq() {
 	messgaes, err := rocketmq.NewPushConsumer(consumer.WithNameServer([]string{global.Config.RocketMQ.Addr()}),
-		consumer.WithGroupName("shop_order"))
+		consumer.WithGroupName(global.Config.RocketMQ.GroupName))
 	if err != nil {
 		panic(err)
 	}
-	messgaes.Subscribe("order_timeout", consumer.MessageSelector{}, Timeout)
+	messgaes.Subscribe(global.Config.RocketMQ.ConsumerSubscribe, consumer.MessageSelector{}, Timeout)
 	messgaes.Start()
 	select {}
 
@@ -49,18 +49,9 @@ func Timeout(ctx context.Context, msg ...*primitive.MessageExt) (consumer.Consum
 				tx.Rollback()
 				return consumer.ConsumeRetryLater, nil
 			}
-			p, err := rocketmq.NewProducer(producer.WithNameServer([]string{"192.168.163.132:9876"}))
-			if err != nil {
-				tx.Rollback()
-				return consumer.ConsumeRetryLater, nil
-			}
-			err = p.Start()
-			if err != nil {
-				tx.Rollback()
-				return consumer.ConsumeRetryLater, nil
-			}
 
-			_, err = p.SendSync(context.Background(), primitive.NewMessage("shop_reback", msg[i].Body))
+			_, err = handler.GlobalOrderServer.MessageProducer.SendSync(context.Background(),
+				primitive.NewMessage(global.Config.RocketMQ.ConsumerTopic, msg[i].Body))
 
 			if err != nil {
 				tx.Rollback()
