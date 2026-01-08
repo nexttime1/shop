@@ -14,7 +14,9 @@ import (
 	"order_service/models"
 	"order_service/proto"
 	"order_service/service"
+	"order_service/utils/listen_handler"
 	"sync"
+	"time"
 )
 
 // TransactionStatus 定义每个事务请求的状态（非单例）
@@ -233,8 +235,8 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	DeleteCart := opentracing.GlobalTracer().StartSpan("delete_shop_cart", opentracing.ChildOf(span.Context()))
 	// 删除购物车中 已经生成订单的商品
 	err = tx.Model(&models.ShoppingCartModel{}). // Model传空指针，指定操作shoppingcart表
-							Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
-							Delete(&models.ShoppingCartModel{}).Error                 // Delete传指针（必须）
+		Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
+		Delete(&models.ShoppingCartModel{}).Error // Delete传指针（必须）
 	if err != nil {
 		zap.S().Error(err)
 		tx.Rollback()
@@ -246,7 +248,7 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	// 发送延时消息  确保归还库存  发送普通消息就行   复用生产者
 	delayMessage := opentracing.GlobalTracer().StartSpan("send_delay_message", opentracing.ChildOf(span.Context()))
 	delayMsg := primitive.NewMessage("order_timeout", msg.Body)
-	delayMsg.WithDelayTimeLevel(3) // 延时级别3（根据RocketMQ配置对应时间）
+	delayMsg.WithDelayTimeLevel(6) // 延时级别6（根据RocketMQ配置对应时间）
 	if _, err = t.delayProducer.SendSync(context.Background(), delayMsg); err != nil {
 		zap.S().Error("发送延时消息失败", zap.Error(err))
 		tx.Rollback()
@@ -338,4 +340,60 @@ func (t *TransactionProducer) GetTransactionStatus(transactionId string) (*Trans
 // DeleteTransactionStatus 清理已完成的事务状态（避免内存泄漏）
 func (t *TransactionProducer) DeleteTransactionStatus(transactionId string) {
 	t.statusMap.Delete(transactionId)
+}
+
+// 发送延迟消息  带重试
+func (t *TransactionProducer) sendDelayMsgWithRetry(msg *primitive.Message, orderSn string) (*primitive.SendResult, error) {
+	var (
+		sendResult *primitive.SendResult
+		sendErr    error
+		delayMsg   = primitive.NewMessage("order_timeout", msg.Body)
+	)
+	delayMsg.WithDelayTimeLevel(16) // 30分钟延时
+
+	// 执行重试逻辑
+	for retryIdx := 0; retryIdx < global.Config.RocketMQ.MaxRetryTimes; retryIdx++ {
+		// 发送消息
+		sendResult, sendErr = t.delayProducer.SendSync(context.Background(), delayMsg)
+
+		// 构建通用日志字段
+		logFields := []zap.Field{
+			zap.String("order_sn", orderSn),
+			zap.Int("retry_times", retryIdx+1), // 重试次数（1=首次，2=第1次重试，3=第2次重试）
+			zap.Bool("send_success", sendErr == nil),
+		}
+		if sendResult != nil {
+			logFields = append(logFields,
+				zap.String("msg_id", sendResult.MsgID),
+				zap.String("send_status", listen_handler.SendStatusToString(sendResult.Status)),
+			)
+		}
+		if sendErr != nil {
+			logFields = append(logFields, zap.Error(sendErr))
+		}
+
+		// 发送成功：记录日志并返回
+		if sendResult != nil && sendErr == nil && sendResult.Status == primitive.SendOK {
+			zap.S().Info("延时消息发送成功", logFields)
+			return sendResult, nil
+		}
+
+		// 发送失败：记录日志，判断是否继续重试
+		if retryIdx == global.Config.RocketMQ.MaxRetryTimes-1 {
+			// 最后一次重试失败：记录错误日志（标记最终失败）
+			zap.S().Error("延时消息3次发送均失败", logFields)
+		} else {
+			// 非最后一次：记录警告日志，等待后重试
+			zap.S().Warn("延时消息发送失败，准备重试", logFields)
+			// 递增间隔重试（避免高频重试）：第1次等500ms，第2次等1000ms
+			baseRetryDelay := time.Duration(global.Config.RocketMQ.BaseRetryDelay) * time.Millisecond
+
+			// 2. 再计算递增的重试间隔
+			retryDelay := baseRetryDelay * time.Duration(retryIdx+1)
+			time.Sleep(retryDelay)
+		}
+	}
+
+	// 3次重试均失败：返回最终结果
+	return sendResult, sendErr
 }

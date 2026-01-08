@@ -3,6 +3,7 @@ package listen_handler
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/consumer"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
@@ -62,4 +63,22 @@ func Timeout(ctx context.Context, msg ...*primitive.MessageExt) (consumer.Consum
 
 	}
 	return consumer.ConsumeSuccess, nil
+}
+
+// SendStatusToString 将int类型的SendStatus转为可读的中文描述
+func SendStatusToString(status primitive.SendStatus) string {
+	switch status {
+	case primitive.SendOK:
+		return "消息发送成功（已持久化）"
+	case primitive.SendFlushDiskTimeout:
+		return "消息发送成功但刷盘超时（仅存于Broker内存）"
+	case primitive.SendFlushSlaveTimeout:
+		return "消息发送成功但主从复制超时（从节点未同步）"
+	case primitive.SendSlaveNotAvailable:
+		return "消息发送成功但从节点不可用（仅主节点存储）"
+	case primitive.SendUnknownError:
+		return "消息发送未知错误"
+	default:
+		return fmt.Sprintf("未知发送状态(%d)", status)
+	}
 }

@@ -5,19 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/option_service/connect/srv_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_service/connect/srv_client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/option_service/utils/otgrpc/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_service/utils/otgrpc/server.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order_service/conf/conf_mq.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/conf/conf_mq.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/core/init_producer.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/handler/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/handler/order.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/utils/listen_handler/listen_timeout.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/utils/listen_handler/listen_timeout.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order_service/utils/mq/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/utils/mq/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/utils/mq/listen_timeout.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/utils/listen_handler/listen_timeout.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/utils/otgrpc/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/utils/otgrpc/client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/utils/otgrpc/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/utils/otgrpc/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop_service/utils/otgrpc/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop_service/utils/otgrpc/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock_service/models/inventory_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/models/inventory_model.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,6 +67,7 @@
     "Go 构建.go build shop_api/z_test/phone_register.executor": "Run",
     "Go 构建.go build shop_api/z_test/zap_test.executor": "Run",
     "Go 构建.go build shop_service.executor": "Debug",
+    "Go 构建.go build stock_service.executor": "Run",
     "Go 构建.go build true11.go.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -120,7 +114,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Go 构建.go build goods_api/test">
+  <component name="RunManager" selected="Go 构建.go build stock_service">
     <configuration name="go build goods_api" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="shop" />
       <working_directory value="$PROJECT_DIR$/goods_api" />
@@ -137,14 +131,6 @@
       <package value="goods_api/test" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$/goods_api/test/tracer.go" />
-      <method v="2" />
-    </configuration>
-    <configuration name="go build main.go (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="shop" />
-      <working_directory value="$PROJECT_DIR$/shop_api/z_test" />
-      <kind value="FILE" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/shop_api/z_test/zap_test/main.go" />
       <method v="2" />
     </configuration>
     <configuration name="go build shop_api" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
@@ -165,20 +151,29 @@
       <filePath value="$PROJECT_DIR$/shop_service/main.go" />
       <method v="2" />
     </configuration>
+    <configuration name="go build stock_service" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="shop" />
+      <working_directory value="$PROJECT_DIR$/stock_service" />
+      <kind value="PACKAGE" />
+      <package value="stock_service" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/stock_service/main.go" />
+      <method v="2" />
+    </configuration>
     <list>
+      <item itemvalue="Go 构建.go build stock_service" />
       <item itemvalue="Go 构建.go build goods_api" />
       <item itemvalue="Go 构建.go build goods_api/test" />
-      <item itemvalue="Go 构建.go build main.go (1)" />
       <item itemvalue="Go 构建.go build shop_api" />
       <item itemvalue="Go 构建.go build shop_service" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go 构建.go build stock_service" />
         <item itemvalue="Go 构建.go build goods_api/test" />
         <item itemvalue="Go 构建.go build goods_api" />
         <item itemvalue="Go 构建.go build shop_service" />
         <item itemvalue="Go 构建.go build shop_api" />
-        <item itemvalue="Go 构建.go build main.go (1)" />
       </list>
     </recent_temporary>
   </component>
