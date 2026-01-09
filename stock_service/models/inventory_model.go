@@ -18,6 +18,7 @@ type StockSellDetail struct {
 	OrderSn string          `gorm:"type:varchar(200);index:unique"`
 	Status  int32           //1 表示已扣减 2. 表示已归还
 	Detail  GoodsDetailList `gorm:"type:json"`
+	Version int32           `gorm:"type:int"` //乐观锁
 }
 
 type GoodsDetailList []GoodsDetail

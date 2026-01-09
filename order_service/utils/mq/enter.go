@@ -3,6 +3,7 @@ package mq
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/producer"
@@ -14,7 +15,6 @@ import (
 	"order_service/models"
 	"order_service/proto"
 	"order_service/service"
-	"order_service/utils/listen_handler"
 	"sync"
 	"time"
 )
@@ -235,8 +235,8 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	DeleteCart := opentracing.GlobalTracer().StartSpan("delete_shop_cart", opentracing.ChildOf(span.Context()))
 	// 删除购物车中 已经生成订单的商品
 	err = tx.Model(&models.ShoppingCartModel{}). // Model传空指针，指定操作shoppingcart表
-		Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
-		Delete(&models.ShoppingCartModel{}).Error // Delete传指针（必须）
+							Where("user = ? AND checked = ?", request.UserId, check). // Where传查询条件
+							Delete(&models.ShoppingCartModel{}).Error                 // Delete传指针（必须）
 	if err != nil {
 		zap.S().Error(err)
 		tx.Rollback()
@@ -365,7 +365,7 @@ func (t *TransactionProducer) sendDelayMsgWithRetry(msg *primitive.Message, orde
 		if sendResult != nil {
 			logFields = append(logFields,
 				zap.String("msg_id", sendResult.MsgID),
-				zap.String("send_status", listen_handler.SendStatusToString(sendResult.Status)),
+				zap.String("send_status", SendStatusToString(sendResult.Status)),
 			)
 		}
 		if sendErr != nil {
@@ -396,4 +396,22 @@ func (t *TransactionProducer) sendDelayMsgWithRetry(msg *primitive.Message, orde
 
 	// 3次重试均失败：返回最终结果
 	return sendResult, sendErr
+}
+
+// SendStatusToString 将int类型的SendStatus转为可读的中文描述
+func SendStatusToString(status primitive.SendStatus) string {
+	switch status {
+	case primitive.SendOK:
+		return "消息发送成功（已持久化）"
+	case primitive.SendFlushDiskTimeout:
+		return "消息发送成功但刷盘超时（仅存于Broker内存）"
+	case primitive.SendFlushSlaveTimeout:
+		return "消息发送成功但主从复制超时（从节点未同步）"
+	case primitive.SendSlaveNotAvailable:
+		return "消息发送成功但从节点不可用（仅主节点存储）"
+	case primitive.SendUnknownError:
+		return "消息发送未知错误"
+	default:
+		return fmt.Sprintf("未知发送状态(%d)", status)
+	}
 }

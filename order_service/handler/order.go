@@ -254,3 +254,41 @@ func (o *OrderSever) UpdateOrderStatus(ctx context.Context, req *proto.OrderStat
 
 	return &emptypb.Empty{}, nil
 }
+func (o *OrderSever) OrderDetailByOrderSn(ctx context.Context, request *proto.AlipayOrderSnRequest) (*proto.OrderInfoDetailResponse, error) {
+	// 如果传userId  那就查这个用户的  不传就是全部的
+	response := &proto.OrderInfoDetailResponse{}
+	var model models.OrderModel
+	err := global.DB.Where("order_sn = ?").Take(&model).Error
+	if err != nil {
+		zap.S().Error(err)
+		return nil, status.Error(codes.NotFound, "订单不存在")
+	}
+	response.OrderInfo = &proto.OrderInfoResponse{
+		Id:      model.ID,
+		UserId:  model.User,
+		OrderSn: model.OrderSn,
+		PayType: model.PayType,
+		Status:  model.Status,
+		Post:    model.Post,
+		Total:   model.OrderMount,
+		Address: model.Address,
+		Name:    model.SignerName,
+		Mobile:  model.SignerMobile,
+	}
+	// 找一下商品
+	var goodModels []models.OrderGoodsModel
+	global.DB.Where("`order` = ?", model.ID).Find(&goodModels)
+	var Goods []*proto.OrderItemResponse
+	for _, item := range goodModels {
+		Goods = append(Goods, &proto.OrderItemResponse{
+			Id:         item.ID,
+			OrderId:    item.Order,
+			GoodsId:    item.Goods,
+			GoodsName:  item.GoodsName,
+			GoodsPrice: item.GoodsPrice,
+			Nums:       item.Nums,
+		})
+	}
+	response.Goods = Goods
+	return response, nil
+}

@@ -5,12 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock_service/conf/conf_mq.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/aa31e529-cb24-4d17-96b8-d35c0e30ae1b.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_service/conf/conf_mq.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/conf/conf_mq.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/handler/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/handler/order.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/proto/order.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/proto/order.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/proto/order.proto" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/proto/order.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order_service/utils/listen_handler/listen_timeout.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/utils/listen_handler/listen_timeout.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order_service/utils/mq/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/utils/mq/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/api/order_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/api/order_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/proto/order.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/proto/order.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/proto/order.proto" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/proto/order.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/router/order_router.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/router/order_router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock_service/conf/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/conf/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock_service/handler/inventory.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/handler/inventory.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock_service/models/inventory_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/models/inventory_model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock_service/utils/mq/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/stock_service/utils/mq/enter.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +90,7 @@
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/option_service/utils",
+    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/order_web/proto",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -93,11 +105,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\stock_service\conf" />
       <recent name="D:\5524\go_project\xtm_shop\shop\option_service\utils" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\utils" />
       <recent name="D:\5524\go_project\xtm_shop\shop\shop_service\utils" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\core" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\conf" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\utils\listen_handler" />
@@ -206,7 +218,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/order_service/utils/mq/enter.go</url>
-          <line>11</line>
+          <line>12</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">

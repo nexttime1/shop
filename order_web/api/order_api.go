@@ -123,6 +123,7 @@ func (OrderApi) OrderCreateView(c *gin.Context) {
 	p.OutTradeNo = orderModel.OrderSn
 	p.TotalAmount = strconv.FormatFloat(float64(orderModel.Total), 'f', 2, 64)
 	p.ProductCode = "FAST_INSTANT_TRADE_PAY"
+	p.TimeoutExpress = "30m" //3分钟 链接失效
 
 	result, err := client.TradePagePay(p)
 	if err != nil {
@@ -135,10 +136,6 @@ func (OrderApi) OrderCreateView(c *gin.Context) {
 		AlipayUrl: result.String(),
 	}
 	res.OkWithData(c, response)
-
-}
-
-func (OrderApi) DeleteOrderView(c *gin.Context) {
 
 }
 
@@ -248,12 +245,25 @@ func (OrderApi) AlipayCallBackView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	_, err = OrderClient.UpdateOrderStatus(context.WithValue(context.Background(), "ginContext", c), &proto.OrderStatus{
+	ctx := context.WithValue(context.Background(), "ginContext", c)
+	// 查看订单是否存在 是否超时
+	info, err := OrderClient.OrderDetailByOrderSn(ctx, &proto.AlipayOrderSnRequest{
+		OrderSn: notification.OutTradeNo,
+	})
+	if err != nil {
+		zap.S().Error(err)
+		c.String(200, "fail")
+		return
+	}
+	if info.OrderInfo.Status != "" {
+		c.String(200, "fail")
+	}
+	_, err = OrderClient.UpdateOrderStatus(ctx, &proto.OrderStatus{
 		OrderSn: notification.OutTradeNo,
 		Status:  string(notification.TradeStatus),
 	})
 	if err != nil {
-		res.FailWithServiceMsg(c, err)
+		c.String(200, "fail")
 		return
 	}
 	c.String(http.StatusOK, "success")

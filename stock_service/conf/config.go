@@ -6,4 +6,5 @@ type Config struct {
 	LocalInfo  LocalInfo  `mapstructure:"local_info" yaml:"local_info"`
 	NacosInfo  NacosInfo  `mapstructure:"nacos_info" yaml:"nacos_info"`
 	Redis      Redis      `mapstructure:"redis" yaml:"redis"`
+	RocketMQ   RocketMQ   `mapstructure:"rocketmq" yaml:"rocketmq"`
 }

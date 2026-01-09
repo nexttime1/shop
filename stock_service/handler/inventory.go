@@ -160,7 +160,7 @@ func (i InventorySever) Reback(ctx context.Context, info *proto.SellInfo) (*empt
 			if err != nil {
 				retryCount++
 				zap.S().Warnf("商品%d乐观锁重试，当前次数: %d", invInfo.GoodsId, retryCount)
-				time.Sleep(10 * time.Millisecond)
+				time.Sleep(100 * time.Millisecond)
 				continue
 			} else {
 				break
