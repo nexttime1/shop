@@ -15,11 +15,13 @@ import (
 func main() {
 	flags.Parse() //解析 yaml文件
 	core.InitZap()
+	// 从 Nacos 读取数据
 	global.Config = core.ReadConf()
 	//fmt.Println(global.Config)
 	global.DB = core.InitDB()
 	global.EsClient = core.InitEs()
 	flags.Run()
+	//链路跟踪
 	tracer, closer, err := core.InitTracer()
 	if err != nil {
 		zap.L().Error("tracer 初始化失败", zap.Error(err))
@@ -28,7 +30,9 @@ func main() {
 	global.Tracer = tracer
 	global.TracerClose = closer
 	opentracing.SetGlobalTracer(tracer)
-
+	//熔断限流
+	core.InitSentinel()
+	//注册到Consul
 	client := core.NewConsulRegister()
 	err = client.Register()
 	if err != nil {

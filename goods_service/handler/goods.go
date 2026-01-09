@@ -2,7 +2,10 @@ package handler
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"github.com/alibaba/sentinel-golang/api"
+	"github.com/alibaba/sentinel-golang/core/base"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/olivere/elastic/v7"
 	"github.com/opentracing/opentracing-go"
@@ -13,6 +16,7 @@ import (
 	"goods_service/models/enum"
 	"goods_service/proto"
 	"goods_service/service"
+	"goods_service/utils/good_json"
 	"goods_service/utils/struct_to_map"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -79,6 +83,25 @@ func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequ
 	parentSpan := opentracing.SpanFromContext(ctx)
 	// 链路记录
 	prepareSpan := opentracing.GlobalTracer().StartSpan("prepare_option", opentracing.ChildOf(parentSpan.Context()))
+	//限流
+	entryFlow, flowErr := api.Entry(global.Config.Sentinel.LimitResourceName, api.WithTrafficType(base.Inbound))
+	if flowErr != nil {
+		// 限流兜底：返回静态商品列表
+		var data proto.GoodsListResponse
+		json.Unmarshal([]byte(good_json.Data), &data)
+		return &data, nil
+
+	}
+	defer entryFlow.Exit()
+	// 熔断
+	entryBreaker, breakerErr := api.Entry(global.Config.Sentinel.FuseResourceName, api.WithTrafficType(base.Outbound))
+	if breakerErr != nil {
+		var data proto.GoodsListResponse
+		json.Unmarshal([]byte(good_json.Data), &data)
+		return &data, nil
+	}
+	defer entryBreaker.Exit()
+
 	response := proto.GoodsListResponse{}
 	pageInfo := common.PageInfo{
 		Page:  request.Pages,
@@ -143,7 +166,6 @@ func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequ
 		}
 
 		query = query.Filter(elastic.NewTermsQuery("category_id", categoryIds...))
-
 	}
 	prepareSpan.Finish()
 	// 链路记录
@@ -153,6 +175,7 @@ func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequ
 		zap.S().Error(err)
 		return nil, status.Errorf(codes.Internal, "查询错误")
 	}
+
 	response.Total = int32(resp.Hits.TotalHits.Value)
 	esSpan.Finish() //es 完成
 	ids := make([]int, 0)
@@ -176,6 +199,7 @@ func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequ
 		InfoList = append(InfoList, &info)
 	}
 	response.Data = InfoList
+
 	return &response, nil
 
 }
