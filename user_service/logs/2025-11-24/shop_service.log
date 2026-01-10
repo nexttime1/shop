@@ -1,0 +1,5 @@
+[2025-11-24 19:16:20] [36m[info][0m enter.go:11 user_service/utils/struct_to_map.StructToMap data: map[Birthday:1970-01-01 08:00:00 +0800 CST Model:map[CreatedAt:0001-01-01 00:00:00 +0000 UTC DeletedAt:map[Time:0001-01-01 00:00:00 +0000 UTC Valid:false] ID:0 UpdatedAt:0001-01-01 00:00:00 +0000 UTC] Password:123456]
+[2025-11-24 19:16:20] [31m[error][0m user.go:119 user_service/handler.UserSever.UpdateUser update user error: sql: converting argument $2 type: unsupported type map[string]interface {}, a map
+[2025-11-24 19:26:30] [36m[info][0m enter.go:11 user_service/utils/struct_to_map.StructToMap data: map[Model:{0 0001-01-01 00:00:00 +0000 UTC 0001-01-01 00:00:00 +0000 UTC {0001-01-01 00:00:00 +0000 UTC false} false} birthday:1970-01-01 08:00:00 +0800 CST password:123456]
+[2025-11-24 19:26:30] [31m[error][0m user.go:119 user_service/handler.UserSever.UpdateUser update user error: sql: converting argument $1 type: unsupported type models.Model, a struct
+[2025-11-24 19:33:02] [36m[info][0m enter.go:11 user_service/utils/struct_to_map.StructToMap data: map[birthday:<nil> password:123456]
