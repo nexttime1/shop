@@ -3,6 +3,8 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"github.com/alibaba/sentinel-golang/api"
+	"github.com/alibaba/sentinel-golang/core/base"
 	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/producer"
@@ -101,6 +103,7 @@ func (o *OrderSever) CloseProducer() error {
 	return nil
 }
 func (o *OrderSever) CreateOrder(ctx context.Context, request *proto.OrderRequest) (*proto.OrderInfoResponse, error) {
+
 	model := service.OrderTransitionRequest{
 		Id:       request.Id,
 		UserId:   request.UserId,
@@ -134,6 +137,21 @@ func (o *OrderSever) CreateOrder(ctx context.Context, request *proto.OrderReques
 	}
 	// 链路记录
 	halfSpan := opentracing.GlobalTracer().StartSpan("发送 half消息", opentracing.ChildOf(parentSpan.Context()))
+
+	//限流
+	entryFlow, flowErr := api.Entry(global.Config.Sentinel.CreateLimitResourceName, api.WithTrafficType(base.Inbound))
+	if flowErr != nil {
+		return nil, status.Error(codes.Internal, "下单人数过多, 请稍微再试")
+
+	}
+	defer entryFlow.Exit()
+	// 熔断
+	entryBreaker, breakerErr := api.Entry(global.Config.Sentinel.FuseResourceName, api.WithTrafficType(base.Outbound))
+	if breakerErr != nil {
+		return nil, status.Error(codes.Internal, "服务失败 请稍微再试")
+	}
+	defer entryBreaker.Exit()
+
 	_, err := o.transactionProducer.SendMessageInTransaction(ctx, msg)
 	if err != nil {
 		zap.S().Error(err)
@@ -157,6 +175,20 @@ func (o *OrderSever) CreateOrder(ctx context.Context, request *proto.OrderReques
 }
 
 func (o *OrderSever) OrderList(ctx context.Context, request *proto.OrderFilterRequest) (*proto.OrderListResponse, error) {
+	//限流
+	entryFlow, flowErr := api.Entry(global.Config.Sentinel.LimitResourceName, api.WithTrafficType(base.Inbound))
+	if flowErr != nil {
+		return nil, status.Error(codes.Internal, "加载失败, 请稍微再试")
+
+	}
+	defer entryFlow.Exit()
+	// 熔断
+	entryBreaker, breakerErr := api.Entry(global.Config.Sentinel.FuseResourceName, api.WithTrafficType(base.Outbound))
+	if breakerErr != nil {
+		return nil, status.Error(codes.Internal, "服务失败 请稍微再试")
+	}
+	defer entryBreaker.Exit()
+
 	// 管理员看所有的列表   而用户看自己的  区别是 看web端给我发不发id
 	response := &proto.OrderListResponse{}
 	pageInfo := common.PageInfo{

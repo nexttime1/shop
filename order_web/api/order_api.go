@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"github.com/alibaba/sentinel-golang/api"
 	"github.com/gin-gonic/gin"
 	"github.com/smartwalle/alipay/v3"
 	"go.uber.org/zap"
@@ -43,6 +44,15 @@ func (OrderApi) OrderListView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
+
+	// 熔断
+	queryEntry, fuseErr := api.Entry(global.Config.Sentinel.FuseResourceName)
+	if fuseErr != nil {
+		res.FailWithMsg(c, res.FailServiceCode, "服务暂不可用，请稍后再试")
+		return
+	}
+	defer queryEntry.Exit()
+
 	list, err := orderClient.OrderList(context.WithValue(context.Background(), "ginContext", c), &proto.OrderFilterRequest{
 		PageNum:  cr.Page,
 		PageSize: cr.Limit,
@@ -84,7 +94,6 @@ func (OrderApi) OrderCreateView(c *gin.Context) {
 	var cr order_srv.OrderCreateRequest
 	err := c.ShouldBindJSON(&cr)
 	if err != nil {
-		fmt.Println(2222)
 		fmt.Println(err)
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
@@ -95,6 +104,13 @@ func (OrderApi) OrderCreateView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
+	// 熔断
+	createEntry, fuseErr := api.Entry(global.Config.Sentinel.FuseResourceName)
+	if fuseErr != nil {
+		res.FailWithMsg(c, res.FailServiceCode, "当前下单人数过多，请稍后再试")
+		return
+	}
+	defer createEntry.Exit()
 	orderModel, err := OrderClient.CreateOrder(context.WithValue(context.Background(), "ginContext", c), &proto.OrderRequest{
 		UserId:  claims.UserID,
 		Address: cr.Address,

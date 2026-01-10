@@ -11,4 +11,5 @@ type Config struct {
 	Alipay       Alipay     `mapstructure:"alipay" yaml:"alipay"`
 	JaegerInfo   JaegerInfo `mapstructure:"jaeger_info" yaml:"jaeger_info"`
 	RocketMQ     RocketMQ   `mapstructure:"rocketmq" yaml:"rocketmq"`
+	Sentinel     Sentinel   `mapstructure:"sentinel" yaml:"sentinel"`
 }

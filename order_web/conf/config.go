@@ -10,4 +10,5 @@ type Config struct {
 	NacosInfo    NacosInfo  `mapstructure:"nacos_info" yaml:"nacos_info"`
 	Alipay       Alipay     `mapstructure:"alipay" yaml:"alipay"`
 	JaegerInfo   JaegerInfo `mapstructure:"jaeger_info" yaml:"jaeger_info"`
+	Sentinel     Sentinel   `mapstructure:"sentinel" yaml:"sentinel"`
 }

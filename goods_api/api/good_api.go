@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+
 	"fmt"
 	"github.com/alibaba/sentinel-golang/api"
 	"github.com/alibaba/sentinel-golang/core/base"
@@ -12,6 +13,7 @@ import (
 	"goods_api/global"
 	"goods_api/proto"
 	"goods_api/service/good_srv"
+
 	"strconv"
 )
 
@@ -154,6 +156,20 @@ func (GoodApi) GoodDetailView(c *gin.Context) {
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}
+	// 熔断机制
+	// 资源名要保持一致
+	entry, blockErr := api.Entry(
+		global.Config.Sentinel.FuseErrResourceName,
+		api.WithTrafficType(base.Outbound), // 出站流量：调用下游服务
+	)
+
+	// 触发熔断：服务层挂了/超时，直接返回兜底数据
+	if blockErr != nil {
+		res.OkWithMessage(c, "商品加载中")
+		return
+	}
+	defer entry.Exit()
+
 	ctx := context.WithValue(context.Background(), "ginContext", c)
 	goodInfo, err := client.GetGoodsDetail(ctx, &proto.GoodInfoRequest{
 		Id: cr.Id,

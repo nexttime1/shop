@@ -32,6 +32,8 @@ func main() {
 	global.Tracer = tracer
 	global.TracerClose = closer
 	opentracing.SetGlobalTracer(global.Tracer)
+	// 熔断限流
+	core.InitSentinel()
 	router.Router()
 	// ctrl + C 自动注销 刚注册的consul  监听
 	quit := make(chan os.Signal)

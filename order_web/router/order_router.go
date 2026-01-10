@@ -9,9 +9,9 @@ import (
 func OrderRouter(r *gin.RouterGroup) {
 	app := api.App.OrderApi
 	order := r.Group("orders").Use(middleware.AuthMiddleware).Use(middleware.Trace)
-
-	order.GET("", app.OrderListView)       //查看所有订单
-	order.POST("", app.OrderCreateView)    //创建订单
-	order.GET("/:id", app.OrderDetailView) //订单细节
+	// 限流
+	order.GET("", middleware.OrderListCurrentLimiting, app.OrderListView)      //查看所有订单
+	order.POST("", middleware.CreateOrderCurrentLimiting, app.OrderCreateView) //创建订单
+	order.GET("/:id", app.OrderDetailView)                                     //订单细节
 
 }
