@@ -17,7 +17,7 @@ type CaptchaResponse struct {
 
 type SendSmsRequest struct {
 	Mobile string `json:"mobile" binding:"required,mobile"`
-	Type   string `json:"type" binding:"required,oneof=1 2"`
+	Role   string `json:"role" binding:"required,oneof=1 2 3"` // 1 代表 管理员 2代表普通用户 3代表游客
 }
 
 type VerifySmsRequest struct {

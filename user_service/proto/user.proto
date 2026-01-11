@@ -33,12 +33,14 @@ message UpdateUserReq {
   uint64 birthDay = 5;
   string gender = 6;
   int32 role = 7;
+  int32 userId = 8;
 }
 
 message CreateUserReq {
   string nickName = 1;
   string password = 2;
   string mobile = 3;
+  int32 role = 4;
 }
 
 message MobileRequest {

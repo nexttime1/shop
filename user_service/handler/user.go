@@ -104,6 +104,7 @@ func (UserSever) CreateUser(ctx context.Context, req *proto.CreateUserReq) (*pro
 	user.Mobile = req.Mobile
 	user.Password = req.Password
 	user.NickName = req.NickName
+	user.Role = int(req.Role)
 	err := global.DB.Create(&user).Error
 	if err != nil {
 		logrus.Errorf("create user error: %v", err)

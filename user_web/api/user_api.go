@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"time"
 	"user_web/common/enum"
 	"user_web/common/res"
 	"user_web/connect"
@@ -31,7 +32,24 @@ func (UserApi) UserListView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	res.OkWithList(c, userListResponse.Data, userListResponse.Total)
+	var response []user_service.UserListResponse
+	for _, v := range userListResponse.Data {
+		password := v.Password[0:1] + "*****"
+		loc, _ := time.LoadLocation("Asia/Shanghai")
+		// 解析秒级时间戳 -> 转东八区时间
+		birthTime := time.Unix(int64(v.BirthDay), 0).In(loc)
+		birthDayStr := birthTime.Format("2006-01-02")
+		response = append(response, user_service.UserListResponse{
+			Id:       v.Id,
+			Password: password,
+			Mobile:   v.Mobile,
+			NickName: v.NickName,
+			BirthDay: birthDayStr,
+			Gender:   v.Gender,
+			Role:     int(v.Role),
+		})
+	}
+	res.OkWithList(c, response, userListResponse.Total)
 
 }
 
@@ -134,11 +152,57 @@ func (UserApi) UserRegisterView(c *gin.Context) {
 		Password: cr.Password,
 		NickName: fmt.Sprintf("user_%s", cr.Mobile),
 		Mobile:   cr.Mobile,
+		Role:     cr.Role,
 	})
 	if err != nil {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
 	res.OkWithMessage(c, "创建成功")
+
+}
+
+func (UserApi) UserUpdateView(c *gin.Context) {
+	// 先认证 看看你是不是 admin
+	_claims, exist := c.Get("claims")
+	if !exist {
+		return
+	}
+	claims := _claims.(*jwts.MyClaims)
+	var cr user_service.UserUpdateRequest
+	err := c.ShouldBindJSON(&cr)
+	if err != nil {
+		zap.S().Error(err)
+		res.FailWithErr(c, res.FailArgumentCode, err)
+		return
+	}
+	UserCilent, conn, err := connect.UserConnectService(c)
+	if err != nil {
+		return
+	}
+	defer conn.Close()
+	if cr.Id != claims.UserID {
+		if claims.Role != enum.AdminRole {
+			res.FailWithMsg(c, res.FailArgumentCode, "权限不够")
+			return
+		}
+	}
+
+	_, err = UserCilent.UpdateUser(context.Background(), &proto.UpdateUserReq{
+		Id:       cr.Id,
+		Password: cr.Password,
+		NickName: cr.NickName,
+		BirthDay: cr.BirthDay,
+		Gender:   cr.Gender,
+		Role:     cr.Role,
+		UserId:   claims.UserID,
+	})
+	if err != nil {
+		zap.S().Error(err)
+		res.FailWithServiceMsg(c, err)
+		return
+	}
+
+	res.OkWithMessage(c, "更新成功")
 
 }

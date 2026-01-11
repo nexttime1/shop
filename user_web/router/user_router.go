@@ -12,4 +12,5 @@ func UserRouter(r *gin.RouterGroup) {
 	r.GET("/user/list", middleware.AdminMiddleware, app.UserListView)
 	r.POST("/user/login", app.UserLoginView)
 	r.POST("/user/register", app.UserRegisterView)
+	r.PUT("/user/update", middleware.AuthMiddleware, app.UserUpdateView)
 }
