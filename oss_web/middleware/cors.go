@@ -7,32 +7,30 @@ import (
 
 func Cors() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// 允许的源（生产环境建议指定具体域名，不要用*）
+		// 1. 修正允許的來源，加入前端的 8090 埠
+		allowOrigins := []string{"http://localhost:8090", "http://localhost:8080", "http://127.0.0.1:8090"}
+
 		origin := c.Request.Header.Get("Origin")
 		if origin != "" {
-			c.Header("Access-Control-Allow-Origin", origin)
-		} else {
-			c.Header("Access-Control-Allow-Origin", "*") // 本地测试可用*，生产环境替换为具体域名
+			for _, o := range allowOrigins {
+				if o == "*" || o == origin {
+					c.Header("Access-Control-Allow-Origin", origin)
+					break
+				}
+			}
 		}
 
-		// 允许的请求方法
-		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		// 允许的请求头
-		c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With")
-		// 允许携带凭证（前端用了 credentials: "include" 必须设置这个）
+		// 2. 這裡已經包含了 "Token"，是正確的
+		c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, Token")
+		c.Header("Access-Control-Allow-Methods", "POST, GET, PUT, PATCH, DELETE, OPTIONS")
 		c.Header("Access-Control-Allow-Credentials", "true")
-		// 暴露自定义响应头（如果有）
-		c.Header("Access-Control-Expose-Headers", "Content-Length")
-		// 预检请求缓存时间（避免频繁OPTIONS请求）
 		c.Header("Access-Control-Max-Age", "86400")
 
-		// 处理预检请求（OPTIONS）
 		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(http.StatusNoContent) // 预检请求返回204即可，无需返回body
+			c.AbortWithStatus(http.StatusOK)
 			return
 		}
 
-		// 继续处理请求
 		c.Next()
 	}
 }
