@@ -15,3 +15,12 @@ type UpdateCategoryRequest struct {
 	Name  string `form:"name" json:"name" binding:"required,min=3,max=20"`
 	IsTab *bool  `form:"is_tab" json:"is_tab"`
 }
+
+type SubCategoryResponse struct {
+	Id             int32                  `json:"id"`              // 分类ID
+	Name           string                 `json:"name"`            // 分类名称
+	ParentCategory int32                  `json:"parent_category"` // 父分类ID
+	Level          int32                  `json:"level"`           // 分类层级 1/2/3级
+	IsTab          bool                   `json:"is_tab"`          // 是否是导航栏标签
+	SubCategories  []*SubCategoryResponse `json:"sub_categories"`  // 子分类列表
+}

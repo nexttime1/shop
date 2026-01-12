@@ -5,18 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Jenkinsfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_service/handler/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_service/handler/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_service/models/user_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_service/models/user_model.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_service/proto/user.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_service/proto/user.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_service/proto/user.proto" beforeDir="false" afterPath="$PROJECT_DIR$/user_service/proto/user.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_web/api/captcha_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_web/api/captcha_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_web/api/user_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_web/api/user_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_web/proto/user.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_web/proto/user.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_web/proto/user.proto" beforeDir="false" afterPath="$PROJECT_DIR$/user_web/proto/user.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_web/router/user_router.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_web/router/user_router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_web/service/user_service/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_web/service/user_service/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/handler/brands.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/brands.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/handler/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/goods.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.proto" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_web/api/banner_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/api/banner_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_web/api/brand_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/api/brand_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_web/api/category_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/api/category_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_web/api/good_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/api/good_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_web/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/middleware/cors.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_web/router/brand_router.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/router/brand_router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_web/service/banner_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/service/banner_srv/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_web/service/brand_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/service/brand_srv/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_web/service/category_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/service/category_srv/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_web/api/message_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/api/message_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/option_web/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/middleware/cors.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/api/cart_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/api/cart_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/middleware/cors.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/oss_web/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/oss_web/middleware/cors.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_web/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_web/middleware/cors.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -234,6 +242,11 @@
           <url>file://$PROJECT_DIR$/user_web/connect/user.go</url>
           <line>45</line>
           <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/goods_service/handler/goods.go</url>
+          <line>81</line>
+          <option name="timeStamp" value="38" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -148,14 +148,14 @@ func (g GoodSever) GoodsList(ctx context.Context, request *proto.GoodsFilterRequ
 		} else if model.Level == 2 {
 			subQuery = fmt.Sprintf("select id from category_models where parent_category_id = %d", request.TopCategoryID)
 		} else {
-			subQuery = fmt.Sprintf("%d", request.TopCategoryID)
+			subQuery = fmt.Sprintf("%d", request.TopCategoryID) + ""
 		}
 		type result struct {
 			Id int32 `json:"id"`
 		}
 		var results []result
-		search := fmt.Sprintf("category_id in (%s)", subQuery)
-		err = global.DB.Model(models.CategoryModel{}).Raw(search).Scan(&results).Error
+		search := fmt.Sprintf("SELECT id FROM category_models WHERE id IN (%s)", subQuery)
+		err = global.DB.Raw(search).Scan(&results).Error
 		if err != nil {
 			zap.S().Error(err)
 			return nil, status.Errorf(codes.NotFound, "不存在")

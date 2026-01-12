@@ -14,6 +14,7 @@ func BrandRouter(r *gin.RouterGroup) {
 	r.POST("brands", app.CreateBrandView)
 	r.PUT("brands/:id", app.UpdateBrandView)
 	r.DELETE("brands/:id", app.DeleteBrandView)
+	r.GET("brands/:id", app.BrandDetailView)
 
 	// 第三张表
 	r.GET("categorybrands", app.CategoryBrandListView)    //所有的 第三张表

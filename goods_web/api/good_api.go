@@ -119,7 +119,7 @@ func (GoodApi) CreateGoodView(c *gin.Context) {
 		return
 	}
 	ctx := context.WithValue(context.Background(), "ginContext", c)
-	goodInfo, err := client.CreateGoods(ctx, &proto.CreateGoodsInfo{
+	_, err = client.CreateGoods(ctx, &proto.CreateGoodsInfo{
 		Name:            cr.Name,
 		GoodsSn:         cr.GoodsSn,
 		Stocks:          cr.Stocks,
@@ -139,7 +139,7 @@ func (GoodApi) CreateGoodView(c *gin.Context) {
 		return
 	}
 
-	res.OkWithData(c, goodInfo)
+	res.OkWithMessage(c, "创建成功")
 }
 
 func (GoodApi) GoodDetailView(c *gin.Context) {
@@ -283,7 +283,13 @@ func (GoodApi) GoodPatchUpdateView(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-
+	idString := c.Param("id")
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		zap.S().Error(err)
+		res.FailWithErr(c, res.FailArgumentCode, err)
+		return
+	}
 	var cr good_srv.GoodPatchUpdateRequest
 	err = c.ShouldBindJSON(&cr)
 	if err != nil {
@@ -293,9 +299,12 @@ func (GoodApi) GoodPatchUpdateView(c *gin.Context) {
 	}
 	ctx := context.WithValue(context.Background(), "ginContext", c)
 	_, err = client.UpdateGoods(ctx, &proto.CreateGoodsInfo{
-		IsNew:  cr.IsNew,
-		IsHot:  cr.IsHot,
-		OnSale: cr.OnSale,
+		Id:         int32(id),
+		IsNew:      cr.IsNew,
+		IsHot:      cr.IsHot,
+		OnSale:     cr.OnSale,
+		CategoryId: 0,
+		Brand:      0,
 	})
 
 	if err != nil {

@@ -163,3 +163,20 @@ func (g GoodSever) UpdateBrand(ctx context.Context, request *proto.BrandRequest)
 	return &empty.Empty{}, nil
 
 }
+
+func (g GoodSever) GetBrand(ctx context.Context, req *proto.BrandRequest) (*proto.BrandResponse, error) {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "sql")
+	defer span.Finish()
+
+	var brand models.Brands
+	if err := global.DB.Where("id = ?", req.Id).First(&brand).Error; err != nil {
+		zap.S().Errorw("brand not found", "id", req.Id, "err", err)
+		return nil, status.Errorf(codes.NotFound, "不存在")
+	}
+
+	return &proto.BrandResponse{
+		Id:   brand.ID,
+		Name: brand.Name,
+		Logo: brand.Logo,
+	}, nil
+}

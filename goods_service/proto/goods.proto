@@ -23,6 +23,9 @@ service Goods{
   rpc CreateBrand(BrandRequest) returns(BrandInfoResponse); //新建品牌信息
   rpc DeleteBrand(BrandRequest) returns(google.protobuf.Empty); //删除品牌
   rpc UpdateBrand(BrandRequest) returns(google.protobuf.Empty); //修改品牌信息
+  rpc GetBrand(BrandRequest) returns (BrandResponse);
+
+
   rpc BannerList(google.protobuf.Empty) returns(BannerListResponse); //获取轮播列表信息
   rpc CreateBanner(BannerRequest) returns(BannerResponse); //添加banner图
   rpc DeleteBanner(BannerRequest) returns(google.protobuf.Empty); //删除轮播图
@@ -130,6 +133,13 @@ message BrandRequest {
   int32 id = 1;
   string name = 2;
   string logo = 3;
+}
+
+message BrandResponse {
+  int32 id = 1;
+  string name = 2;
+  string logo = 3;
+  string desc = 4;
 }
 
 message BrandInfoResponse {

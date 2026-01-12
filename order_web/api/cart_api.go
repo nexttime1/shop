@@ -142,6 +142,7 @@ func (CartApi) AddItemView(c *gin.Context) {
 	// 检查库存
 	InventoryClient, inventoryConn, err := connect.InventoryConnectService()
 	if err != nil {
+		zap.S().Error(err)
 		res.FailWithErr(c, res.FailArgumentCode, err)
 		return
 	}

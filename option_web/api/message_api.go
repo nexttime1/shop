@@ -90,7 +90,9 @@ func (MessageApi) CreateMessageView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-
-	res.OkWithData(c, req.Id)
+	RMap := map[string]interface{}{
+		"id": req.Id,
+	}
+	res.OkWithData(c, RMap)
 
 }

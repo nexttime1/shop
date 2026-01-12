@@ -64,8 +64,34 @@ func (CategoryApi) GetSubCategoryView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	res.OkWithData(c, categoryInfo)
+	response := ProtoToWebSubCategory(categoryInfo)
+	res.OkWithData(c, response)
 
+}
+
+func ProtoToWebSubCategory(protoCategory *proto.SubCategoryListResponse) *category_srv.SubCategoryResponse {
+	if protoCategory == nil {
+		return nil
+	}
+	// 1. 赋值当前层级的分类基础字段
+	webCategory := &category_srv.SubCategoryResponse{
+		Id:             protoCategory.Id,
+		Name:           protoCategory.Name,
+		ParentCategory: protoCategory.ParentCategory,
+		Level:          protoCategory.Level,
+		IsTab:          protoCategory.IsTab,
+	}
+
+	// 2. 递归处理【子分类】，完美适配 1→2→3 级嵌套
+	if protoCategory.SubCategories != nil && len(protoCategory.SubCategories) > 0 {
+		webSubList := make([]*category_srv.SubCategoryResponse, 0, len(protoCategory.SubCategories))
+		for _, protoSub := range protoCategory.SubCategories {
+			webSub := ProtoToWebSubCategory(protoSub)
+			webSubList = append(webSubList, webSub)
+		}
+		webCategory.SubCategories = webSubList
+	}
+	return webCategory
 }
 
 func (CategoryApi) CreateCategoryView(c *gin.Context) {
@@ -93,7 +119,10 @@ func (CategoryApi) CreateCategoryView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	res.OkWithData(c, category)
+	RMap := map[string]interface{}{
+		"id": category.Id,
+	}
+	res.OkWithData(c, RMap)
 
 }
 

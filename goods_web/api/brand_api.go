@@ -3,12 +3,15 @@ package api
 import (
 	"context"
 	"github.com/gin-gonic/gin"
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"goods_web/common"
 	"goods_web/common/res"
 	"goods_web/connect"
 	"goods_web/proto"
 	"goods_web/service/brand_srv"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"strconv"
 )
 
@@ -62,7 +65,10 @@ func (BrandApi) CreateBrandView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	res.OkWithData(c, brandInfo)
+	RMap := map[string]interface{}{
+		"id": brandInfo.Id,
+	}
+	res.OkWithData(c, RMap)
 
 }
 
@@ -126,6 +132,34 @@ func (BrandApi) DeleteBrandView(c *gin.Context) {
 
 }
 
+func (BrandApi) BrandDetailView(c *gin.Context) {
+	span, ctx := opentracing.StartSpanFromContext(c.Request.Context(), "BrandDetailView")
+	defer span.Finish()
+
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil || id <= 0 {
+		res.FailWithMsg(c, res.FailArgumentCode, "id 参数错误")
+		return
+	}
+
+	Client, conn, err := connect.GoodConnectService(c)
+	if err != nil {
+		return
+	}
+	defer conn.Close()
+
+	resp, err := Client.GetBrand(ctx, &proto.BrandRequest{Id: int32(id)})
+	if err != nil {
+		res.FailWithServiceMsg(c, err)
+		return
+	}
+
+	res.OkWithData(c, resp)
+}
+
+//第三张表
+
 func (BrandApi) CategoryBrandListView(c *gin.Context) {
 	var cr common.PageInfo
 	if err := c.ShouldBindQuery(&cr); err != nil {
@@ -148,7 +182,26 @@ func (BrandApi) CategoryBrandListView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	res.OkWithList(c, list.Data, list.Total)
+	var response []brand_srv.BrandCategoryItem
+	for _, model := range list.Data {
+		response = append(response, brand_srv.BrandCategoryItem{
+			Brand: brand_srv.Brand{
+				Id:   model.Brand.Id,
+				Name: model.Brand.Name,
+				Logo: model.Brand.Logo,
+			},
+
+			Category: brand_srv.Category{
+				Id:               model.Category.Id,
+				Name:             model.Category.Name,
+				ParentCategoryID: model.Category.ParentCategoryID,
+				Level:            model.Category.Level,
+				IsTab:            model.Category.IsTab,
+			},
+		})
+	}
+
+	res.OkWithList(c, response, list.Total)
 
 }
 
@@ -199,7 +252,10 @@ func (BrandApi) CreateCategoryBrandView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	res.OkWithData(c, Info)
+	RMap := map[string]interface{}{
+		"id": Info.Id,
+	}
+	res.OkWithData(c, RMap)
 }
 
 func (BrandApi) DeleteCategoryBrandView(c *gin.Context) {

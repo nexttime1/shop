@@ -23,3 +23,30 @@ type UpdateCategoryBrandRequest struct {
 	CategoryId int32 `json:"category_id" `
 	BrandId    int32 `json:"brand_id" `
 }
+
+type BrandListResponse struct {
+	Id   int32  `json:"id"`
+	Name string `json:"name"`
+	Logo string `json:"logo"`
+}
+
+// 第三张表
+
+type BrandCategoryItem struct {
+	Brand    Brand    `json:"brand"`
+	Category Category `json:"category"`
+}
+
+type Brand struct {
+	Id   int32  `json:"id"`
+	Name string `json:"name"`
+	Logo string `json:"logo"`
+}
+
+type Category struct {
+	Id               int32  `json:"id"`
+	Name             string `json:"name"`
+	ParentCategoryID int32  `json:"parent_category_id"`
+	Level            int32  `json:"level"`
+	IsTab            bool   `json:"is_tab,omitempty"`
+}

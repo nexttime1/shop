@@ -28,7 +28,17 @@ func (BannerApi) GetBannerListView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	res.OkWithList(c, list.Data, list.Total)
+	var response []banner_srv.BannerListResponse
+
+	for _, model := range list.Data {
+		response = append(response, banner_srv.BannerListResponse{
+			Id:    model.Id,
+			Index: model.Index,
+			Image: model.Image,
+			Url:   model.Url,
+		})
+	}
+	res.OkWithList(c, response, list.Total)
 
 }
 
@@ -57,8 +67,11 @@ func (BannerApi) CreateBannerView(c *gin.Context) {
 		res.FailWithServiceMsg(c, err)
 		return
 	}
-	res.OkWithData(c, bannerInfo)
 
+	RMap := map[string]interface{}{
+		"id": bannerInfo.Id,
+	}
+	res.OkWithData(c, RMap)
 }
 
 func (BannerApi) DeleteBannerView(c *gin.Context) {
