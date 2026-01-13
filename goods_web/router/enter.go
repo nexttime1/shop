@@ -28,6 +28,7 @@ func Router() {
 	CategoryRouter(ApiGroup)
 	BannerRouter(ApiGroup)
 	BrandRouter(ApiGroup)
+	PmsRouter(r)
 
 	go func() {
 		err := r.Run(global.Config.System.GetAddr())

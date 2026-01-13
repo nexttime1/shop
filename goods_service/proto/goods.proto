@@ -10,6 +10,7 @@ service Goods{
   rpc DeleteGoods(DeleteGoodsInfo) returns (google.protobuf.Empty);
   rpc UpdateGoods(CreateGoodsInfo) returns (google.protobuf.Empty);
   rpc GetGoodsDetail(GoodInfoRequest) returns(GoodsInfoResponse);
+  rpc GetBrand(BrandRequest) returns (BrandResponse); //單個品牌詳情
 
   //商品分类
   rpc GetAllCategorysList(google.protobuf.Empty) returns(CategoryListResponse); //获取分类列表
@@ -23,7 +24,6 @@ service Goods{
   rpc CreateBrand(BrandRequest) returns(BrandInfoResponse); //新建品牌信息
   rpc DeleteBrand(BrandRequest) returns(google.protobuf.Empty); //删除品牌
   rpc UpdateBrand(BrandRequest) returns(google.protobuf.Empty); //修改品牌信息
-  rpc GetBrand(BrandRequest) returns (BrandResponse);
 
 
   rpc BannerList(google.protobuf.Empty) returns(BannerListResponse); //获取轮播列表信息
@@ -32,9 +32,16 @@ service Goods{
   rpc UpdateBanner(BannerRequest) returns(google.protobuf.Empty); //修改轮播图
   rpc CategoryBrandList(CategoryBrandFilterRequest) returns(CategoryBrandListResponse); //获取轮播列表信息
   rpc GetCategoryBrandList(CategoryInfoRequest) returns(BrandListResponse); //通过category获取brands
+  rpc GetCategoryBrand(CategoryBrandRequest) returns(CategoryBrandResponse); //第三張表詳情
   rpc CreateCategoryBrand(CategoryBrandRequest) returns(CategoryBrandResponse); //添加banner图
   rpc DeleteCategoryBrand(CategoryBrandRequest) returns(google.protobuf.Empty); //删除轮播图
   rpc UpdateCategoryBrand(CategoryBrandRequest) returns(google.protobuf.Empty); //修改轮播图
+
+  // PMS - 商品屬性與庫存
+  rpc ListProductAttr(ProductAttrListRequest) returns(ProductAttrListResponse);
+  rpc CreateProductAttr(ProductAttrItem) returns (google.protobuf.Empty);
+  rpc ListSkuStock(SkuStockListRequest) returns(SkuStockListResponse);
+  rpc CreateSkuStock(SkuStockItem) returns (google.protobuf.Empty);
 }
 
 message CategoryListRequest {
@@ -163,6 +170,42 @@ message CategoryBrandListResponse {
   repeated CategoryBrandResponse data = 2;
 }
 
+// ---------------- PMS ----------------
+message ProductAttrItem {
+  int32 id = 1;
+  string attr_name = 2;
+  string attr_value = 3;
+}
+
+message ProductAttrListRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string key = 3;
+}
+
+message ProductAttrListResponse {
+  repeated ProductAttrItem list = 1;
+  int32 count = 2;
+}
+
+message SkuStockItem {
+  int32 id = 1;
+  int32 product_id = 2;
+  string sku_code = 3;
+  int32 stock = 4;
+}
+
+message SkuStockListRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  int32 product_id = 3;
+}
+
+message SkuStockListResponse {
+  repeated SkuStockItem list = 1;
+  int32 count = 2;
+}
+
 
 
 message BatchGoodsIdInfo {
@@ -262,3 +305,4 @@ message GoodsListResponse {
   int32 total = 1;
   repeated GoodsInfoResponse data = 2;
 }
+

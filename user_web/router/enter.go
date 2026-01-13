@@ -28,6 +28,7 @@ func Router() {
 	ApiGroup := r.Group("/u/v1")
 	UserRouter(ApiGroup)
 	CaptchaRouter(ApiGroup)
+	UmsRouter(r)
 
 	go func() {
 		err := r.Run(global.Config.System.GetAddr())

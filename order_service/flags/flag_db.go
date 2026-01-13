@@ -12,6 +12,9 @@ func FlagDB() {
 		&models.OrderGoodsModel{},
 		&models.ShoppingCartModel{},
 		&models.OrderStockHistory{},
+		&models.Ad{},
+		&models.Coupon{},
+		&models.Flash{},
 	)
 	if err != nil {
 		zap.S().Errorf("\n数据库迁移失败  %s", err)

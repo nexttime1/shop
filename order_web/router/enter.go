@@ -29,6 +29,7 @@ func Router() {
 	AlipayRouter(ApiGroup)
 	OrderRouter(ApiGroup)
 	CartRouter(ApiGroup)
+	SmsRouter(r)
 	go func() {
 		err := r.Run(global.Config.System.GetAddr())
 		if err != nil {

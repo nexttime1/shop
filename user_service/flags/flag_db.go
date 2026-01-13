@@ -9,6 +9,7 @@ import (
 func FlagDB() {
 	err := global.DB.AutoMigrate(
 		&models.UserModel{},
+		&models.Role{},
 	)
 	if err != nil {
 		zap.S().Errorf("\n数据库迁移失败  %s", err)

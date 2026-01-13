@@ -15,6 +15,7 @@ func FlagDB() {
 		&models.BrandCategoryModel{}, //分类和品牌的 第三个表
 		&models.GoodModel{},          //商品表
 		&models.GoodsImageModel{},    //商品与 自己图片的关系表
+		&models.ProductAttr{},
 	)
 	if err != nil {
 		zap.S().Errorf("\n数据库迁移失败  %s", err)

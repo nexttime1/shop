@@ -42,6 +42,32 @@ func UserConnectService(c *gin.Context) (proto.UserClient, *grpc.ClientConn, err
 
 }
 
+func UserOptionConnectService(c *gin.Context) (proto.UmsClient, *grpc.ClientConn, error) {
+	//你只要导入这个包  就可以 执行 	resolver.Register(&builder{})  注册进去  就由内部管理  根据 tag 去找到对应服务  轮询的实现负载均衡
+
+	// 这个是 consul 的 ip 和 port
+	connectAddr := "consul://" +
+		global.Config.ConsulInfo.GetAddr() +
+		"/user_service?wait=14s"
+
+	zap.S().Infof("try connecting to %s ...", connectAddr)
+	conn, err := grpc.NewClient(
+		connectAddr,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
+		grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(opentracing.GlobalTracer())), // 设置拦截器  只要调用 grpc 就拦截
+	)
+	if err != nil {
+		zap.S().Errorf("创建 grpc 客户端连接失败：%v", err)
+		res.FailWithErr(c, res.FailServiceCode, err)
+		return nil, nil, err
+	}
+	client := proto.NewUmsClient(conn)
+
+	return client, conn, err
+
+}
+
 // UserConnectService11 演变 1  已经换新
 func UserConnectService11(c *gin.Context) (proto.UserClient, *grpc.ClientConn, error) {
 	// 从服务中心去拿

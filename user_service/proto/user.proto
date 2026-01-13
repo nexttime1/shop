@@ -11,6 +11,15 @@ service User {
   rpc checkPassword(checkPasswordReq) returns (CheckPasswordResponse);
 }
 
+// UMS 角色服務
+service Ums {
+  rpc GetRole(RoleRequest) returns (RoleItem);
+  rpc ListRole(RoleListRequest) returns (RoleListResponse);
+  rpc CreateRole(RoleItem) returns (Response);
+  rpc UpdateRole(RoleItem) returns (Response);
+  rpc DeleteRole(RoleRequest) returns (Response);
+}
+
 message  CheckPasswordResponse {
   bool is_valid = 1;
 }
@@ -72,4 +81,26 @@ message UserListResponse{
   int32 total = 1;
   repeated UserInfoResponse data = 2;
 
+}
+
+// -------------- UMS --------------
+message RoleItem {
+  int32 id = 1;
+  string role_name = 2;
+  repeated int32 menu_ids = 3;
+}
+
+message RoleRequest {
+  int32 id = 1;
+}
+
+message RoleListRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string key = 3;
+}
+
+message RoleListResponse {
+  repeated RoleItem list = 1;
+  int32 count = 2;
 }

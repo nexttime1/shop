@@ -5,6 +5,7 @@ type Api struct {
 	CategoryApi CategoryApi
 	BannerApi   BannerApi
 	BrandApi    BrandApi
+	PmsApi      PmsApi
 }
 
 var App = Api{}

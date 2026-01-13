@@ -38,6 +38,7 @@ func (c ConsulRegister) Register() error {
 	zap.S().Infof("用户服务获得的端口号为: %d", port)
 	server := grpc.NewServer(grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(opentracing.GlobalTracer())))
 	proto.RegisterUserServer(server, &handler.UserSever{})
+	proto.RegisterUmsServer(server, &handler.UmsServer{})
 	// 监听的端口 一定是动态获取的 要不健康检查 识别不到
 	listenAddr := fmt.Sprintf("%s:%d", global.Config.LocalInfo.Addr, port)
 	lis, err := net.Listen("tcp", listenAddr)

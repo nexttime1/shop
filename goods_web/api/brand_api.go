@@ -10,8 +10,7 @@ import (
 	"goods_web/connect"
 	"goods_web/proto"
 	"goods_web/service/brand_srv"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+
 	"strconv"
 )
 

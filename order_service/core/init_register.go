@@ -27,7 +27,7 @@ type ConsulRegister struct {
 	ServiceID string
 }
 
-// Go 编译器对指针类型调用值接收者方法时，会自动做 *ptr 解引用
+// Register Go 编译器对指针类型调用值接收者方法时，会自动做 *ptr 解引用
 func (c ConsulRegister) Register() (*handler.OrderSever, error) {
 	// 动态获得 端口
 	port, err := free_port.GetFreePort()
@@ -44,6 +44,7 @@ func (c ConsulRegister) Register() (*handler.OrderSever, error) {
 		return nil, err
 	}
 	proto.RegisterOrderServer(server, orderSever)
+	proto.RegisterSmsServer(server, &handler.SmsServer{})
 	// 监听的端口 一定是动态获取的 要不健康检查 识别不到
 	listenAddr := fmt.Sprintf("%s:%d", global.Config.LocalInfo.Addr, port)
 	lis, err := net.Listen("tcp", listenAddr)

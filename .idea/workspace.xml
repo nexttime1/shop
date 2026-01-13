@@ -5,26 +5,44 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e01dc3-ef1c-4026-9b53-d220d3acb5b0" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/API_REQUIREMENTS.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_service/connect/enter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_service/proto/inventory.pb.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/goods_service/proto/inventory.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/handler/brands.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/brands.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/handler/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/handler/goods.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/flags/flag_db.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/flags/flag_db.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.pb.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_service/proto/goods.proto" beforeDir="false" afterPath="$PROJECT_DIR$/goods_service/proto/goods.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_web/api/banner_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/api/banner_api.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/goods_web/api/brand_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/api/brand_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_web/api/category_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/api/category_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_web/api/good_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/api/good_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_web/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/middleware/cors.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_web/router/brand_router.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/router/brand_router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_web/service/banner_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/service/banner_srv/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_web/service/brand_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/service/brand_srv/enter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/goods_web/service/category_srv/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/service/category_srv/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_web/api/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/api/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_web/proto/goods.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/proto/goods.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_web/proto/goods.proto" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/proto/goods.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goods_web/router/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/goods_web/router/enter.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/option_web/api/message_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/api/message_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/option_web/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/option_web/middleware/cors.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/api/cart_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/api/cart_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order_web/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/middleware/cors.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oss_web/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/oss_web/middleware/cors.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_web/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_web/middleware/cors.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/core/init_register.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/core/init_register.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/flags/flag_db.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/flags/flag_db.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/proto/goods.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/proto/goods.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/proto/goods.proto" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/proto/goods.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/proto/order.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/proto/order.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_service/proto/order.proto" beforeDir="false" afterPath="$PROJECT_DIR$/order_service/proto/order.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/api/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/api/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/connect/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/connect/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/proto/goods.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/proto/goods.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/proto/goods.proto" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/proto/goods.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/proto/order.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/proto/order.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/proto/order.proto" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/proto/order.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order_web/router/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/order_web/router/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_service/core/init_register.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_service/core/init_register.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_service/flags/flag_db.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_service/flags/flag_db.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_service/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/user_service/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_service/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/user_service/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_service/proto/user.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_service/proto/user.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_service/proto/user.proto" beforeDir="false" afterPath="$PROJECT_DIR$/user_service/proto/user.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_web/api/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_web/api/enter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_web/connect/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_web/connect/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_web/proto/user.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_web/proto/user.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_web/proto/user.proto" beforeDir="false" afterPath="$PROJECT_DIR$/user_web/proto/user.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_web/router/enter.go" beforeDir="false" afterPath="$PROJECT_DIR$/user_web/router/enter.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,56 +87,56 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
-    &quot;Go 构建.go build enter.go.executor&quot;: &quot;Run&quot;,
-    &quot;Go 构建.go build goods_api.executor&quot;: &quot;Debug&quot;,
-    &quot;Go 构建.go build goods_api/test.executor&quot;: &quot;Run&quot;,
-    &quot;Go 构建.go build main.go (1).executor&quot;: &quot;Run&quot;,
-    &quot;Go 构建.go build main.go.executor&quot;: &quot;Run&quot;,
-    &quot;Go 构建.go build shop_api.executor&quot;: &quot;Debug&quot;,
-    &quot;Go 构建.go build shop_api/z_test/phone_register.executor&quot;: &quot;Run&quot;,
-    &quot;Go 构建.go build shop_api/z_test/zap_test.executor&quot;: &quot;Run&quot;,
-    &quot;Go 构建.go build shop_service.executor&quot;: &quot;Debug&quot;,
-    &quot;Go 构建.go build stock_service.executor&quot;: &quot;Run&quot;,
-    &quot;Go 构建.go build true11.go.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/5524/go_project/xtm_shop/shop/user_service/proto&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.grazie&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "Go 构建.go build enter.go.executor": "Run",
+    "Go 构建.go build goods_api.executor": "Debug",
+    "Go 构建.go build goods_api/test.executor": "Run",
+    "Go 构建.go build main.go (1).executor": "Run",
+    "Go 构建.go build main.go.executor": "Run",
+    "Go 构建.go build shop_api.executor": "Debug",
+    "Go 构建.go build shop_api/z_test/phone_register.executor": "Run",
+    "Go 构建.go build shop_api/z_test/zap_test.executor": "Run",
+    "Go 构建.go build shop_service.executor": "Debug",
+    "Go 构建.go build stock_service.executor": "Run",
+    "Go 构建.go build true11.go.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "main",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "D:/5524/go_project/xtm_shop/shop/goods_service/proto",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop\goods_service\proto" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\proto" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\order_web\proto" />
       <recent name="D:\5524\go_project\xtm_shop\shop\user_service\proto" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\core" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\order_service\conf" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\order_web\core" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\order_web\middleware" />
+      <recent name="D:\5524\go_project\xtm_shop\shop\goods_web\proto" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\5524\go_project\xtm_shop\shop" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\utils\listen_handler" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\service" />
       <recent name="D:\5524\go_project\xtm_shop\shop\goods_api\utils" />
       <recent name="D:\5524\go_project\xtm_shop\shop\order_service\core" />
-      <recent name="D:\5524\go_project\xtm_shop\shop\order_service" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -240,7 +258,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/user_web/connect/user.go</url>
-          <line>45</line>
+          <line>71</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">

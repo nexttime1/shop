@@ -34,6 +34,21 @@ service Order {
   rpc OrderDetailByOrderSn(AlipayOrderSnRequest) returns (OrderInfoDetailResponse);
 }
 
+// SMS 营销服务
+service Sms {
+  rpc GetCoupon(CouponRequest) returns (CouponItem);
+  rpc ListCoupon(CouponListRequest) returns (CouponListResponse);
+  rpc CreateCoupon(CouponItem) returns (google.protobuf.Empty);
+
+  rpc GetFlash(CouponRequest) returns (FlashItem);
+  rpc ListFlash(CouponListRequest) returns (CouponListResponse);
+  rpc CreateFlash(FlashItem) returns (google.protobuf.Empty);
+
+  rpc GetAd(CouponRequest) returns (AdItem);
+  rpc ListAd(CouponListRequest) returns (CouponListResponse);
+  rpc CreateAd(AdItem) returns (google.protobuf.Empty);
+}
+
 // UserInfo 用户信息（仅传递用户ID）
 message UserInfo {
   int32 id = 1; // 用户ID
@@ -129,4 +144,39 @@ message OrderListResponse {
 message CartItemListResponse {
   int32 total = 1; // 购物车商品总数
   repeated ShopCartInfoResponse data = 2; // 购物车商品列表
+}
+
+// -------------- SMS --------------
+message CouponRequest {
+  int32 id = 1;
+}
+
+message CouponItem {
+  int32 id = 1;
+  string coupon_code = 2;
+  string title = 3;
+  int32 discount = 4;
+}
+
+message CouponListRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  int32 userID = 3;
+}
+
+message CouponListResponse {
+  repeated CouponItem list = 1;
+  int32 count = 2;
+}
+
+message FlashItem {
+  int32 id = 1;
+  string name = 2;
+  int32 flash_id = 3;
+}
+
+message AdItem {
+  int32 id = 1;
+  string image = 2;
+  string url = 3;
 }
