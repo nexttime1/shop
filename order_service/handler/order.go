@@ -102,6 +102,7 @@ func (o *OrderSever) CloseProducer() error {
 	}
 	return nil
 }
+
 func (o *OrderSever) CreateOrder(ctx context.Context, request *proto.OrderRequest) (*proto.OrderInfoResponse, error) {
 
 	model := service.OrderTransitionRequest{
