@@ -42,7 +42,8 @@ func (t *TransactionProducer) InitDelayProducer() error {
 	}
 	p, err := rocketmq.NewProducer(
 		producer.WithNameServer([]string{global.Config.RocketMQ.Addr()}),
-		producer.WithGroupName(global.Config.RocketMQ.GroupName+"_delay"),
+		// 延时消息 生产者组
+		producer.WithGroupName(global.Config.RocketMQ.DelayGroupName),
 	)
 	if err != nil {
 		return err
@@ -247,7 +248,7 @@ func (t *TransactionProducer) ExecuteLocalTransaction(msg *primitive.Message) pr
 	DeleteCart.Finish()
 	// 发送延时消息  确保归还库存  发送普通消息就行   复用生产者
 	delayMessage := opentracing.GlobalTracer().StartSpan("send_delay_message", opentracing.ChildOf(span.Context()))
-	delayMsg := primitive.NewMessage("order_timeout", msg.Body)
+	delayMsg := primitive.NewMessage(global.Config.RocketMQ.DelayTopic, msg.Body)
 	delayMsg.WithDelayTimeLevel(6) // 延时级别6（根据RocketMQ配置对应时间）
 	if _, err = t.delayProducer.SendSync(context.Background(), delayMsg); err != nil {
 		zap.S().Error("发送延时消息失败", zap.Error(err))
@@ -347,19 +348,20 @@ func (t *TransactionProducer) sendDelayMsgWithRetry(msg *primitive.Message, orde
 	var (
 		sendResult *primitive.SendResult
 		sendErr    error
-		delayMsg   = primitive.NewMessage("order_timeout", msg.Body)
+		delayMsg   = primitive.NewMessage(global.Config.RocketMQ.DelayTopic, msg.Body)
 	)
 	delayMsg.WithDelayTimeLevel(16) // 30分钟延时
 
+	var retryIdx int32
 	// 执行重试逻辑
-	for retryIdx := 0; retryIdx < global.Config.RocketMQ.MaxRetryTimes; retryIdx++ {
+	for retryIdx = 0; retryIdx < global.Config.RocketMQ.MaxRetryTimes; retryIdx++ {
 		// 发送消息
 		sendResult, sendErr = t.delayProducer.SendSync(context.Background(), delayMsg)
 
 		// 构建通用日志字段
 		logFields := []zap.Field{
 			zap.String("order_sn", orderSn),
-			zap.Int("retry_times", retryIdx+1), // 重试次数（1=首次，2=第1次重试，3=第2次重试）
+			zap.Int32("retry_times", retryIdx+1), // 重试次数（1=首次，2=第1次重试，3=第2次重试）
 			zap.Bool("send_success", sendErr == nil),
 		}
 		if sendResult != nil {

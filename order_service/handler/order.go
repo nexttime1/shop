@@ -45,7 +45,8 @@ func (o *OrderSever) InitProducer() error {
 	producerIns, err := rocketmq.NewTransactionProducer(
 		o.orderListener,
 		producer.WithNameServer([]string{global.Config.RocketMQ.Addr()}),
-		producer.WithGroupName(global.Config.RocketMQ.GroupName),
+		// 事务生产者组
+		producer.WithGroupName(global.Config.RocketMQ.TransGroupName),
 	)
 	if err != nil {
 		zap.L().Error("RocketMQ创建事务生产者失败", zap.Error(err))
@@ -115,7 +116,8 @@ func (o *OrderSever) CreateOrder(ctx context.Context, request *proto.OrderReques
 		OrderSns: service.RandomSns(request.UserId),
 	}
 	data, _ := json.Marshal(model)
-	msg := primitive.NewMessage(global.Config.RocketMQ.Topic, data)
+	// TransactionTopic  需要 库存微服务消费 事务消息
+	msg := primitive.NewMessage(global.Config.RocketMQ.TransactionTopic, data)
 	//half 消息 如果回复了 我就调用本地事务 也就是 ExecuteLocalTransaction
 	parentSpan := opentracing.SpanFromContext(ctx)
 	if parentSpan != nil {
@@ -170,7 +172,6 @@ func (o *OrderSever) CreateOrder(ctx context.Context, request *proto.OrderReques
 	if statusInfo.Code != codes.OK {
 		return nil, status.Error(statusInfo.Code, statusInfo.Detail)
 	}
-
 	return &proto.OrderInfoResponse{Id: statusInfo.ID, OrderSn: model.OrderSns, Total: statusInfo.PriceSum}, nil
 
 }

@@ -20,13 +20,43 @@ import (
 )
 
 func ListenMq() {
-	messgaes, err := rocketmq.NewPushConsumer(consumer.WithNameServer([]string{global.Config.RocketMQ.Addr()}),
-		consumer.WithGroupName(global.Config.RocketMQ.ConsumerGroupName))
+	mqConsumer, err := rocketmq.NewPushConsumer(consumer.WithNameServer([]string{global.Config.RocketMQ.Addr()}),
+		consumer.WithGroupName(global.Config.RocketMQ.ConsumerGroupName),
+		// 最大重试次数
+		// -1表示使用默认值16次，这里显式设置为3次
+		consumer.WithMaxReconsumeTimes(3),
+		// 4. 重试延迟时间（核心重试配置）
+		// 每次重试时，当前队列暂停拉取的时间（对应原DelayLevelWhenNextConsume）
+		// 级别2对应5秒，这里直接设置为5*time.Second
+		consumer.WithSuspendCurrentQueueTimeMillis(5*time.Second),
+		// 5. 消费超时时间（可选，防止长耗时消费）
+		consumer.WithConsumeTimeout(30*time.Second),
+		// 6. 并发消费协程数（可选，根据业务调整）
+		consumer.WithConsumeGoroutineNums(10),
+		// 7. 批量消费大小（可选，每次最多消费1条，保证幂等）
+		consumer.WithConsumeMessageBatchMaxSize(1),
+	)
 	if err != nil {
 		panic(err)
 	}
-	messgaes.Subscribe(global.Config.RocketMQ.ConsumerSubscribe, consumer.MessageSelector{}, AutoReBack)
-	messgaes.Start()
+	// 订阅第一个Topic：事务消息（本地事务失败的库存归还）
+	err = mqConsumer.Subscribe(global.Config.RocketMQ.TransactionTopic, consumer.MessageSelector{}, AutoReBack)
+	if err != nil {
+		zap.S().Fatal("订阅事务消息Topic失败", zap.Error(err))
+	}
+
+	// 订阅第二个Topic：普通归还消息（订单超时的库存归还）
+	err = mqConsumer.Subscribe(global.Config.RocketMQ.StockTimeoutTopic, consumer.MessageSelector{}, AutoReBack)
+	if err != nil {
+		zap.S().Fatal("订阅普通归还Topic失败", zap.Error(err))
+	}
+
+	// 启动消费者
+	if err = mqConsumer.Start(); err != nil {
+		zap.S().Fatal("启动RocketMQ消费者失败", zap.Error(err))
+		panic(err)
+	}
+	zap.S().Info("库存服务MQ消费者启动成功，监听Topic：", global.Config.RocketMQ.TransactionTopic, ",", global.Config.RocketMQ.StockTimeoutTopic)
 	select {}
 
 }
